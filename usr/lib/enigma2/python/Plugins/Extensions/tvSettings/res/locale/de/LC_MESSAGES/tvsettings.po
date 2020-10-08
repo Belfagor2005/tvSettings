@@ -1,0 +1,386 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: cbpanel\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-06-05 21:28+0200\n"
+"PO-Revision-Date: \n"
+"Last-Translator: ))^^(( <>\n"
+"Language-Team: *\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Generator: Poedit 1.8.7\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SearchPathExcluded-0: ../../../../plugin.py\n"
+
+#: plugin.py:247 plugin.py:251 plugin.py:362 plugin.py:380 plugin.py:486
+#: plugin.py:504 plugin.py:611 plugin.py:630 plugin.py:741 plugin.py:758
+#: plugin.py:858 plugin.py:876 plugin.py:974 plugin.py:993 plugin.py:1090
+#: plugin.py:1108
+#, python-format
+msgid "..:: TiVuStream Settings V. %s  by Lululla ::.."
+msgstr ""
+
+#: plugin.py:256 plugin.py:413 plugin.py:539 plugin.py:667 plugin.py:795
+#: plugin.py:910 plugin.py:1028 plugin.py:1143
+msgid "Please select ..."
+msgstr "Bitte auswählen ..."
+
+#: plugin.py:258
+msgid "Select"
+msgstr "Wählen"
+
+#: plugin.py:259
+msgid "Exit"
+msgstr "Ausfahrt"
+
+#: plugin.py:290
+msgid "UPDATE SATELLITES.XML"
+msgstr ""
+
+#: plugin.py:292
+msgid "UPDATE TERRESTRIAL.XML"
+msgstr ""
+
+#: plugin.py:315 plugin.py:334 plugin.py:420 plugin.py:546 plugin.py:674
+#: plugin.py:802 plugin.py:917 plugin.py:1035 plugin.py:1150
+msgid "Do you want to install?"
+msgstr "Möchten Sie installieren ?"
+
+#: plugin.py:324
+msgid "Satellites.xml Updated!"
+msgstr ""
+
+#: plugin.py:325 plugin.py:344 plugin.py:473 plugin.py:600 plugin.py:730
+#: plugin.py:846 plugin.py:960 plugin.py:1079 plugin.py:1194
+msgid "Installation performed successfully!"
+msgstr "Installation erfolgreich durchgeführt!"
+
+#: plugin.py:343
+msgid "Terrestrial.xml Updated!"
+msgstr ""
+
+#: plugin.py:369 plugin.py:493 plugin.py:618 plugin.py:748 plugin.py:865
+#: plugin.py:981 plugin.py:1097
+msgid "Getting the list, please wait ..."
+msgstr "die Liste bekommen , bitte warten ..."
+
+#: plugin.py:370 plugin.py:494 plugin.py:619 plugin.py:749 plugin.py:866
+#: plugin.py:982 plugin.py:1098
+msgid "Install"
+msgstr "Installieren"
+
+#: plugin.py:371 plugin.py:495 plugin.py:620 plugin.py:750 plugin.py:867
+#: plugin.py:983 plugin.py:1099
+msgid "Back"
+msgstr "Zurück"
+
+#: plugin.py:393 plugin.py:517 plugin.py:644 plugin.py:770 plugin.py:889
+#: plugin.py:1006 plugin.py:1121
+msgid "Try again later ..."
+msgstr "Versuchen Sie es später noch einmal ..."
+
+#: plugin.py:464 plugin.py:591 plugin.py:722 plugin.py:837 plugin.py:954
+#: plugin.py:1072 plugin.py:1187
+msgid "Installation Settings"
+msgstr "Installationseinstellungen"
+
+#: plugin.py:472 plugin.py:599 plugin.py:729 plugin.py:845 plugin.py:959
+#: plugin.py:1078 plugin.py:1193
+msgid "Setting Installed!"
+msgstr "Einstellung Installiert!"
+
+#: plugin.py:1218
+msgid "TiVuStream Settings V."
+msgstr ""
+
+#: plugin.py:1219 plugin.py:1220
+msgid "TiVuStream Settings"
+msgstr ""
+
+#~ msgid "Other"
+#~ msgstr "Andere"
+
+#~ msgid "SETTINGS DAILY"
+#~ msgstr "SETTINGS DAILY"
+
+#~ msgid "MMARK PICONS"
+#~ msgstr "MMARK PICONS"
+
+#~ msgid "DEPENDENCIES"
+#~ msgstr "DEPENDENCIES"
+
+#~ msgid "DRIVERS"
+#~ msgstr "DRIVERS"
+
+#~ msgid "PLUGIN BACKUP"
+#~ msgstr "PLUGIN BACKUP"
+
+#~ msgid "PLUGIN EPG"
+#~ msgstr "PLUGIN EPG"
+
+#~ msgid "PLUGIN EMULATORS CAMS"
+#~ msgstr "PLUGIN EMULATORS CAMS"
+
+#~ msgid "PLUGIN IPTV"
+#~ msgstr "PLUGIN IPTV"
+
+#~ msgid "PLUGIN KODI"
+#~ msgstr "PLUGIN KODI"
+
+#~ msgid "PLUGIN MULTIBOOT"
+#~ msgstr "PLUGIN MULTIBOOT"
+
+#~ msgid "PLUGIN PICONS"
+#~ msgstr "PLUGIN PICONS"
+
+#~ msgid "PLUGIN PPANEL"
+#~ msgstr "PLUGIN PPANEL"
+
+#~ msgid "PLUGIN SETTINGS PANEL"
+#~ msgstr "PLUGIN SETTINGS PANEL"
+
+#~ msgid "PLUGIN SKINS"
+#~ msgstr "PLUGIN SKINS"
+
+#~ msgid "PLUGIN SPORT"
+#~ msgstr "PLUGIN SPORT"
+
+#~ msgid "PLUGIN UTILITY"
+#~ msgstr "PLUGIN UTILITY"
+
+#~ msgid "PLUGIN WEATHER"
+#~ msgstr "PLUGIN WEATHER"
+
+#~ msgid "..:: TiVuStream Addons V. %s  by Lululla ::.."
+#~ msgstr "..:: TiVuStream Addons V. %s  by Lululla ::.."
+
+#~ msgid "Uninstall"
+#~ msgstr "Deinstallieren"
+
+#~ msgid "tvManager"
+#~ msgstr "tvManager"
+
+#~ msgid ""
+#~ "New update available!!\n"
+#~ " Do you want update plugin ?"
+#~ msgstr ""
+#~ "Neues Update verfügbar !!\n"
+#~ "  Haben Sie Update Plugin wollen?"
+
+#~ msgid "Install Update: %s"
+#~ msgstr "Installieren Sie Update: %s"
+
+#~ msgid "Do you want restart enigma2 ?"
+#~ msgstr "Wollen Sie enigma2 neu starten ?"
+
+#~ msgid "Please install ..."
+#~ msgstr "Please install ..."
+
+#~ msgid "Installing: %s"
+#~ msgstr "Installieren: %s"
+
+#~ msgid "Installing "
+#~ msgstr "Installieren "
+
+#~ msgid "... please wait"
+#~ msgstr "... Warten Sie mal"
+
+#~ msgid "Unknow Image!"
+#~ msgstr "Unknow Image!"
+
+#~ msgid "Installation canceled!"
+#~ msgstr "Installation abgebrochen!"
+
+#~ msgid "Download Failed!"
+#~ msgstr "Download Failed!"
+
+#~ msgid "Addon KodiLite installed!"
+#~ msgstr "Addon KodiLite installiert!"
+
+#~ msgid "KodiLite not installed!"
+#~ msgstr "KodiLite nicht installiert!"
+
+#~ msgid "Downloading file select in /tmp"
+#~ msgstr "Herunterladen von Dateien auswählen, in / tmp"
+
+#~ msgid "Download file in /tmp successful!"
+#~ msgstr "Download-Datei in /tmp erfolgreich!"
+
+#~ msgid "Download file in /tmp successful!!"
+#~ msgstr "Download-Datei in /tmp erfolgreich!!"
+
+#~ msgid "Download failed!"
+#~ msgstr "Download failed!"
+
+#~ msgid "... Not supported"
+#~ msgstr "... Nicht unterstützt"
+
+#~ msgid "Execution Progress:"
+#~ msgstr "Execution Fortschritt:"
+
+#~ msgid "Execution finished!!"
+#~ msgstr "Die Ausführung abgeschlossen!!"
+
+#~ msgid "Put addon .ipk .tar.gz .deb and install from config path"
+#~ msgstr "Fügen Sie Addon .ipk .tar.gz .deb und installieren Sie aus dem Konfigurationspfad"
+
+#~ msgid "Restart"
+#~ msgstr "Neustart"
+
+#~ msgid "Remove"
+#~ msgstr "Entfernen"
+
+#~ msgid "Do you really want to install the selected Addon?"
+#~ msgstr "Wollen Sie wirklich die ausgewählte Addon zu installieren?"
+
+#~ msgid "Do you really want to remove selected?"
+#~ msgstr "Wollen Sie wirklich ausgewählt entfernen?"
+
+#~ msgid "Restart Enigma to load the installed plugin?"
+#~ msgstr "Neustart Enigma um das installierte Plugin zu laden?"
+
+#~ msgid "Update"
+#~ msgstr "Aktualisieren"
+
+#~ msgid "Do you want update plugin ?"
+#~ msgstr "Haben Sie Update Plugin wollen?"
+
+#~ msgid "Removing: %s"
+#~ msgstr "Entfernen: %s"
+
+#~ msgid "Do you want to remove?"
+#~ msgstr "Wollen Sie entfernen ?"
+
+#~ msgid "Question"
+#~ msgstr "Question"
+
+#~ msgid "Information"
+#~ msgstr "Information"
+
+#~ msgid "Warning"
+#~ msgstr "Warning"
+
+#~ msgid "Error"
+#~ msgstr "Error"
+
+#~ msgid "Message"
+#~ msgstr "Message"
+
+#~ msgid "Yes"
+#~ msgstr "Yes"
+
+#~ msgid "No"
+#~ msgstr "No"
+
+#~ msgid "Config Panel Addon"
+#~ msgstr "Konfiguration Platte Addon"
+
+#~ msgid "Save"
+#~ msgstr "Speichern"
+
+#~ msgid "Auto Update Plugin"
+#~ msgstr "Auto Update Plugin"
+
+#~ msgid "If Active: Automatic Update Plugin"
+#~ msgstr "Wenn aktiv: Automatisches Update-Plugin"
+
+#~ msgid "Path Picons zipfile type MMark"
+#~ msgstr "Pfad Picons-ZIP-Dateityp MMark"
+
+#~ msgid "Configure folder containing picons files"
+#~ msgstr "Konfigurieren Sie einen Ordner mit Picons-Dateien"
+
+#~ msgid "Format Size Picons type MMark"
+#~ msgstr "Format Größe Picons Typ MMark"
+
+#~ msgid "Configure format size Picons filter"
+#~ msgstr "Formatgröße Picons-Filter konfigurieren"
+
+#~ msgid "Path Manual IPK"
+#~ msgstr "Path Manual IPK"
+
+#~ msgid "Path to the addon installation folder"
+#~ msgstr "Pfad zum Installationsordner des Addons"
+
+#~ msgid "Link in Extensions Menu"
+#~ msgstr "Link in Extensions Menu"
+
+#~ msgid "Link in Extensions button"
+#~ msgstr "Schaltfläche in Erweiterungen verknüpfen"
+
+#~ msgid "Link in Main Menu"
+#~ msgstr "Link in Main Menu"
+
+#~ msgid "Link in Setup Menu"
+#~ msgstr "Link in Setup Menu"
+
+#~ msgid "Quit without saving"
+#~ msgstr "Beenden ohne zu Speichern"
+
+#~ msgid "Device not detected!"
+#~ msgstr "Gerät nicht erkannt!"
+
+#~ msgid "Successfully saved configuration"
+#~ msgstr "Erfolgreich gespeicherte Konfiguration"
+
+#~ msgid "PICONS BLACK"
+#~ msgstr "PICONS BLACK"
+
+#~ msgid "PICONS TRANSPARENT"
+#~ msgstr "PICONS TRANSPARENT"
+
+#~ msgid "Folder picons "
+#~ msgstr "Ordner Picons "
+
+#~ msgid "Format size picons "
+#~ msgstr "Formatgröße Picons "
+
+#~ msgid "no filtered picons"
+#~ msgstr "keine gefilterten Pikons"
+
+#~ msgid ""
+#~ "Do you want to install?\n"
+#~ "It could for a few minutes, wait .."
+#~ msgstr ""
+#~ "Möchten Sie die Installation durchführen?\n"
+#~ "Es könnte einige Minuten warten."
+
+#~ msgid "Installation Picons"
+#~ msgstr "Installation Picons"
+
+#~ msgid "TiVuStream Addons"
+#~ msgstr "TiVuStream Addons"
+
+#~ msgid "TiVuStream Addons V."
+#~ msgstr "TiVuStream Addons V."
+
+#~ msgid "TiVuStream Panel"
+#~ msgstr "TiVuStream Panel"
+
+#~ msgid "SETTINGS CIEFP"
+#~ msgstr "SETTINGS CIEFP"
+
+#~ msgid "SETTINGS MALIMALI"
+#~ msgstr "SETTINGS MALIMALI"
+
+#~ msgid "SETTINGS MANUTEK"
+#~ msgstr "SETTINGS MANUTEK"
+
+#~ msgid "SETTINGS MILENKA61"
+#~ msgstr "SETTINGS MILENKA61"
+
+#~ msgid "SETTINGS MORPHEUS"
+#~ msgstr "SETTINGS MORPHEUS"
+
+#~ msgid "SETTINGS PREDRAG"
+#~ msgstr "SETTINGS PREDRAG"
+
+#~ msgid "SETTINGS VHANNIBAL"
+#~ msgstr "SETTINGS VHANNIBAL"
+
+#~ msgid "Extensions (Menu)"
+#~ msgstr "Extensions (Menu)"
