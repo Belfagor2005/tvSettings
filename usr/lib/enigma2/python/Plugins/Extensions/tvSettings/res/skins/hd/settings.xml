@@ -1,5 +1,5 @@
 <!-- <screen name="settings.xml" flags="wfNoBorder" position="0,0" size="1280,720" title="..::TiVuStream Panel Settings Manager::.." backgroundColor="#ff000000">
-	<ePixmap position="0,0" size="1280,720" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/tvSettings/res/pics/menu_plug_FHD.jpg" zPosition="-1" />  
+	<ePixmap position="0,0" size="1280,720" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/tvSettings/res/pics/menu_plug_FHD.jpg" zPosition="-1" />
 	<widget name="title" position="33,30" size="1066,33" font="Regular;24" foregroundColor="#ffcc33" backgroundColor="black" transparent="1" zPosition="3" />
 	<widget source="global.CurrentTime" render="Label" position="1053,16" size="200,33" font="Regular;20" halign="right" valign="center" backgroundColor="black" foregroundColor="grey" transparent="1">
 		<convert type="ClockToText">Format:%d.%m.%Y</convert>
@@ -20,12 +20,12 @@
 
 
 	<ePixmap position="0,640" size="1280,1" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/tvSettings/res/pics/sep2.png" alphatest="blend" transparent="1" zPosition="1" />
-	<eLabel position="33,666" size="6,26" backgroundColor="red" zPosition="1" /> 
-	<widget name="key_red" position="46,666" size="200,26" font="Regular;20" halign="left" valign="center" foregroundColor="#ffffff" backgroundColor="background" transparent="1" zPosition="3" />  
-	<eLabel position="253,666" size="6,26" backgroundColor="green" zPosition="1" /> 
+	<eLabel position="33,666" size="6,26" backgroundColor="red" zPosition="1" />
+	<widget name="key_red" position="46,666" size="200,26" font="Regular;20" halign="left" valign="center" foregroundColor="#ffffff" backgroundColor="background" transparent="1" zPosition="3" />
+	<eLabel position="253,666" size="6,26" backgroundColor="green" zPosition="1" />
 	<widget name="key_green" position="266,666" size="200,26" font="Regular;18" halign="left" valign="center" foregroundColor="#ffffff" backgroundColor="background" transparent="1" zPosition="3" />
-	<eLabel position="486,666" size="6,26" backgroundColor="yellow" zPosition="1" /> 
-	<widget name="key_yellow" position="500,666" size="200,26" font="Regular;20" halign="left" valign="center" foregroundColor="#ffffff" backgroundColor="background" transparent="1" zPosition="3" />  
+	<eLabel position="486,666" size="6,26" backgroundColor="yellow" zPosition="1" />
+	<widget name="key_yellow" position="500,666" size="200,26" font="Regular;20" halign="left" valign="center" foregroundColor="#ffffff" backgroundColor="background" transparent="1" zPosition="3" />
 
 </screen> -->
 
