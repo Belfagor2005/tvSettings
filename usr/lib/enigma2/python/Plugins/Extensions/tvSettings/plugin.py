@@ -70,7 +70,14 @@ try:
     import zipfile
 except:
     pass
-    
+
+try:
+    _create_unverified_https_context = ssl._create_unverified_context
+except AttributeError:
+    pass
+else:
+    ssl._create_default_https_context = _create_unverified_https_context
+
 def checkStr(txt):
     # convert variable to type str both in Python 2 and 3
     if PY3:
@@ -81,9 +88,8 @@ def checkStr(txt):
         #Python 2
         if type(txt) == type(str()):
             txt = txt.encode('utf-8')
-        
     return txt
-    
+
 def checkInternet():
     try:
         response = checkStr(urlopen("http://google.com", None, 5))
