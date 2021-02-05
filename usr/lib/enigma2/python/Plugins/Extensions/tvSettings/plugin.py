@@ -211,14 +211,9 @@ class SetList(MenuList):
 def DListEntry(name, idx):
     res = [name]
     if HD.width() > 1280:
-
         res.append(MultiContentEntryPixmapAlphaTest(pos=(10, 12), size=(34, 25), png=loadPNG(pngs)))
         res.append(MultiContentEntryText(pos=(60, 0), size=(1900, 50), font=7, text=name, color = 0xa6d1fe, flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER))#
     else:
-
-
-
-
         res.append(MultiContentEntryPixmapAlphaTest(pos=(10, 6), size=(34, 25), png=loadPNG(pngs)))
         res.append(MultiContentEntryText(pos=(60, 5), size=(1000, 50), font=1, text=name, color = 0xa6d1fe, flags=RT_HALIGN_LEFT))
     return res
@@ -332,24 +327,8 @@ class MainSetting(Screen):
         elif sel == ('SETTINGS VHANNIBAL'):
             self.session.open(SettingVhan)
 
-
-
-
     def okSATELLITE(self):
         self.session.openWithCallback(self.okSatInstall, MessageBox,(_("Do you want to install?")), MessageBox.TYPE_YESNO)
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     def okSatInstall(self, result):
         if result:
@@ -362,12 +341,10 @@ class MainSetting(Screen):
                     urlretrieve(link_sat, dirCopy)
                     self.mbox = self.session.open(tvMessageBox, _('Satellites.xml Updated!'), tvMessageBox.TYPE_INFO, timeout=5)
                     self['info'].setText(_('Installation done !!!'))
-
                 except:
                     return
             else:
                 session.open(MessageBox, "No Internet", MessageBox.TYPE_INFO)
-
 
     def okTERRESTRIAL(self):
         self.session.openWithCallback(self.okTerrInstall, MessageBox,(_("Do you want to install?")), MessageBox.TYPE_YESNO)
@@ -383,7 +360,6 @@ class MainSetting(Screen):
                     urlretrieve(link_ter, dirCopy) # , context= ssl._create_unverified_context())
                     self.mbox = self.session.open(tvMessageBox, _('Terrestrial.xml Updated!'), tvMessageBox.TYPE_INFO, timeout=5)
                     self['info'].setText(_('Installation done !!!'))
-
                 except:
                     return
             else:
@@ -523,37 +499,6 @@ class tvColombo(Screen):
 class SettingVhan(Screen):
 
     def __init__(self, session):
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         self.session = session
         skin = skin_path + 'settings.xml'
         with open(skin, 'r') as f:
@@ -589,33 +534,10 @@ class SettingVhan(Screen):
         url = base64.b64decode("aHR0cDovL3NhdC5hbGZhLXRlY2gubmV0L3VwbG9hZC9zZXR0aW5ncy92aGFubmliYWwv")
         getPage(url).addCallback(self._gotPageLoad).addErrback(self.errorLoad)
 
-
     def errorLoad(self, error):
         print(str(error))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         self['info'].setText(_('Try again later ...'))
-
-
         self.downloading = False
-
-
-
 
     def _gotPageLoad(self, data):
         self.xml = data
@@ -646,21 +568,6 @@ class SettingVhan(Screen):
 
     def okRun(self):
         self.session.openWithCallback(self.okInstall, MessageBox,(_("Do you want to install?")), MessageBox.TYPE_YESNO)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     def okInstall(self, result):
         global set
@@ -1395,7 +1302,6 @@ class SettingPredrag(Screen):
         print("download error =", error)
         self.close()
 
-
     def install(self, fplug):
         if os.path.exists('/tmp/settings.tar.gz'):
             os.system('rm -rf /etc/enigma2/lamedb')
@@ -1475,7 +1381,6 @@ def terrestrial_rest():
 
 def lcnstart():
     print(' lcnstart ')
-
     if os.path.exists('/etc/enigma2/lcndb'):
         lcn = LCN()
         lcn.read()
@@ -1483,8 +1388,6 @@ def lcnstart():
             lcn.writeBouquet()
             ReloadBouquet()
     return
-
-
 
 
 def StartSavingTerrestrialChannels():
