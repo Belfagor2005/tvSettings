@@ -44,7 +44,7 @@ import ssl
 from sys import version_info
 from Lcn import *
 global isDreamOS
-global skin_path, ico_path, ico1_path, ico2_path, ico3_path, pngx, pngl, pngs
+global pngx, pngl, pngs
 
 
 currversion      = '1.5'
