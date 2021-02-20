@@ -30,7 +30,8 @@
   <!-- eLabel  position="6,33"   size="620,1"     backgroundColor="grey" /-->
   <ePixmap position="146,86" size="686,5" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/tvSettings/res/pics/sep.png" zPosition="5" />
   <eLabel position="76,0" size="826,720" backgroundColor="#60000000" zPosition="1" />
-  <ePixmap position="0,0" size="886,720" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/tvSettings/res/pics/setmain.png" zPosition="2" />
+  <!-- <ePixmap position="0,0" size="886,720" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/tvSettings/res/pics/setmain.png" zPosition="2" /> -->
+	<ePixmap position="0,0" size="1280,720" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/tvaddon/res/pics/hd/main1.png" zPosition="1" />  
   <ePixmap position="126,0" size="720,720" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/tvSettings/res/pics/fulltop.png" scale="stretch" zPosition="3" />
   <ePixmap position="126,0" size="2,720" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/tvSettings/res/pics/b-left.png" zPosition="5" />
   <ePixmap position="844,0" size="54,720" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/tvSettings/res/pics/sh-right.png" zPosition="5" />
