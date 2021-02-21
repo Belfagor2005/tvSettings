@@ -1,44 +1,11 @@
-<!-- <screen name="settings.xml" flags="wfNoBorder" position="0,0" size="1280,720" title="..::TiVuStream Panel Settings Manager::.." backgroundColor="#ff000000">
-	<ePixmap position="0,0" size="1280,720" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/tvSettings/res/pics/menu_plug_FHD.jpg" zPosition="-1" />  
-	<widget name="title" position="33,30" size="1066,33" font="Regular;24" foregroundColor="#ffcc33" backgroundColor="black" transparent="1" zPosition="3" />
-	<widget source="global.CurrentTime" render="Label" position="1053,16" size="200,33" font="Regular;20" halign="right" valign="center" backgroundColor="black" foregroundColor="grey" transparent="1">
-		<convert type="ClockToText">Format:%d.%m.%Y</convert>
-	</widget>
-	<widget source="global.CurrentTime" render="Label" position="1053,46" size="200,33" font="Regular;20" halign="right" backgroundColor="black" transparent="1">
-		<convert type="ClockToText">Default</convert>
-	</widget>
-	<ePixmap position="0,73" size="1280,1" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/tvSettings/res/pics/sep2.png" alphatest="blend" transparent="1" zPosition="1" />
-
-	<eLabel position="33,86" size="480,282" backgroundColor="#1b3c85" />
-	<eLabel position="36,90" size="473,275" backgroundColor="#20000000" />
-	<eLabel position="43,96" size="460,262" backgroundColor="#FFFFFFFF" />
-	<widget source="session.VideoPicture" render="Pig" position="48,100" size="453,255" backgroundColor="#AA001842" transparent="1" zPosition="2" />
-
-	<widget name="info" position="526,86" size="720,33" font="Regular;24" foregroundColor="#ffcc33" halign="left" valign="center" transparent="1" zPosition="8" />
-	<widget name="text" position="526,126" size="720,466" itemHeight="33" scrollbarMode="showOnDemand" foregroundColor="#7ac2fc" foregroundColorSelected="#f4b700" transparent="1" zPosition="1" />
-	<ePixmap position="159,410" size="213,73" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/tvSettings/res/pics/tvlogofhd.png" transparent="1" alphatest="blend" zPosition="10" />
-
-
-	<ePixmap position="0,640" size="1280,1" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/tvSettings/res/pics/sep2.png" alphatest="blend" transparent="1" zPosition="1" />
-	<eLabel position="33,666" size="6,26" backgroundColor="red" zPosition="1" /> 
-	<widget name="key_red" position="46,666" size="200,26" font="Regular;20" halign="left" valign="center" foregroundColor="#ffffff" backgroundColor="background" transparent="1" zPosition="3" />  
-	<eLabel position="253,666" size="6,26" backgroundColor="green" zPosition="1" /> 
-	<widget name="key_green" position="266,666" size="200,26" font="Regular;18" halign="left" valign="center" foregroundColor="#ffffff" backgroundColor="background" transparent="1" zPosition="3" />
-	<eLabel position="486,666" size="6,26" backgroundColor="yellow" zPosition="1" /> 
-	<widget name="key_yellow" position="500,666" size="200,26" font="Regular;20" halign="left" valign="center" foregroundColor="#ffffff" backgroundColor="background" transparent="1" zPosition="3" />  
-
-</screen> -->
-
 <screen name="settings" position="0,0" size="1280,720" title="..::TiVuStream Panel Settings Manager::.." backgroundColor="transparent" flags="wfNoBorder">
-  <widget name="title" position="133,16" size="573,66" font="Regular;24" halign="left" valign="center" foregroundColor="#002a79b8" backgroundColor="black" transparent="1" zPosition="5" />
+  <widget name="title" position="440,8" size="384,66" font="Regular;24" halign="left" valign="center" foregroundColor="#002a79b8" backgroundColor="black" transparent="1" zPosition="5" />
   <!-- eLabel  position="6,33"   size="620,1"     backgroundColor="grey" /-->
   <ePixmap position="146,86" size="686,5" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/tvSettings/res/pics/sep.png" zPosition="5" />
   <eLabel position="76,0" size="826,720" backgroundColor="#60000000" zPosition="1" />
-  <!-- <ePixmap position="0,0" size="886,720" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/tvSettings/res/pics/setmain.png" zPosition="2" /> -->
-	<ePixmap position="0,0" size="1280,720" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/tvaddon/res/pics/hd/main1.png" zPosition="1" />  
-  <ePixmap position="126,0" size="720,720" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/tvSettings/res/pics/fulltop.png" scale="stretch" zPosition="3" />
-  <ePixmap position="126,0" size="2,720" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/tvSettings/res/pics/b-left.png" zPosition="5" />
-  <ePixmap position="844,0" size="54,720" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/tvSettings/res/pics/sh-right.png" zPosition="5" />
+	<ePixmap position="149,11" size="280,50" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/tvSettings/res/pics/hd/tvs.png" zPosition="5" />
+  <!-- <ePixmap position="0,0" size="886,720" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/tvSettings/res/pics/main1.png" zPosition="2" /> -->
+	<ePixmap position="0,0" size="1280,720" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/tvSettings/res/pics/hd/main2.png" zPosition="1" />  
   <!-- Menu List -->
   <widget name="text" position="146,103" size="686,398" font="Regular;20" itemHeight="33" scrollbarMode="showOnDemand" transparent="1" zPosition="5" foregroundColor="#00a0a0a0" foregroundColorSelected="#ffffff" backgroundColor="#20000000" backgroundColorSelected="#0b2049" selectionPixmap="/usr/lib/enigma2/python/Plugins/Extensions/tvSettings/res/pics/sliderb.png" />
   <widget name="info" position="146,502" size="686,36" font="Regular;20" halign="center" foregroundColor="yellow" backgroundColor="#20000000" transparent="1" zPosition="5" />
