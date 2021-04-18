@@ -3,7 +3,7 @@
 #--------------------#
 #  coded by Lululla  #
 #   skin by MMark    #
-#     08/02/2021     #
+#     018/04/2021     #
 #--------------------#
 #Info http://t.me/tivustream
 # from __future__ import print_function
@@ -41,6 +41,7 @@ import sys
 import glob
 import shutil
 import ssl
+import six
 from sys import version_info
 from Lcn import *
 global isDreamOS
@@ -104,10 +105,10 @@ else:
 
 def checkStr(txt):
     if PY3:
-        if type(txt) == type(bytes()):
+        if isinstance(txt, type(bytes())):
             txt = txt.decode('utf-8')
     else:
-        if type(txt) == type(unicode()):
+        if isinstance(txt, type(six.text_type())):
             txt = txt.encode('utf-8')
     return txt
 
