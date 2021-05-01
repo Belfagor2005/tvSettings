@@ -3,7 +3,7 @@
 #--------------------#
 #  coded by Lululla  #
 #   skin by MMark    #
-#     18/04/2021     #
+#     01/05/2021     #
 #--------------------#
 #Info http://t.me/tivustream
 # from __future__ import print_function
@@ -31,6 +31,7 @@ from enigma import RT_HALIGN_LEFT, loadPNG, RT_HALIGN_RIGHT, RT_HALIGN_CENTER
 from enigma import eTimer, eListboxPythonMultiContent, eListbox, eConsoleAppContainer, gFont
 from enigma import getDesktop
 from os import path, listdir, remove, mkdir, chmod
+                            
 from twisted.web.client import downloadPage, getPage
 from xml.dom import Node, minidom
 import base64
@@ -41,9 +42,11 @@ import sys
 import glob
 import shutil
 import ssl
+           
 import six
+                 
 from sys import version_info
-from Lcn import *
+from . import Lcn      
 global isDreamOS
 global pngx, pngl, pngs
 
@@ -103,6 +106,12 @@ except AttributeError:
 else:
     ssl._create_default_https_context = _create_unverified_https_context
 
+                                                                          
+
+
+                      
+                      
+                      
 def checkStr(txt):
     if PY3:
         if isinstance(txt, type(bytes())):
@@ -124,17 +133,6 @@ def checkInternet():
         return False
     else:
         return True
-
-def lcnstart():
-    print(' lcnstart ')
-    if os.path.exists('/etc/enigma2/lcndb'):
-        lcn = LCN()
-        lcn.read()
-        if len(lcn.lcnlist) > 0:
-            lcn.writeBouquet()
-            ReloadBouquet()
-    return
-
 def ReloadBouquet():
     print('\n----Reloading bouquets----')
     if eDVBDB:
@@ -261,6 +259,7 @@ class MainSetting(Screen):
             self.skin = f.read()
         self.setup_title = ('MainSetting')
         Screen.__init__(self, session)
+                           
         self.setTitle(_(title_plug))
         self['text'] = SetList([])
         self.working = False
@@ -413,7 +412,7 @@ class tvColombo(Screen):
         self.downloading = False
 
     def _gotPageLoad(self, data):
-        self.xml = data
+        self.xml = six.ensure_str(data)
         self.names = []
         self.urls = []
         try:
@@ -542,7 +541,7 @@ class SettingVhan(Screen):
         self.downloading = False
 
     def _gotPageLoad(self, data):
-        self.xml = data
+        self.xml = six.ensure_str(data)
         self.names = []
         self.urls = []
         try:
@@ -661,7 +660,7 @@ class SettingMilenka6121(Screen):
         self.downloading = False
 
     def _gotPageLoad(self, data):
-        self.xml = data
+        self.xml = six.ensure_str(data)
         self.names = []
         self.urls = []
         try:
@@ -775,7 +774,7 @@ class SettingManutek(Screen):
         self.downloading = False
 
     def _gotPageLoad(self, data):
-        self.xml = data
+        self.xml = six.ensure_str(data)
         self.names = []
         self.urls = []
         try:
@@ -897,7 +896,7 @@ class SettingMorpheus2(Screen):
         self.downloading = False
 
     def _gotPageLoad(self, data):
-        self.xml = data
+        self.xml = six.ensure_str(data)
         self.names = []
         self.urls = []
         try:
@@ -1018,7 +1017,7 @@ class SettingCiefp3(Screen):
         self.downloading = False
 
     def _gotPageLoad(self, data):
-        self.xml = data
+        self.xml = six.ensure_str(data)
         self.names = []
         self.urls = []
         try:
@@ -1130,7 +1129,7 @@ class tvSettingBi58(Screen):
 
     def _gotPageLoad(self, data):
 
-        self.xml = data
+        self.xml = six.ensure_str(data)
         self.names = []
         self.urls = []
         try:
@@ -1241,7 +1240,7 @@ class SettingPredrag(Screen):
 
     def _gotPageLoad(self, data):
 
-        self.xml = data
+        self.xml = six.ensure_str(data)
         self.names = []
         self.urls = []
         try:
@@ -1354,7 +1353,7 @@ class CirusSetting(Screen):
 
     def _gotPageLoad(self, data):
 
-        self.xml = data
+        self.xml = six.ensure_str(data)
         self.names = []
         self.urls = []
         try:
