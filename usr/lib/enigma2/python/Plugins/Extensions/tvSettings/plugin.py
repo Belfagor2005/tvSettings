@@ -6,7 +6,7 @@
 #     01/05/2021     #
 #--------------------#
 #Info http://t.me/tivustream
-# from __future__ import print_function
+from __future__ import print_function
 from . import _
 from Components.ActionMap import ActionMap, NumberActionMap
 from Components.Button import Button
@@ -126,26 +126,14 @@ def make_request(url):
         response.close()
         return link
     except:
-        return
+        e = URLError #, e:
+        print('We failed to open "%s".' % url)
+        if hasattr(e, 'code'):
+            print('We failed with error code - %s.' % e.code)
+        if hasattr(e, 'reason'):
+            print('We failed to reach a server.')
+            print('Reason: ', e.reason)
     return
-
-
-# def make_request(url):
-    # try:
-        # req = Request(url)
-        # req.add_header('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; rv:52.0) Gecko/20100101 Firefox/52.0')
-        # response = urlopen(req)
-        # link = response.read()
-        # response.close()
-        # return link
-    # except:
-        # e = URLError #, e:
-        # print('We failed to open "%s".' % url)
-        # if hasattr(e, 'code'):
-            # print('We failed with error code - %s.' % e.code)
-        # if hasattr(e, 'reason'):
-            # print('We failed to reach a server.')
-            # print('Reason: ', e.reason)
 
 def checkInternet():
     try:
@@ -159,6 +147,7 @@ def checkInternet():
         return False
     else:
         return True
+
 def ReloadBouquet():
     print('\n----Reloading bouquets----')
     if eDVBDB:
@@ -429,9 +418,7 @@ class tvColombo(Screen):
          'cancel': self.close}, -2)
 
     def downxmlpage(self):
-        # url = base64.b64decode("aHR0cDovL2NvbG9tYm8uYWx0ZXJ2aXN0YS5vcmcvY29sb21iby9jb2xvbWJvLw==")
         url = 'http://colombo.altervista.org/colombo/colombo/'
-        # print('url ', url)
         r = make_request(url)
         print('rrrrrrrr ', r)
         self.names  = []
@@ -492,7 +479,7 @@ class tvColombo(Screen):
                         cmd = "rm -rf '/tmp/unzipped'"
                         os.system(cmd)
                     os.makedirs('/tmp/unzipped')
-                    
+
                     cmd2 = "unzip -o -q '/tmp/settings.zip' -d " + fdest1
                     os.system(cmd2)
                     if os.path.exists(fdest1):
@@ -540,9 +527,7 @@ class SettingVhan(Screen):
          'cancel': self.close}, -2)
 
     def downxmlpage(self):
-        # url = base64.b64decode("aHR0cDovL3NhdC5hbGZhLXRlY2gubmV0L3VwbG9hZC9zZXR0aW5ncy92aGFubmliYWwv")
         url = 'http://sat.alfa-tech.net/upload/settings/vhannibal/'
-        # print('url ', url)
         r = make_request(url)
         print('rrrrrrrr ', r)
         self.names  = []
@@ -589,15 +574,10 @@ class SettingVhan(Screen):
                 url = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
                 with urlopen(url) as response, open(dest, 'wb') as destlocal:
                     shutil.copyfileobj(response, destlocal)
-
                 if os.path.exists('/tmp/settings.zip'):
                     os.system('rm -rf /etc/enigma2/lamedb')
                     os.system('rm -rf /etc/enigma2/*.radio')
                     os.system('rm -rf /etc/enigma2/*.tv')
-                    # fdest1 = "/tmp"
-                    # fdest2 = "/etc/enigma2"
-                    # cmd1 = "unzip -o -q '/tmp/settings.zip' -d /tmp" + fdest1
-                    # cmd2 = "cp -rf  '/tmp/" + self.name + "'/* /etc/enigma2" + fdest2
                     title = _("Installation Settings")
                     self.session.openWithCallback(self.yes, Console, title=_(title), cmdlist=["unzip -o -q '/tmp/settings.zip' -d /tmp; cp -rf '/tmp/" + str(self.name) + "'/* /etc/enigma2; wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"])
             else:
@@ -642,11 +622,9 @@ class SettingMilenka6121(Screen):
          'cancel': self.close}, -2)
 
     def downxmlpage(self):
-        # url = base64.b64decode("aHR0cDovLzE3OC42My4xNTYuNzUvdGFyR3ov")
         url = 'http://178.63.156.75/tarGz/'
         # print('url ', url)
         r = make_request(url)
-        print('rrrrrrrr ', r)
         self.names  = []
         self.urls   = []
         try:
@@ -741,9 +719,7 @@ class SettingManutek(Screen):
          'cancel': self.close}, -2)
 
     def downxmlpage(self):
-        # url = base64.b64decode("aHR0cDovL3d3dy5tYW51dGVrLml0L2lzZXR0aW5nLw==")
         url = 'http://www.manutek.it/isetting/'
-        # print('url ', url)
         r = make_request(url)
         print('rrrrrrrr ', r)
         self.names  = []
@@ -769,7 +745,6 @@ class SettingManutek(Screen):
             showlist(self.names, self['text'])
         except:
             self.downloading = False
-
 
     def okRun(self):
         self.session.openWithCallback(self.okInstall, MessageBox,(_("Do you want to install?")), MessageBox.TYPE_YESNO)
@@ -804,7 +779,7 @@ class SettingManutek(Screen):
                             os.system('rm -rf /etc/enigma2/lamedb')
                             os.system('rm -rf /etc/enigma2/*.radio')
                             os.system('rm -rf /etc/enigma2/*.tv')
-                            os.system("cp -rf  '/tmp/unzipped/" + name + "'/* " + fdest2)                            
+                            os.system("cp -rf  '/tmp/unzipped/" + name + "'/* " + fdest2)
                         title = _("Installation Settings")
                         self.session.openWithCallback(self.yes, Console, title=_(title), cmdlist=["wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &; sleep 3"])
             else:
@@ -813,7 +788,7 @@ class SettingManutek(Screen):
     def yes(self):
         if not isDreamOS:
             self.onShown.append(resettings)
-        self['info'].setText(_('Settings Installed ...'))       
+        self['info'].setText(_('Settings Installed ...'))
 
 class SettingMorpheus2(Screen):
     def __init__(self, session):
@@ -849,9 +824,7 @@ class SettingMorpheus2(Screen):
          'cancel': self.close}, -2)
 
     def downxmlpage(self):
-        # url = base64.b64decode("aHR0cDovL21vcnBoZXVzODgzLmFsdGVydmlzdGEub3JnL2Rvd25sb2FkL2luZGV4LnBocD9kaXI9")
         url = 'http://morpheus883.altervista.org/download/index.php?dir='
-        # print('url ', url)
         r = make_request(url)
         print('rrrrrrrr ', r)
         self.names  = []
@@ -899,7 +872,7 @@ class SettingMorpheus2(Screen):
                         set = 1
                         terrestrial()
                 url = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-                print("url3333333 =", url)                
+                print("url3333333 =", url)
                 with urlopen(url) as response, open(dest, 'wb') as destlocal:
                     shutil.copyfileobj(response, destlocal)
                 if os.path.exists('/tmp/settings.zip'):
@@ -908,7 +881,6 @@ class SettingMorpheus2(Screen):
                     os.makedirs('/tmp/unzipped')
                     os.system('unzip -o -q /tmp/settings.zip -d /tmp/unzipped')
                     path = '/tmp/unzipped'
-                    # pth = ''
                     for root, dirs, files in os.walk(path):
                         for pth in dirs:
                             cmd = []
@@ -916,13 +888,6 @@ class SettingMorpheus2(Screen):
                             os.system('rm -rf /etc/enigma2/*.radio')
                             os.system('rm -rf /etc/enigma2/*.tv')
                             os.system("cp -rf /tmp/unzipped/" + pth + "/* '/etc/enigma2'")
-                            # cmd1 = "cp -rf /tmp/unzipped/" + pth + "/* '/etc/enigma2'"
-                            # cmd2 = "wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"
-                            # cmd5 = "rm -rf /tmp/settings.zip"
-                            # cmd6 = "rm -rf /tmp/unzipped"
-                            # cmd.append(cmd1)
-                            # cmd.append(cmd2)
-
                     title = _("Installation Settings")
                     self.session.openWithCallback(self.yes, Console, title=_(title), cmdlist=["wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"])
             else:
@@ -967,9 +932,7 @@ class SettingCiefp3(Screen):
          'cancel': self.close}, -2)
 
     def downxmlpage(self):
-        # url = base64.b64decode("aHR0cDovLzE3OC42My4xNTYuNzUvcGFuZWxhZGRvbnMvQ2llZnAv")
         url = 'http://178.63.156.75/paneladdons/Ciefp/'
-        # print('url ', url)
         r = make_request(url)
         print('rrrrrrrr ', r)
         self.names  = []
@@ -1019,15 +982,7 @@ class SettingCiefp3(Screen):
                     os.system('rm -rf /etc/enigma2/lamedb')
                     os.system('rm -rf /etc/enigma2/*.radio')
                     os.system('rm -rf /etc/enigma2/*.tv')
-                    os.system('tar -xvf /tmp/settings.tar.gz -C /')                    
-                    # cmd1 = "tar -xvf /tmp/*.tar.gz -C /"
-                    # print("cmd1 =", cmd1)
-                    # cmd3 = "wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"
-                    # cmd4 = "rm -rf /tmp/*.tar.gz"
-                    # cmd = []
-                    # cmd.append(cmd1)
-                    # cmd.append(cmd3)
-                    # cmd.append(cmd4)
+                    os.system('tar -xvf /tmp/settings.tar.gz -C /')
                     title = _("Installation Settings")
                     self.session.openWithCallback(self.yes, Console, title=_(title), cmdlist=["wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"])
             else:
@@ -1036,8 +991,8 @@ class SettingCiefp3(Screen):
     def yes(self):
         if not isDreamOS:
             self.onShown.append(resettings)
-        self['info'].setText(_('Settings Installed ...'))    
-        
+        self['info'].setText(_('Settings Installed ...'))
+
 class tvSettingBi58(Screen):
     def __init__(self, session):
         self.session = session
@@ -1072,9 +1027,7 @@ class tvSettingBi58(Screen):
          'cancel': self.close}, -2)
 
     def downxmlpage(self):
-        # url = base64.b64decode("aHR0cDovLzE3OC42My4xNTYuNzUvcGFuZWxhZGRvbnMvQmk1OC8=")
         url = 'http://178.63.156.75/paneladdons/Bi58/'
-        # print('url ', url)
         r = make_request(url)
         print('rrrrrrrr ', r)
         self.names  = []
@@ -1123,14 +1076,6 @@ class tvSettingBi58(Screen):
                     os.system('rm -rf /etc/enigma2/lamedb')
                     os.system('rm -rf /etc/enigma2/*.radio')
                     os.system('rm -rf /etc/enigma2/*.tv')
-                    # cmd1 = "tar -xvf /tmp/*.tar.gz -C /"
-                    # print("cmd1 =", cmd1)
-                    # cmd3 = "wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"
-                    # cmd4 = "rm -rf /tmp/*.tar.gz"
-                    # cmd = []
-                    # cmd.append(cmd1)
-                    # cmd.append(cmd3)
-                    # cmd.append(cmd4)
                     title = _("Installation Settings")
                     self.session.openWithCallback(self.yes, Console, title=_(title), cmdlist=["tar -xvf /tmp/settings.tar.gz -C /; wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"])
             else:
@@ -1139,8 +1084,8 @@ class tvSettingBi58(Screen):
     def yes(self):
         if not isDreamOS:
             self.onShown.append(resettings)
-        self['info'].setText(_('Settings Installed ...'))   
-        
+        self['info'].setText(_('Settings Installed ...'))
+
 class SettingPredrag(Screen):
     def __init__(self, session):
         self.session = session
@@ -1175,9 +1120,7 @@ class SettingPredrag(Screen):
          'cancel': self.close}, -2)
 
     def downxmlpage(self):
-        # url = base64.b64decode("aHR0cDovLzE3OC42My4xNTYuNzUvcGFuZWxhZGRvbnMvUHJlZHJAZy8=")
         url = 'http://178.63.156.75/paneladdons/Predr@g/'
-        # print('url ', url)
         r = make_request(url)
         print('rrrrrrrr ', r)
         self.names  = []
@@ -1228,13 +1171,6 @@ class SettingPredrag(Screen):
                     os.system('rm -rf /etc/enigma2/lamedb')
                     os.system('rm -rf /etc/enigma2/*.radio')
                     os.system('rm -rf /etc/enigma2/*.tv')
-                    # cmd1 = "tar -xvf /tmp/*.tar.gz -C /"
-                    # cmd3 = "wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"
-                    # cmd4 = "rm -rf /tmp/*.tar.gz"
-                    # cmd = []
-                    # cmd.append(cmd1)
-                    # cmd.append(cmd3)
-                    # cmd.append(cmd4)
                     title = _("Installation Settings")
                     self.session.openWithCallback(self.yes, Console, title=_(title), cmdlist=["tar -xvf /tmp/settings.tar.gz -C /; wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"])
             else:
@@ -1244,7 +1180,7 @@ class SettingPredrag(Screen):
         if not isDreamOS:
             self.onShown.append(resettings)
         self['info'].setText(_('Settings Installed ...'))
-        
+
 class CirusSetting(Screen):
 
     def __init__(self, session):
@@ -1280,9 +1216,7 @@ class CirusSetting(Screen):
          'cancel': self.close}, -2)
 
     def downxmlpage(self):
-        # url = base64.b64decode("aHR0cDovL3d3dy5jeXJ1c3NldHRpbmdzLmNvbS9TZXRfMjlfMTFfMjAxMS9EcmVhbWJveC1JcEJveC9Db25maWcueG1s")
         url = 'http://www.cyrussettings.com/Set_29_11_2011/Dreambox-IpBox/Config.xml'
-        # print('url ', url)
         r = make_request(url)
         print('rrrrrrrr ', r)
         self.names  = []
@@ -1338,19 +1272,13 @@ class CirusSetting(Screen):
                     os.makedirs('/tmp/unzipped')
                     os.system('unzip -o -q /tmp/settings.zip -d /tmp/unzipped')
                     path = '/tmp/unzipped'
-                    # pth = ''
                     for root, dirs, files in os.walk(path):
                         for pth in dirs:
                             pth = pth
-                            # cmd = []
                             os.system('rm -rf /etc/enigma2/lamedb')
                             os.system('rm -rf /etc/enigma2/*.radio')
                             os.system('rm -rf /etc/enigma2/*.tv')
                             os.system("cp -rf /tmp/unzipped/" + pth + "/* '/etc/enigma2'")
-                            # cmd1 = "cp -rf /tmp/unzipped/" + pth + "/* '/etc/enigma2'"
-                            # cmd2 = "wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"
-                            # cmd.append(cmd1)
-                            # cmd.append(cmd2)
                     title = _("Installation Settings")
                     self.session.openWithCallback(self.yes, Console, title=_(title), cmdlist=["wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"])
             else:
