@@ -3,7 +3,7 @@
 #--------------------#
 #  coded by Lululla  #
 #   skin by MMark    #
-#     15/05/2021     #
+#     28/05/2021     #
 #--------------------#
 #Info http://t.me/tivustream
 from __future__ import print_function
@@ -47,7 +47,7 @@ from . import Lcn
 global isDreamOS
 global pngx, pngl, pngs
 
-currversion='1.5'
+currversion='1.6'
 title_plug='..:: TiVuStream Settings V. %s ::..' % currversion
 name_plug='TiVuStream Settings'
 
@@ -246,7 +246,7 @@ def DListEntry(name, idx):
 def OneSetListEntry(name):
     res= [name]
     if HD.width() > 1280:
-    
+
         res.append(MultiContentEntryPixmapAlphaTest(pos=(10, 12), size=(34, 25), png=loadPNG(pngx)))
         res.append(MultiContentEntryText(pos=(60, 0), size=(1900, 50), font=0, text=name, color= 0xa6d1fe, flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER))
     else:
@@ -438,6 +438,8 @@ class tvColombo(Screen):
                         name=name.replace("%20", " ")
                         name=name.replace("_", " ")
                         name=name.replace("-", " ")
+                        url = checkStr(url)
+                        name = checkStr(name)
                         self.urls.append(url)
                         self.names.append(name)
                         self.downloading=True
@@ -530,7 +532,7 @@ class SettingVhan(Screen):
         r=make_request(url)
         print('rrrrrrrr ', r)
         if isDreamOS:
-            r  = six.ensure_str(r)                               
+            r  = six.ensure_str(r)
         self.names=[]
         self.urls=[]
         try:
@@ -544,6 +546,8 @@ class SettingVhan(Screen):
                     name=name.replace(".zip", "")
                     name=name.replace("%20", " ")
                     url="http://sat.alfa-tech.net/upload/settings/vhannibal/Vhannibal" + url
+                    url = checkStr(url)
+                    name = checkStr(name)
                     self.urls.append(url)
                     self.names.append(name)
                     self.downloading=True
@@ -627,7 +631,7 @@ class SettingMilenka6121(Screen):
         # print('url ', url)
         r=make_request(url)
         if isDreamOS:
-            r  = six.ensure_str(r)                               
+            r  = six.ensure_str(r)
         self.names=[]
         self.urls=[]
         try:
@@ -643,6 +647,8 @@ class SettingMilenka6121(Screen):
                     name=name.replace("Lista", "").replace("%20", " ")
                     name=name.replace("-", " ").replace("_", " ")
                     url="http://178.63.156.75/tarGz/Satvenus" + url
+                    url = checkStr(url)
+                    name = checkStr(name)
                     self.urls.append(url)
                     self.names.append(name)
                     self.downloading=True
@@ -726,7 +732,7 @@ class SettingManutek(Screen):
         r=make_request(url)
         print('rrrrrrrr ', r)
         if isDreamOS:
-            r  = six.ensure_str(r)                               
+            r  = six.ensure_str(r)
         self.names=[]
         self.urls=[]
         try:
@@ -740,6 +746,8 @@ class SettingManutek(Screen):
                     name=name.replace("NemoxyzRLS_", "")
                     name=name.replace("_", " ")
                     url='http://www.manutek.it/isetting/enigma2/' + url
+                    url = checkStr(url)
+                    name = checkStr(name)
                     self.urls.append(url)
                     self.names.append(name)
                     self.downloading=True
@@ -833,7 +841,7 @@ class SettingMorpheus2(Screen):
         r=make_request(url)
         print('rrrrrrrr ', r)
         if isDreamOS:
-            r  = six.ensure_str(r)                               
+            r  = six.ensure_str(r)
         self.names=[]
         self.urls=[]
         try:
@@ -850,6 +858,8 @@ class SettingMorpheus2(Screen):
                     name=name.replace("Morph883", "Morpheus883")
                     name=name.replace("E2", "")
                     url="http://morpheus883.altervista.org/settings/" + url
+                    url = checkStr(url)
+                    name = checkStr(name)
                     self.urls.append(url)
                     self.names.append(name)
                     self.downloading=True
@@ -957,6 +967,8 @@ class SettingCiefp3(Screen):
                     name=name.replace(".tar.gz", "")
                     name=name.replace("%20", " ")
                     url="http://178.63.156.75/paneladdons/Ciefp/ciefp" + url
+                    url = checkStr(url)
+                    name = checkStr(name)                    
                     self.urls.append(url)
                     self.names.append(name)
                     self.downloading=True
@@ -1040,7 +1052,7 @@ class tvSettingBi58(Screen):
         r=make_request(url)
         print('rrrrrrrr ', r)
         if isDreamOS:
-            r  = six.ensure_str(r)                               
+            r  = six.ensure_str(r)
         self.names=[]
         self.urls=[]
         try:
@@ -1053,6 +1065,8 @@ class tvSettingBi58(Screen):
                     name=name.replace(".tar.gz", "")
                     name=name.replace("%20", " ")
                     url="http://178.63.156.75/paneladdons/Bi58/bi58-e2" + url
+                    url = checkStr(url)
+                    name = checkStr(name)                    
                     self.urls.append(url)
                     self.names.append(name)
                     self.downloading=True
@@ -1135,7 +1149,7 @@ class SettingPredrag(Screen):
         r=make_request(url)
         print('rrrrrrrr ', r)
         if isDreamOS:
-            r  = six.ensure_str(r)                               
+            r  = six.ensure_str(r)
         self.names=[]
         self.urls=[]
         try:
@@ -1148,6 +1162,8 @@ class SettingPredrag(Screen):
                     name=name + date1 + '-' + date2 + '-' + date3
                     name=name.replace(".tar.gz", "")
                     url="http://178.63.156.75/paneladdons/Predr@g/predrag" + url
+                    url = checkStr(url)
+                    name = checkStr(name)                    
                     self.urls.append(url)
                     self.names.append(name)
                     self.downloading=True
@@ -1233,7 +1249,7 @@ class CirusSetting(Screen):
         r=make_request(url)
         print('rrrrrrrr ', r)
         if isDreamOS:
-            r  = six.ensure_str(r)                               
+            r  = six.ensure_str(r)
         self.names=[]
         self.urls=[]
         try:
@@ -1249,6 +1265,8 @@ class CirusSetting(Screen):
                     if 'Sat' in name.lower():
                         continue
                     name=name + ' ' + date
+                    url = checkStr(url)
+                    name = checkStr(name)                    
                     self.urls.append(url)
                     self.names.append(name)
                     self.downloading=True
