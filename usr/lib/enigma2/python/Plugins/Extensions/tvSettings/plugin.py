@@ -46,26 +46,20 @@ from sys import version_info
 from . import Lcn
 global isDreamOS
 global pngx, pngl, pngs
+PY3 = sys.version_info.major >= 3
+print('Py3: ',PY3)
+from six.moves.urllib.request import urlopen
+from six.moves.urllib.request import Request
+from six.moves.urllib.error import HTTPError, URLError
+from six.moves.urllib.parse import urlparse
+from six.moves.urllib.parse import quote
+from six.moves.urllib.parse import urlencode
+from six.moves.urllib.request import urlretrieve    
+import six.moves.urllib.request
 
 currversion='1.6'
 title_plug='..:: TiVuStream Settings V. %s ::..' % currversion
 name_plug='TiVuStream Settings'
-
-PY3=sys.version_info[0]== 3
-
-if PY3:
-    from urllib.request import urlopen, Request
-    from urllib.error import URLError, HTTPError
-    from urllib.parse import urlparse
-    from urllib.parse import urlencode, quote
-    from urllib.request import urlretrieve
-else:
-    from urllib2 import urlopen, Request
-    from urllib2 import URLError, HTTPError
-    from urlparse import urlparse
-    from urllib import urlencode, quote
-    from urllib import urlretrieve
-
 
 if sys.version_info >= (2, 7, 9):
     try:
@@ -184,8 +178,6 @@ else:
     skin_path=res_plugin_path + 'skins/hd/'
 if isDreamOS:
     skin_path=skin_path + 'dreamOs/'
-
-
 
 Panel_Dlist=[
  ('SETTINGS BI58'),
