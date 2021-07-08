@@ -3,7 +3,7 @@
 #--------------------#
 #  coded by Lululla  #
 #   skin by MMark    #
-#     28/05/2021     #
+#     06/07/2021     #
 #--------------------#
 #Info http://t.me/tivustream
 from __future__ import print_function
@@ -485,6 +485,7 @@ class tvColombo(Screen):
         if not isDreamOS:
             self.onShown.append(resettings)
         self['info'].setText(_('Settings Installed ...'))
+        
 class SettingVhan(Screen):
 
     def __init__(self, session):
@@ -1372,12 +1373,12 @@ def terrestrial_rest():
                 new_bouquet.close()
                 os.system('cp -rf /etc/enigma2/bouquets.tv /etc/enigma2/backup_bouquets.tv')
                 os.system('mv -f /etc/enigma2/new_bouquets.tv /etc/enigma2/bouquets.tv')
-        lcnstart()
+        if not isDreamOS:
+            lcnstart()
 
 def lcnstart():
     print(' lcnstart ')
     if os.path.exists('/etc/enigma2/lcndb'):
-    # if os.path.exists('/var/etc/enigma2/lamedb') :
         lcn=LCN()
         lcn.read()
         if len(lcn.lcnlist) > 0:
