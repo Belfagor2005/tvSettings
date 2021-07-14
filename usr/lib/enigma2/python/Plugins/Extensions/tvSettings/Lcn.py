@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
-from __future__ import print_function                                     
+from __future__ import print_function
 from enigma import eDVBDB, eServiceReference, eServiceCenter
 from Screens.Screen import Screen
 from Screens.MessageBox import MessageBox
@@ -32,7 +32,7 @@ class LCN():
     service_types_tv = '1:7:1:0:0:0:0:0:0:0:(type == 1) || (type == 17) || (type == 22) || (type == 25) || (type == 134) || (type == 195)'
 
     def __init__(self):
-        self.dbfile = '/var/etc/enigma2/lcndb'
+        self.dbfile = '/etc/enigma2/lcndb'
         self.bouquetfile = Bouquet()
         self.lcnlist = []
         self.markers = []
@@ -118,6 +118,15 @@ class LCN():
             if line == '':
                 break
 
+            ##########
+            line = line.strip()
+            if len(line) != 38:
+                continue
+            tmp = line.split(':')
+            if len(tmp) != 6:
+                continue
+            self.addLcnToList(int(tmp[0], 16), int(tmp[1], 16), int(tmp[2], 16), int(tmp[3], 16), int(tmp[4]), int(tmp[5]))
+            ################
         if self.root is not None:
             for x in self.root:
                 if x.tag == 'rule':
@@ -126,60 +135,6 @@ class LCN():
 
         self.markers.sort(key=lambda z: int(z[0]))
         return
-        
-    # def read(self):
-        # self.readE2Services()
-        # Provider = ''
-        # try:
-            # f = open(self.dbfile)
-        # except Exception as e:
-            # print(str(e))
-            # return
-        # while True:
-            # line = f.readline()
-            # if line == '':
-                # break
-            # line = line.strip()
-            # if len(line) != 38:
-                # continue
-            # tmp = line.split(':')
-            
-            # # #edit lululla    
-            # # # if line == 'p:\n':
-                # # # print('is p: ', line)
-                # # # continue
-            # # # if line == 'end':
-                # # # break
-               
-            # # if line.lower().find('p:') != -1:
-                # # try:
-                    # # Provider = line.split('p:')[1].split(',')[0]
-                    # # print('provider:, ', Provider)
-                    # # # StateProv = True                    
-                # # except:
-                    # # try:
-                        # # Provider = line.split('p:')[1]
-                        # # print('provider a:, ', Provider)
-                        # # # StateProv = True
-                    # # except:
-                        # # pass
-            # # if line.lower().find('p:') == -1:    
-                # # pass                                    
-            # # #end edit lululla               
-            
-            # if len(tmp) != 6:
-                # continue
-            # self.addLcnToList(int(tmp[0], 16), int(tmp[1], 16), int(tmp[2], 16), int(tmp[3], 16), int(tmp[4]), int(tmp[5]))
-            
-
-        # if self.root is not None:
-            # for x in self.root:
-                # if x.tag == 'rule':
-                    # if x.get('type') == 'marker':
-                        # self.addMarker(int(x.get('position')), x.text)
-
-        # self.markers.sort(key=lambda z: int(z[0]))
-        # return
 
     def readE2Services(self):
         self.e2services = []
