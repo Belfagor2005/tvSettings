@@ -132,16 +132,11 @@ def make_request(url):
 
 def checkInternet():
     try:
-        response=checkStr(urlopen("http://google.com", None, 5))
-        response.close()
-    except HTTPError:
-        return False
-    except URLError:
-        return False
-    except socket.timeout:
-        return False
-    else:
+        socket.setdefaulttimeout(0.5)
+        socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect(("8.8.8.8", 53))
         return True
+    except:
+        return False
 
 def ReloadBouquet():
     print('\n----Reloading bouquets----')
