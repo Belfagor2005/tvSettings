@@ -130,14 +130,6 @@ def make_request(url):
             print('Reason: ', e.reason)
     return
 
-def checkInternet():
-    try:
-        socket.setdefaulttimeout(0.5)
-        socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect(("8.8.8.8", 53))
-        return True
-    except:
-        return False
-
 def ReloadBouquet():
     print('\n----Reloading bouquets----')
     if eDVBDB:
@@ -338,38 +330,32 @@ class MainSetting(Screen):
 
     def okSatInstall(self, result):
         if result:
-            if checkInternet():
-                try:
-                    url_sat_oealliance='http://raw.githubusercontent.com/oe-alliance/oe-alliance-tuxbox-common/master/src/satellites.xml'
-                    link_sat=ssl_urlopen(url_sat_oealliance)
-                    dirCopy='/etc/tuxbox/satellites.xml'
-                    # urlretrieve(url_sat_oealliance, dirCopy, context= ssl._create_unverified_context())
-                    urlretrieve(link_sat, dirCopy)
-                    self.mbox=self.session.open(MessageBox, _('Satellites.xml Updated!'), MessageBox.TYPE_INFO, timeout=5)
-                    self['info'].setText(_('Installation done !!!'))
-                except:
-                    return
-            else:
-                session.open(MessageBox, "No Internet", MessageBox.TYPE_INFO)
+            try:
+                url_sat_oealliance='http://raw.githubusercontent.com/oe-alliance/oe-alliance-tuxbox-common/master/src/satellites.xml'
+                link_sat=ssl_urlopen(url_sat_oealliance)
+                dirCopy='/etc/tuxbox/satellites.xml'
+                # urlretrieve(url_sat_oealliance, dirCopy, context= ssl._create_unverified_context())
+                urlretrieve(link_sat, dirCopy)
+                self.mbox=self.session.open(MessageBox, _('Satellites.xml Updated!'), MessageBox.TYPE_INFO, timeout=5)
+                self['info'].setText(_('Installation done !!!'))
+            except:
+                return
 
     def okTERRESTRIAL(self):
         self.session.openWithCallback(self.okTerrInstall, MessageBox,(_("Do you want to install?")), MessageBox.TYPE_YESNO)
 
     def okTerrInstall(self, result):
         if result:
-            if checkInternet():
-                try:
-                    url_sat_oealliance='https://raw.githubusercontent.com/oe-alliance/oe-alliance-tuxbox-common/master/src/terrestrial.xml'
-                    link_ter=ssl_urlopen(url_sat_oealliance)
-                    dirCopy='/etc/tuxbox/terrestrial.xml'
-                    # urlretrieve(url_sat_oealliance, dirCopy, context= ssl._create_unverified_context())
-                    urlretrieve(link_ter, dirCopy) # , context= ssl._create_unverified_context())
-                    self.mbox=self.session.open(MessageBox, _('Terrestrial.xml Updated!'), MessageBox.TYPE_INFO, timeout=5)
-                    self['info'].setText(_('Installation done !!!'))
-                except:
-                    return
-            else:
-                session.open(MessageBox, "No Internet", MessageBox.TYPE_INFO)
+            try:
+                url_sat_oealliance='https://raw.githubusercontent.com/oe-alliance/oe-alliance-tuxbox-common/master/src/terrestrial.xml'
+                link_ter=ssl_urlopen(url_sat_oealliance)
+                dirCopy='/etc/tuxbox/terrestrial.xml'
+                # urlretrieve(url_sat_oealliance, dirCopy, context= ssl._create_unverified_context())
+                urlretrieve(link_ter, dirCopy) # , context= ssl._create_unverified_context())
+                self.mbox=self.session.open(MessageBox, _('Terrestrial.xml Updated!'), MessageBox.TYPE_INFO, timeout=5)
+                self['info'].setText(_('Installation done !!!'))
+            except:
+                return
 
 # class tvColombo(Screen):
 
@@ -1440,12 +1426,12 @@ class tvConsole(Screen):
         self.container.sendEOF()
 
     def restartenigma(self):
-        self.session.open(TryQuitMainloop, 3)       
+        self.session.open(TryQuitMainloop, 3)   
+
+   
 def main(session, **kwargs):
-    if checkInternet():
-        session.open(MainSetting)
-    else:
-        session.open(MessageBox, "No Internet", MessageBox.TYPE_INFO)
+    session.open(MainSetting)
+
 
 def StartSetup(menuid):
     if menuid== 'scan':
