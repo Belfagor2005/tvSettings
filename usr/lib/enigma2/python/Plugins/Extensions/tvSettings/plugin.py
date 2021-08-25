@@ -3,7 +3,7 @@
 #--------------------#
 #  coded by Lululla  #
 #   skin by MMark    #
-#     13/07/2021     #
+#     23/08/2021     #
 #--------------------#
 #Info http://t.me/tivustream
 from __future__ import print_function
@@ -43,11 +43,16 @@ import shutil
 import ssl
 import six
 from sys import version_info
-from . import Lcn
-global isDreamOS
+from .Lcn import *
+global isDreamOS, category
 global pngx, pngl, pngs
 PY3 = sys.version_info.major >= 3
 print('Py3: ',PY3)
+currversion='1.7'
+title_plug='..:: TiVuStream Settings V. %s ::..' % currversion
+name_plug='TiVuStream Settings'
+category = 'lululla.xml'
+from six.moves.urllib.parse import quote_plus
 from six.moves.urllib.request import urlopen
 from six.moves.urllib.request import Request
 from six.moves.urllib.parse import urlparse
@@ -55,12 +60,8 @@ from six.moves.urllib.parse import quote
 from six.moves.urllib.parse import urlencode
 from six.moves.urllib.error import HTTPError
 from six.moves.urllib.error import URLError
-from six.moves.urllib.request import urlretrieve    
+from six.moves.urllib.request import urlretrieve
 # import six.moves.urllib.request
-
-currversion='1.6'
-title_plug='..:: TiVuStream Settings V. %s ::..' % currversion
-name_plug='TiVuStream Settings'
 
 if sys.version_info >= (2, 7, 9):
     try:
@@ -98,7 +99,6 @@ except AttributeError:
 else:
     ssl._create_default_https_context=_create_unverified_https_context
 
-
 def checkStr(txt):
     if PY3:
         if isinstance(txt, type(bytes())):
@@ -132,6 +132,8 @@ def make_request(url):
 
 def ReloadBouquet():
     print('\n----Reloading bouquets----')
+    if set == 1:
+        terrestrial_rest()
     if eDVBDB:
         eDVBDB.getInstance().reloadBouquets()
         print('bouquets reloaded...')
@@ -140,9 +142,12 @@ def ReloadBouquet():
         print('bouquets reloaded...')
 
 def resettings():
+    global set
     if set== 1:
+        set = 0
         terrestrial_rest()
-        os.system("wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &")
+    ReloadBouquet()
+    # os.system("wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &")
 
 def deletetmp():
     os.system('rm -rf /tmp/unzipped;rm -f /tmp/*.ipk;rm -f /tmp/*.tar;rm -f /tmp/*.zip;rm -f /tmp/*.tar.gz;rm -f /tmp/*.tar.bz2;rm -f /tmp/*.tar.tbz2;rm -f /tmp/*.tar.tbz')
@@ -251,10 +256,7 @@ class MainSetting(Screen):
         with open(skin, 'r') as f:
             self.skin= f.read()
         self.setup_title= ('MainSetting')
-                                 
         Screen.__init__(self, session)
-                                   
-
         self.setTitle(_(title_plug))
         self['text']=SetList([])
         self.working=False
@@ -307,7 +309,7 @@ class MainSetting(Screen):
         elif sel== _('UPDATE TERRESTRIAL.XML'):
             self.okTERRESTRIAL()
         elif sel== ('SETTINGS CIEFP'):
-            self.session.open(SettingCiefp3)
+            self.session.open(SettingCiefp2)
         elif sel== ('SETTINGS CYRUS'):
             self.session.open(CirusSetting)
         # elif sel== ('SETTINGS COLOMBO'):
@@ -358,7 +360,6 @@ class MainSetting(Screen):
                 return
 
 # class tvColombo(Screen):
-
     # def __init__(self, session):
         # self.session=session
         # skin=skin_path + 'settings.xml'
@@ -469,7 +470,7 @@ class MainSetting(Screen):
         # if not isDreamOS:
             # self.onShown.append(resettings)
         # self['info'].setText(_('Settings Installed ...'))
-        
+
 class SettingVhan(Screen):
 
     def __init__(self, session):
@@ -493,7 +494,7 @@ class SettingVhan(Screen):
         self['key_blue'].hide()
         self.downloading=False
         self.timer=eTimer()
-        self.timer.start(500, True)
+        self.timer.start(500, 1)
         if isDreamOS:
             self.timer_conn=self.timer.timeout.connect(self.downxmlpage)
         else:
@@ -529,9 +530,6 @@ class SettingVhan(Screen):
                     self.names.append(name)
                     self.downloading=True
                     self['info'].setText(_('Please select ...'))
-                # else:
-                    # self['info'].setText(_('no data ...'))
-                    # self.downloading = False
             showlist(self.names, self['text'])
         except Exception as e:
             print(('downxmlpage get failed: ', str(e)))
@@ -553,25 +551,19 @@ class SettingVhan(Screen):
                     # if not isDreamOS:
                         set = 1
                         terrestrial()
-                # url = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-                # with urlopen(url) as response, open(dest, 'wb') as destlocal:
-                    # shutil.copyfileobj(response, destlocal)
-                urlretrieve(url, dest)    
+                urlretrieve(url, dest)
                 if os.path.exists(dest):
                     os.system('rm -rf /etc/enigma2/lamedb')
                     os.system('rm -rf /etc/enigma2/*.radio')
                     os.system('rm -rf /etc/enigma2/*.tv')
                     title = _("Installation Settings")
-                    self.session.openWithCallback(self.yes, tvConsole, title=_(title), cmdlist=["unzip -o -q '/tmp/settings.zip' -d /tmp; cp -rf '/tmp/" + str(self.name) + "'/* /etc/enigma2; wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"])
-
+                    self.session.openWithCallback(self.yes, tvConsole, title=_(title), cmdlist=["unzip -o -q '/tmp/settings.zip' -d /tmp; cp -rf '/tmp/" + str(self.name) + "'/* /etc/enigma2; wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"], closeOnSuccess =False)
+                self['info'].setText(_('Settings Installed ...'))
             else:
                 self['info'].setText(_('Settings Not Installed ...'))
 
     def yes(self):
-        # if not isDreamOS:
-        # self.onShown.append(resettings)
-        resettings()        
-        self['info'].setText(_('Settings Installed ...'))
+        resettings()
 
 class SettingMilenka6121(Screen):
     def __init__(self, session):
@@ -608,7 +600,6 @@ class SettingMilenka6121(Screen):
 
     def downxmlpage(self):
         url = 'http://178.63.156.75/tarGz/'
-                            
         data = make_request(url)
         r = data
         print('rrrrrrrr ', r)
@@ -628,7 +619,7 @@ class SettingMilenka6121(Screen):
                     name = name.replace("-", " ").replace("_", " ")
                     url = "http://178.63.156.75/tarGz/Satvenus" + url
                     url = checkStr(url)
-                    name = checkStr(name)                    
+                    name = checkStr(name)
                     self.urls.append(url)
                     self.names.append(name)
                     self.downloading = True
@@ -656,24 +647,19 @@ class SettingMilenka6121(Screen):
                     # if not isDreamOS:
                         set = 1
                         terrestrial()
-                # url = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-                # with urlopen(url) as response, open(dest, 'wb') as destlocal:
-                    # shutil.copyfileobj(response, destlocal)
-                urlretrieve(url, dest)                     
+                urlretrieve(url, dest)
                 if os.path.exists('/tmp/settings.tar.gz'):
                     os.system('rm -rf /etc/enigma2/lamedb')
                     os.system('rm -rf /etc/enigma2/*.radio')
                     os.system('rm -rf /etc/enigma2/*.tv')
                     title = _("Installation Settings")
-                    self.session.openWithCallback(self.yes, tvConsole, title=_(title), cmdlist=["tar -xvf /tmp/settings.tar.gz -C /; wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"])
+                    self.session.openWithCallback(self.yes, tvConsole, title=_(title), cmdlist=["tar -xvf /tmp/settings.tar.gz -C /; wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"], closeOnSuccess =False)
+                self['info'].setText(_('Settings Installed ...'))
             else:
                 self['info'].setText(_('Settings Not Installed ...'))
 
     def yes(self):
-        # if not isDreamOS:
-        # self.onShown.append(resettings)
-        resettings()        
-        self['info'].setText(_('Settings Installed ...'))
+        resettings()
 
 class SettingManutek(Screen):
 
@@ -715,8 +701,6 @@ class SettingManutek(Screen):
         r = data
         print('rrrrrrrr ', r)
         self.names  = []
-                                  
-                     
         self.urls   = []
         try:
             regex   = 'href=".*?file=(.+?)">'
@@ -730,14 +714,11 @@ class SettingManutek(Screen):
                     name = name.replace("_", " ")
                     url = 'http://www.manutek.it/isetting/enigma2/' + url
                     url = checkStr(url)
-                    name = checkStr(name)                    
+                    name = checkStr(name)
                     self.urls.append(url)
                     self.names.append(name)
                     self.downloading = True
                     self['info'].setText(_('Please select ...'))
-                # else:
-                    # self['info'].setText(_('no data ...'))
-                    # self.downloading = False
             showlist(self.names, self['text'])
         except Exception as e:
             print(('downxmlpage get failed: ', str(e)))
@@ -758,10 +739,7 @@ class SettingManutek(Screen):
                     # if not isDreamOS:
                         set = 1
                         terrestrial()
-                # url = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-                # with urlopen(url) as response, open(dest, 'wb') as destlocal:
-                    # shutil.copyfileobj(response, destlocal)
-                urlretrieve(url, dest) 
+                urlretrieve(url, dest)
                 if os.path.exists(dest):
                     fdest1 = "/tmp/unzipped"
                     fdest2 = "/etc/enigma2"
@@ -778,16 +756,14 @@ class SettingManutek(Screen):
                             os.system('rm -rf /etc/enigma2/*.tv')
                             os.system("cp -rf  '/tmp/unzipped/" + name + "'/* " + fdest2)
                         title = _("Installation Settings")
-                        self.session.openWithCallback(self.yes, tvConsole, title=_(title), cmdlist=["wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &; sleep 3"])
+                        self.session.openWithCallback(self.yes, tvConsole, title=_(title), cmdlist=["tar -xvf /tmp/settings.tar.gz -C /; wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"], closeOnSuccess =False)
+                    self['info'].setText(_('Settings Installed ...'))
             else:
                 self['info'].setText(_('Settings Not Installed ...'))
 
     def yes(self):
-        # if not isDreamOS:
-        # self.onShown.append(resettings)
-        resettings()        
-        self['info'].setText(_('Settings Installed ...'))
-
+        resettings()
+        
 class SettingMorpheus2(Screen):
     def __init__(self, session):
         self.session=session
@@ -827,8 +803,8 @@ class SettingMorpheus2(Screen):
         r = data
         print('rrrrrrrr ', r)
         self.names  = []
-                                  
-                     
+
+
         self.urls   = []
         try:
             #href="/download/index.php?dir=&amp;file=
@@ -847,16 +823,12 @@ class SettingMorpheus2(Screen):
                     name = name.replace("E2", "")
                     url = "http://morpheus883.altervista.org/settings/" + url
                     url = checkStr(url)
-                    name = checkStr(name)                    
+                    name = checkStr(name)
                     self.urls.append(url)
                     self.names.append(name)
                     print("url =", url)
                     print("name =", name)
-                    
                     self['info'].setText(_('Please select ...'))
-                # else:
-                    # self['info'].setText(_('no data ...'))
-                    # self.downloading = False
             showlist(self.names, self['text'])
         except Exception as e:
             print(('downxmlpage get failed: ', str(e)))
@@ -878,11 +850,7 @@ class SettingMorpheus2(Screen):
                     # if not isDreamOS:
                         set = 1
                         terrestrial()
-                # url = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-                                         
-                # with urlopen(url) as response, open(dest, 'wb') as destlocal:
-                    # shutil.copyfileobj(response, destlocal)
-                urlretrieve(url, dest)     
+                urlretrieve(url, dest)
                 if os.path.exists(dest):
                     if os.path.exists("/tmp/unzipped"):
                         os.system('rm -rf /tmp/unzipped')
@@ -898,84 +866,184 @@ class SettingMorpheus2(Screen):
                             os.system('rm -rf /etc/enigma2/*.tv')
                             os.system("cp -rf /tmp/unzipped/" + pth + "/* '/etc/enigma2'")
                     title = _("Installation Settings")
-                    self.session.openWithCallback(self.yes, tvConsole, title=_(title), cmdlist=["wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"])
+                    self.session.openWithCallback(self.yes, tvConsole, title=_(title), cmdlist=["tar -xvf /tmp/settings.tar.gz -C /; wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"], closeOnSuccess =False)
+                self['info'].setText(_('Settings Installed ...'))
             else:
                 self['info'].setText(_('Settings Not Installed ...'))
 
     def yes(self):
-        # if not isDreamOS:
-        # self.onShown.append(resettings)
-        resettings()        
-        self['info'].setText(_('Settings Installed ...'))
+        resettings()
 
-class SettingCiefp3(Screen):
+# class SettingCiefp(Screen):
+    # def __init__(self, session):
+        # self.session=session
+        # skin=skin_path + 'settings.xml'
+        # with open(skin, 'r') as f:
+            # self.skin=f.read()
+        # self.setup_title=('Setting Ciefp')
+        # Screen.__init__(self, session)
+        # self.setTitle(_(title_plug))
+        # self.list=[]
+        # self['text']=OneSetList([])
+        # self.addon='emu'
+        # self.icount=0
+        # self['info']=Label(_('Getting the list, please wait ...'))
+        # self['key_green']=Button(_('Install'))
+        # self['key_red']=Button(_('Back'))
+        # self['key_yellow']=Button(_(''))
+        # self["key_blue"]=Button(_(''))
+        # self['key_yellow'].hide()
+        # self['key_blue'].hide()
+        # self.downloading=False
+        # self.timer=eTimer()
+        # self.timer.start(500, True)
+        # if isDreamOS:
+            # self.timer_conn=self.timer.timeout.connect(self.downxmlpage)
+        # else:
+            # self.timer.callback.append(self.downxmlpage)
+        # self['title']=Label(_(title_plug))
+        # self['actions']=ActionMap(['SetupActions', 'ColorActions'], {'ok': self.okRun,
+         # 'green': self.okRun,
+         # 'red': self.close,
+         # 'cancel': self.close}, -2)
+
+    # def downxmlpage(self):
+        # url = 'http://178.63.156.75/paneladdons/Ciefp/'
+        # data = make_request(url)
+        # r = data
+        # print('rrrrrrrr ', r)
+        # self.names  = []
+        # self.urls   = []
+        # try:
+            # regex   = '<a href="ciefp(.*?)".*?align="right">(.*?)-(.*?)-(.*?) '
+            # match   = re.compile(regex).findall(r)
+            # for url,date1, date2, date3 in match:
+                # if 'tar.gz' in url:
+                    # name = url
+                    # name = name.replace('-e2-settings-', 'Ciefp ')
+                    # name = name + ' ' + date1 + '-' + date2 + '-' + date3
+                    # name = name.replace(".tar.gz", "")
+                    # name = name.replace("%20", " ")
+                    # url = "http://178.63.156.75/paneladdons/Ciefp/ciefp" + url
+                    # url = checkStr(url)
+                    # name = checkStr(name)
+                    # self.urls.append(url)
+                    # self.names.append(name)
+                    # self.downloading = True
+                    # self['info'].setText(_('Please select ...'))
+            # showlist(self.names, self['text'])
+        # except Exception as e:
+            # print(('downxmlpage get failed: ', str(e)))
+
+    # def okRun(self):
+        # self.session.openWithCallback(self.okInstall, MessageBox,(_("Do you want to install?")), MessageBox.TYPE_YESNO)
+
+    # def okInstall(self, result):
+        # global set
+        # set = 0
+        # if result:
+            # if self.downloading == True:
+                # idx = self["text"].getSelectionIndex()
+                # url = self.urls[idx]
+                # dest = "/tmp/settings.tar.gz"
+                # print("url =", url)
+                # if 'dtt' not in url.lower():
+                    # # if not isDreamOS:
+                        # set = 1
+                        # terrestrial()
+                # urlretrieve(url, dest)
+                # if os.path.exists('/tmp/settings.tar.gz'):
+                    # os.system('rm -rf /etc/enigma2/lamedb')
+                    # os.system('rm -rf /etc/enigma2/*.radio')
+                    # os.system('rm -rf /etc/enigma2/*.tv')
+                    # os.system('tar -xvf /tmp/settings.tar.gz -C /')
+                    # title = _("Installation Settings")
+                    # self.session.openWithCallback(self.yes, tvConsole, title=_(title), cmdlist=["wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"] , closeOnSuccess =False)
+                # self['info'].setText(_('Settings Installed ...'))
+            # else:
+                # self['info'].setText(_('Settings Not Installed ...'))
+
+    # def yes(self):
+        # resettings()
+
+class SettingCiefp2(Screen):
     def __init__(self, session):
-        self.session=session
-        skin=skin_path + 'settings.xml'
+        self.session = session
+        skin = skin_path + 'settings.xml'
         with open(skin, 'r') as f:
-            self.skin=f.read()
-        self.setup_title=('Setting Ciefp')
+            self.skin = f.read()
+        self.setup_title = ('Setting Ciefp')
         Screen.__init__(self, session)
         self.setTitle(_(title_plug))
-        self.list=[]
-        self['text']=OneSetList([])
-        self.addon='emu'
-        self.icount=0
-        self['info']=Label(_('Getting the list, please wait ...'))
-        self['key_green']=Button(_('Install'))
-        self['key_red']=Button(_('Back'))
-        self['key_yellow']=Button(_(''))
-        self["key_blue"]=Button(_(''))
+        self.list = []
+        self['text'] = OneSetList([])
+
+        self.icount = 0
+        self['info'] = Label(_('Getting the list, please wait ...'))
+        self['pth'] = Label('')
+        self['pform'] = Label('')
+        # self['progress'] = ProgressBar()
+        # self["progress"].hide()
+        # self['progresstext'] = StaticText()
+        self['key_green'] = Button(_('Install'))
+        self['key_red'] = Button(_('Back'))
+        self['key_yellow'] = Button(_(''))
+        self["key_blue"] = Button(_(''))
         self['key_yellow'].hide()
         self['key_blue'].hide()
-        self.downloading=False
-        self.timer=eTimer()
-        self.timer.start(500, True)
+        self.downloading = False
+        self.timer = eTimer()
+        self.timer.start(500, 1)
         if isDreamOS:
-            self.timer_conn=self.timer.timeout.connect(self.downxmlpage)
+            self.timer_conn = self.timer.timeout.connect(self.downxmlpage)
         else:
             self.timer.callback.append(self.downxmlpage)
-        self['title']=Label(_(title_plug))
-        self['actions']=ActionMap(['SetupActions', 'ColorActions'], {'ok': self.okRun,
+        self['title'] = Label(_(title_plug))
+        self['actions'] = ActionMap(['SetupActions', 'ColorActions'], {'ok': self.okRun,
          'green': self.okRun,
          'red': self.close,
          'cancel': self.close}, -2)
 
+#https://github.com/ciefp/ciefpsettings-enigma2-zipped/raw/master/ciefp-E2-4satA-28E-19E-13E-30W-14.08.2021.zip
+#/ciefp/ciefpsettings-enigma2-zipped/blob/master/ciefp-E2-9sat-28E-23E-19E-16E-13E-9E-1.9E-0.8W-5W-14.08.2021.zip
+#https://github.com//ciefp/ciefpsettings-enigma2-zipped/raw/master/ciefp-E2-9sat-28E-23E-19E-16E-13E-9E-1.9E-0.8W-5W-14.08.2021.zip
+#<span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open Link--primary" title="ciefp-E2-10sat-39E-28E-23E-19E-16E-13E-9E-4.8E-1.9E-0.8W-14.08.2021.zip" data-pjax="#repo-content-pjax-container" href="/ciefp/ciefpsettings-enigma2-zipped/blob/master/ciefp-E2-10sat-39E-28E-23E-19E-16E-13E-9E-4.8E-1.9E-0.8W-14.08.2021.zip">ciefp-E2-10sat-39E-28E-23E-19E-16E-13E-9E-4.8E-1.9E-0.8W-14.08.2021.zip</a></span>
     def downxmlpage(self):
-        url = 'http://178.63.156.75/paneladdons/Ciefp/'
+        url = 'https://github.com/ciefp/ciefpsettings-enigma2-zipped'
         data = make_request(url)
         r = data
         print('rrrrrrrr ', r)
         self.names  = []
-                                  
-                     
         self.urls   = []
         try:
-            regex   = '<a href="ciefp(.*?)".*?align="right">(.*?)-(.*?)-(.*?) '
+            n1 = r.find('Details">', 0)
+            n2 = r.find('href="#readme">', n1)
+            r = r[n1:n2]
+            regex   = 'title="ciefp-E2-(.*?)".*?href="(.*?)"'
             match   = re.compile(regex).findall(r)
-            for url,date1, date2, date3 in match:
-                if 'tar.gz' in url:
-                    name = url
-                    name = name.replace('-e2-settings-', 'Ciefp ')
-                    name = name + ' ' + date1 + '-' + date2 + '-' + date3
-                    name = name.replace(".tar.gz", "")
-                    name = name.replace("%20", " ")
-                    url = "http://178.63.156.75/paneladdons/Ciefp/ciefp" + url
-                    url = checkStr(url)
+            for name, url in match:
+                if url.find('.zip') != -1 :
+                    if 'ddt' in name.lower():
+                        continue
+                    if 'Sat' in name.lower():
+                        continue
+                    # name = name + ' ' + date
                     name = checkStr(name)
+                    url = url.replace('blob', 'raw')
+                    url = 'https://github.com' + url
+                    url = checkStr(url)
+                    print('name ', name)
+                    print('url ', url)
                     self.urls.append(url)
                     self.names.append(name)
                     self.downloading = True
                     self['info'].setText(_('Please select ...'))
-                # else:
-                    # self['info'].setText(_('no data ...'))
-                    # self.downloading = False
             showlist(self.names, self['text'])
         except Exception as e:
             print(('downxmlpage get failed: ', str(e)))
 
     def okRun(self):
-        self.session.openWithCallback(self.okInstall, MessageBox,(_("Do you want to install?")), MessageBox.TYPE_YESNO)
+        self.session.openWithCallback(self.okInstall, tvMessageBox,(_("Do you want to install?")), tvMessageBox.TYPE_YESNO)
 
     def okInstall(self, result):
         global set
@@ -984,31 +1052,36 @@ class SettingCiefp3(Screen):
             if self.downloading == True:
                 idx = self["text"].getSelectionIndex()
                 url = self.urls[idx]
-                dest = "/tmp/settings.tar.gz"
-                print("url =", url)
+                dest = "/tmp/settings.zip"
                 if 'dtt' not in url.lower():
                     # if not isDreamOS:
                         set = 1
                         terrestrial()
-                # url = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-                # with urlopen(url) as response, open(dest, 'wb') as destlocal:
-                    # shutil.copyfileobj(response, destlocal)
-                urlretrieve(url, dest)     
-                if os.path.exists('/tmp/settings.tar.gz'):
-                    os.system('rm -rf /etc/enigma2/lamedb')
-                    os.system('rm -rf /etc/enigma2/*.radio')
-                    os.system('rm -rf /etc/enigma2/*.tv')
-                    os.system('tar -xvf /tmp/settings.tar.gz -C /')
+                urlretrieve(url, dest)
+                if os.path.exists(dest):
+                    if os.path.exists("/tmp/unzipped"):
+                        os.system('rm -rf /tmp/unzipped')
+                    os.makedirs('/tmp/unzipped')
+                    os.system('unzip -o -q /tmp/settings.zip -d /tmp/unzipped')
+                    path = '/tmp/unzipped'
+                    for root, dirs, files in os.walk(path):
+                        for pth in dirs:
+                            pth = pth
+                            os.system('rm -rf /etc/enigma2/lamedb')
+                            os.system('rm -rf /etc/enigma2/*.radio')
+                            os.system('rm -rf /etc/enigma2/*.tv')
+                            os.system("cp -rf /tmp/unzipped/" + pth + "/* '/etc/enigma2'")
                     title = _("Installation Settings")
-                    self.session.openWithCallback(self.yes, tvConsole, title=_(title), cmdlist=["wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"])
+                    self.session.openWithCallback(self.yes, tvConsole, title=_(title), cmdlist=["wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"] , closeOnSuccess =False)
+                self['info'].setText(_('Settings Installed ...'))
             else:
                 self['info'].setText(_('Settings Not Installed ...'))
 
     def yes(self):
-        # if not isDreamOS:
-        # self.onShown.append(resettings)
-        resettings()        
-        self['info'].setText(_('Settings Installed ...'))
+        resettings()
+
+    def retps(self):
+        pass
 
 class tvSettingBi58(Screen):
     def __init__(self, session):
@@ -1049,8 +1122,6 @@ class tvSettingBi58(Screen):
         r = data
         print('rrrrrrrr ', r)
         self.names  = []
-                                  
-                     
         self.urls   = []
         try:
             regex   = '<a href="bi58-e2(.*?)".*?align="right">(.*?)-(.*?)-(.*?) '
@@ -1063,14 +1134,11 @@ class tvSettingBi58(Screen):
                     name = name.replace("%20", " ")
                     url = "http://178.63.156.75/paneladdons/Bi58/bi58-e2" + url
                     url = checkStr(url)
-                    name = checkStr(name)                    
+                    name = checkStr(name)
                     self.urls.append(url)
                     self.names.append(name)
                     self.downloading = True
                     self['info'].setText(_('Please select ...'))
-                # else:
-                    # self['info'].setText(_('no data ...'))
-                    # self.downloading = False
             showlist(self.names, self['text'])
         except Exception as e:
             print(('downxmlpage get failed: ', str(e)))
@@ -1091,24 +1159,19 @@ class tvSettingBi58(Screen):
                     # if not isDreamOS:
                         set = 1
                         terrestrial()
-                urlretrieve(url, dest) 
-                # url = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-                # with urlopen(url) as response, open(dest, 'wb') as destlocal:
-                    # shutil.copyfileobj(response, destlocal)
+                urlretrieve(url, dest)
                 if os.path.exists('/tmp/settings.tar.gz'):
                     os.system('rm -rf /etc/enigma2/lamedb')
                     os.system('rm -rf /etc/enigma2/*.radio')
                     os.system('rm -rf /etc/enigma2/*.tv')
                     title = _("Installation Settings")
-                    self.session.openWithCallback(self.yes, tvConsole, title=_(title), cmdlist=["tar -xvf /tmp/settings.tar.gz -C /; wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"])
+                    self.session.openWithCallback(self.yes, tvConsole, title=_(title), cmdlist=["tar -xvf /tmp/settings.tar.gz -C /; wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"], closeOnSuccess =False)
+                self['info'].setText(_('Settings Installed ...'))
             else:
                 self['info'].setText(_('Settings Not Installed ...'))
 
     def yes(self):
-        # if not isDreamOS:
-        # self.onShown.append(resettings)
-        resettings()        
-        self['info'].setText(_('Settings Installed ...'))
+        resettings()
 
 class SettingPredrag(Screen):
     def __init__(self, session):
@@ -1149,8 +1212,6 @@ class SettingPredrag(Screen):
         r = data
         print('rrrrrrrr ', r)
         self.names  = []
-                                  
-                     
         self.urls   = []
         try:
             regex   = '<a href="predrag(.*?)".*?align="right">(.*?)-(.*?)-(.*?) '
@@ -1168,9 +1229,6 @@ class SettingPredrag(Screen):
                     self.names.append(name)
                     self.downloading = True
                     self['info'].setText(_('Please select ...'))
-                # else:
-                    # self['info'].setText(_('no data ...'))
-                    # self.downloading = False
             showlist(self.names, self['text'])
         except Exception as e:
             print(('downxmlpage get failed: ', str(e)))
@@ -1183,7 +1241,7 @@ class SettingPredrag(Screen):
         set = 0
         if result:
             if self.downloading == True:
-                                                        
+
                 idx = self["text"].getSelectionIndex()
                 self.name = self.names[idx]
                 url = self.urls[idx]
@@ -1193,25 +1251,19 @@ class SettingPredrag(Screen):
                     # if not isDreamOS:
                         set = 1
                         terrestrial()
-                # url = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-                # with urlopen(url) as response, open(dest, 'wb') as destlocal:
-                    # shutil.copyfileobj(response, destlocal)
-                urlretrieve(url, dest) 
+                urlretrieve(url, dest)
                 if os.path.exists('/tmp/settings.tar.gz'):
                     os.system('rm -rf /etc/enigma2/lamedb')
                     os.system('rm -rf /etc/enigma2/*.radio')
                     os.system('rm -rf /etc/enigma2/*.tv')
                     title = _("Installation Settings")
-                    self.session.openWithCallback(self.yes, tvConsole, title=_(title), cmdlist=["tar -xvf /tmp/settings.tar.gz -C /; wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"])
+                    self.session.openWithCallback(self.yes, tvConsole, title=_(title), cmdlist=["tar -xvf /tmp/settings.tar.gz -C /; wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"], closeOnSuccess =False)
+                self['info'].setText(_('Settings Installed ...'))
             else:
                 self['info'].setText(_('Settings Not Installed ...'))
 
     def yes(self):
-        # if not isDreamOS:
-        # self.onShown.append(resettings)
-        resettings()        
-        self['info'].setText(_('Settings Installed ...'))
-
+        resettings()
 
 class CirusSetting(Screen):
 
@@ -1253,8 +1305,6 @@ class CirusSetting(Screen):
         r = data
         print('rrrrrrrr ', r)
         self.names  = []
-                                  
-                     
         self.urls   = []
         try:
             n1 = r.find('name="Sat">', 0)
@@ -1271,20 +1321,13 @@ class CirusSetting(Screen):
                     name = name + ' ' + date
                     name = checkStr(name)
                     url = checkStr(url)
-                                                             
                     self.urls.append(url)
                     self.names.append(name)
                     self.downloading = True
                     self['info'].setText(_('Please select ...'))
-                # else:
-                    # self['info'].setText(_('no data ...'))
-                    # self.downloading = False
             showlist(self.names, self['text'])
         except Exception as e:
             print(('downxmlpage get failed: ', str(e)))
-
-                    
-                                                                                                                       
 
     def okRun(self):
         self.session.openWithCallback(self.okInstall, tvMessageBox,(_("Do you want to install?")), tvMessageBox.TYPE_YESNO)
@@ -1301,11 +1344,7 @@ class CirusSetting(Screen):
                     # if not isDreamOS:
                         set = 1
                         terrestrial()
-
-                # url = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-                # with urlopen(url) as response, open(dest, 'wb') as destlocal:
-                    # shutil.copyfileobj(response, destlocal)
-                urlretrieve(url, dest) 
+                urlretrieve(url, dest)
                 if os.path.exists(dest):
                     if os.path.exists("/tmp/unzipped"):
                         os.system('rm -rf /tmp/unzipped')
@@ -1320,17 +1359,13 @@ class CirusSetting(Screen):
                             os.system('rm -rf /etc/enigma2/*.tv')
                             os.system("cp -rf /tmp/unzipped/" + pth + "/* '/etc/enigma2'")
                     title = _("Installation Settings")
-                    self.session.openWithCallback(self.yes, tvConsole, title=_(title), cmdlist=["wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"])
-
+                    self.session.openWithCallback(self.yes, tvConsole, title=_(title), cmdlist=["wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"] , closeOnSuccess =False)
+                self['info'].setText(_('Settings Installed ...'))
             else:
                 self['info'].setText(_('Settings Not Installed ...'))
 
     def yes(self):
-        # if not isDreamOS:
-        # self.onShown.append(resettings)
-        resettings()        
-        self['info'].setText(_('Settings Installed ...'))
-
+        resettings()
 
 class tvConsole(Screen):
 # def __init__(self, session, title = 'Console', cmdlist = None, finishedCallback = None, closeOnSuccess = False, showStartStopText = True, skin = None):
@@ -1346,9 +1381,9 @@ class tvConsole(Screen):
         self.closeOnSuccess = closeOnSuccess
         self.endstr = endstr
         self.errorOcurred = False
-        self['text'] = ScrollLabel('')
         self['title'] = Label(_(title_plug))
-        self['actions'] = ActionMap(['WizardActions', 'DirectionActions' , 'ColorActions',], {'ok': self.cancel,
+        self['text'] = ScrollLabel('')
+        self['actions'] = ActionMap(['WizardActions', 'DirectionActions' , 'ColorActions'], {'ok': self.cancel,
          'back': self.cancel,
          'red': self.cancel,
          "blue": self.restartenigma,
@@ -1426,9 +1461,9 @@ class tvConsole(Screen):
         self.container.sendEOF()
 
     def restartenigma(self):
-        self.session.open(TryQuitMainloop, 3)   
+        self.session.open(TryQuitMainloop, 3)
 
-   
+
 def main(session, **kwargs):
     session.open(MainSetting)
 
@@ -1496,7 +1531,7 @@ def lcnstart():
         if len(lcn.lcnlist) > 0:
             lcn.writeBouquet()
             # lcn.reloadBouquets()
-            ReloadBouquet()
+            resettings()
     return
 
 def StartSavingTerrestrialChannels():
@@ -1584,7 +1619,6 @@ def StartSavingTerrestrialChannels():
              WritingBouquetTemporary.write('#SERVICE 1:0:%s:%s:%s:%s:%s:0:0:0:\n'% (hex(int(String[4]))[2:],String[0],String[2],String[3],String[1]))
         WritingBouquetTemporary.close()
 
-
     def SaveBouquetTerrestrial():
         NameDirectory=ResearchBouquetTerrestrial('terr')
         if not NameDirectory:
@@ -1656,7 +1690,6 @@ def LamedbRestore():
       return False
 
 def TransferBouquetTerrestrialFinal():
-
         def RestoreTerrestrial():
           for file in os.listdir("/etc/enigma2/"):
             if re.search('^userbouquet.*.tv', file):
@@ -1665,7 +1698,6 @@ def TransferBouquetTerrestrialFinal():
               if re.search("#NAME Digitale Terrestre",x, flags=re.IGNORECASE):
                 return "/etc/enigma2/"+file
           # return
-
         try:
           TerrestrialChannelListArchive=open(plugin_path +'/temp/TerrestrialChannelListArchive').readlines()
           DirectoryUserBouquetTerrestrial=RestoreTerrestrial()

@@ -14,7 +14,7 @@ import os
 import sys
 import re
 import shutil
-import xml.etree.cElementTree
+import xml.etree.ElementTree
 
 plugin_path      = os.path.dirname(sys.modules[__name__].__file__)
 rules            = plugin_path + '/rules.xml'
@@ -37,7 +37,7 @@ class LCN():
         self.lcnlist = []
         self.markers = []
         self.e2services = []
-        mdom = xml.etree.cElementTree.parse(rules)
+        mdom = xml.etree.ElementTree.parse(rules)
         self.root = None
         for x in mdom.getroot():
             if x.tag == 'ruleset' and x.get('name') == 'Italy':
