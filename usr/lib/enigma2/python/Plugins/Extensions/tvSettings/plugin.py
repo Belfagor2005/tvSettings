@@ -161,7 +161,6 @@ Panel_Dlist=[
  ('SETTINGS BI58'),
  ('SETTINGS CIEFP'),
  ('SETTINGS CYRUS'),
- # ('SETTINGS COLOMBO'),
  ('SETTINGS MANUTEK'),
  ('SETTINGS MILENKA61'),
  ('SETTINGS MORPHEUS'),
@@ -292,11 +291,9 @@ class MainSetting(Screen):
         elif sel== _('UPDATE TERRESTRIAL.XML'):
             self.okTERRESTRIAL()
         elif sel== ('SETTINGS CIEFP'):
-            self.session.open(SettingCiefp2)
+            self.session.open(SettingCiefp)
         elif sel== ('SETTINGS CYRUS'):
             self.session.open(CirusSetting)
-        # elif sel== ('SETTINGS COLOMBO'):
-            # self.session.open(tvColombo)
         elif sel== ('SETTINGS BI58'):
             self.session.open(tvSettingBi58)
         elif sel== ('SETTINGS MANUTEK'):
@@ -347,118 +344,6 @@ class MainSetting(Screen):
                     return
             else:
                 self.mbox = self.session.open(MessageBox, "No Internet", MessageBox.TYPE_INFO)
-
-# class tvColombo(Screen):
-    # def __init__(self, session):
-        # self.session=session
-        # skin=skin_path + 'settings.xml'
-        # with open(skin, 'r') as f:
-            # self.skin=f.read()
-        # self.setup_title=('Setting Colombo')
-        # Screen.__init__(self, session)
-        # self.setTitle(_(title_plug))
-        # self.list=[]
-        # self['text']=OneSetList([])
-        # self.addon='emu'
-        # self.icount=0
-        # self['info']=Label(_('Getting the list, please wait ...'))
-        # self['key_green']=Button(_('Install'))
-        # self['key_red']=Button(_('Back'))
-        # self['key_yellow']=Button(_(''))
-        # self["key_blue"]=Button(_(''))
-        # self['key_yellow'].hide()
-        # self['key_blue'].hide()
-        # self.downloading=False
-        # self.timer=eTimer()
-        # self.timer.start(500, True)
-        # if os.path.exists('/var/lib/dpkg/status'):
-            # self.timer_conn=self.timer.timeout.connect(self.downxmlpage)
-        # else:
-            # self.timer.callback.append(self.downxmlpage)
-        # self['title']=Label(_(title_plug))
-        # self['actions']=ActionMap(['SetupActions', 'ColorActions'], {'ok': self.okRun,
-         # 'green': self.okRun,
-         # 'red': self.close,
-         # 'cancel': self.close}, -2)
-
-    # def downxmlpage(self):
-        # url='http://colombo.altervista.org/colombo/colombo/'
-        # r=make_request(url)
-        # print('rrrrrrrr ', r)
-        # if os.path.exists('/var/lib/dpkg/status'):
-            # r  = six.ensure_str(r)
-        # self.names=[]
-        # self.urls=[]
-        # try:
-            # regex='<a href="(.*?)"'
-            # match=re.compile(regex).findall(r)
-            # for url in match:
-                # if 'zip' in url.lower():
-                    # if 'setting' in url.lower():
-                        # if '.php' in url.lower():
-                            # continue
-                        # name=url
-                        # url="http://colombo.altervista.org" + url
-                        # name=name.replace("/colombo/colombo/", "")
-                        # name=name.replace(".zip", "")
-                        # name=name.replace("%20", " ")
-                        # name=name.replace("_", " ")
-                        # name=name.replace("-", " ")
-                        # url = checkStr(url)
-                        # name = checkStr(name)
-                        # self.urls.append(url)
-                        # self.names.append(name)
-                        # self.downloading=True
-                        # self['info'].setText(_('Please select ...'))
-                    # else:
-                        # self['info'].setText(_('no data ...'))
-                        # self.downloading=False
-            # showlist(self.names, self['text'])
-        # except:
-            # self.downloading=False
-
-    # def okRun(self):
-        # self.session.openWithCallback(self.okInstall, MessageBox,(_("Do you want to install?")), MessageBox.TYPE_YESNO)
-
-    # def okInstall(self, result):
-        # global set
-        # set=0
-        # if result:
-            # if self.downloading== True:
-                # idx=self["text"].getSelectionIndex()
-                # url=self.urls[idx]
-                # dest="/tmp/settings.zip"
-                # print("url=", url)
-                # if 'dtt' not in str(url).lower():
-                    # if not os.path.exists('/var/lib/dpkg/status'):
-                        # set=1
-                        # terrestrial()
-                # url=Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-                # with urlopen(url) as response, open(dest, 'wb') as destlocal:
-                    # shutil.copyfileobj(response, destlocal)
-                # if os.path.exists('/tmp/settings.zip'):
-                    # os.system('rm -rf /etc/enigma2/lamedb')
-                    # os.system('rm -rf /etc/enigma2/*.radio')
-                    # os.system('rm -rf /etc/enigma2/*.tv')
-
-                    # fdest1="/tmp/unzipped"
-                    # fdest2="/etc/enigma2"
-                    # if os.path.exists(fdest1):
-                        # cmd="rm -rf '/tmp/unzipped'"
-                        # os.system(cmd)
-                    # os.makedirs('/tmp/unzipped')
-                    # cmd2="unzip -o -q '/tmp/settings.zip' -d " + fdest1
-                    # os.system(cmd2)
-                    # if os.path.exists(fdest1):
-                        # title=_("Installation Settings")
-                        # self.session.openWithCallback(self.yes, Console, title=_(title), cmdlist=["cp -rf /tmp/unzipped/* /etc/enigma2;  wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"])
-            # else:
-                # self['info'].setText(_('Settings Not Installed ...'))
-
-    # def yes(self):
-        # if not os.path.exists('/var/lib/dpkg/status'):
-            # self.onShown.append(ReloadBouquet)
-        # self['info'].setText(_('Settings Installed ...'))
 
 class SettingVhan(Screen):
 
@@ -848,98 +733,7 @@ class SettingMorpheus2(Screen):
     def yes(self):
         ReloadBouquet()
 
-# class SettingCiefp(Screen):
-    # def __init__(self, session):
-        # self.session=session
-        # skin=skin_path + 'settings.xml'
-        # with open(skin, 'r') as f:
-            # self.skin=f.read()
-        # self.setup_title=('Setting Ciefp')
-        # Screen.__init__(self, session)
-        # self.setTitle(_(title_plug))
-        # self.list=[]
-        # self['text']=OneSetList([])
-        # self.icount=0
-        # self['info']=Label(_('Getting the list, please wait ...'))
-        # self['key_green']=Button(_('Install'))
-        # self['key_red']=Button(_('Back'))
-        # self['key_yellow']=Button(_(''))
-        # self["key_blue"]=Button(_(''))
-        # self['key_yellow'].hide()
-        # self['key_blue'].hide()
-        # self.downloading=False
-        # self.timer=eTimer()
-        # self.timer.start(500, True)
-        # if os.path.exists('/var/lib/dpkg/status'):
-            # self.timer_conn=self.timer.timeout.connect(self.downxmlpage)
-        # else:
-            # self.timer.callback.append(self.downxmlpage)
-        # self['title']=Label(_(title_plug))
-        # self['actions']=ActionMap(['SetupActions', 'ColorActions'], {'ok': self.okRun,
-         # 'green': self.okRun,
-         # 'red': self.close,
-         # 'cancel': self.close}, -2)
-
-    # def downxmlpage(self):
-        # url = 'http://178.63.156.75/paneladdons/Ciefp/'
-        # data = make_request(url)
-        # r = data
-        # print('rrrrrrrr ', r)
-        # self.names  = []
-        # self.urls   = []
-        # try:
-            # regex   = '<a href="ciefp(.*?)".*?align="right">(.*?)-(.*?)-(.*?) '
-            # match   = re.compile(regex).findall(r)
-            # for url,date1, date2, date3 in match:
-                # if 'tar.gz' in url:
-                    # name = url
-                    # name = name.replace('-e2-settings-', 'Ciefp ')
-                    # name = name + ' ' + date1 + '-' + date2 + '-' + date3
-                    # name = name.replace(".tar.gz", "")
-                    # name = name.replace("%20", " ")
-                    # url = "http://178.63.156.75/paneladdons/Ciefp/ciefp" + url
-                    # url = checkStr(url)
-                    # name = checkStr(name)
-                    # self.urls.append(url)
-                    # self.names.append(name)
-                    # self.downloading = True
-                    # self['info'].setText(_('Please select ...'))
-            # showlist(self.names, self['text'])
-        # except Exception as e:
-            # print(('downxmlpage get failed: ', str(e)))
-
-    # def okRun(self):
-        # self.session.openWithCallback(self.okInstall, MessageBox,(_("Do you want to install?")), MessageBox.TYPE_YESNO)
-
-    # def okInstall(self, result):
-        # global set
-        # set = 0
-        # if result:
-            # if self.downloading == True:
-                # idx = self["text"].getSelectionIndex()
-                # url = self.urls[idx]
-                # self.dest = "/tmp/settings.tar.gz"
-                # print("url =", url)
-                # if 'dtt' not in url.lower():
-                    # # if not os.path.exists('/var/lib/dpkg/status'):
-                        # set = 1
-                        # terrestrial()
-                # urlretrieve(url, self.dest)
-                # if os.path.exists('/tmp/settings.tar.gz'):
-                    # os.system('rm -rf /etc/enigma2/lamedb')
-                    # os.system('rm -rf /etc/enigma2/*.radio')
-                    # os.system('rm -rf /etc/enigma2/*.tv')
-                    # os.system('tar -xvf /tmp/settings.tar.gz -C /')
-                    # title = _("Installation Settings")
-                    # self.session.openWithCallback(self.yes, tvConsole, title=_(title), cmdlist=["wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"] , closeOnSuccess =False)
-                # self['info'].setText(_('Settings Installed ...'))
-            # else:
-                # self['info'].setText(_('Settings Not Installed ...'))
-
-    # def yes(self):
-        # ReloadBouquet()
-
-class SettingCiefp2(Screen):
+class SettingCiefp(Screen):
     def __init__(self, session):
         self.session = session
         skin = skin_path + 'settings.xml'
