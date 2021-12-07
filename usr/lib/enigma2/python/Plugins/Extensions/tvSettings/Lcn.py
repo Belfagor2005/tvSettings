@@ -102,8 +102,6 @@ class LCN():
     def addMarker(self, position, text):
         self.markers.append([position, text])
 
-
-
     def read(self):
         self.readE2Services()
         # self.readE2ServicesRd()
@@ -221,5 +219,14 @@ class LCN():
         f.close()
         self.ClearDoubleMarker(self.bouquetfile)
 
-    def reloadBouquets(self):
-        eDVBDB.getInstance().reloadBouquets()
+    def ReloadBouquet(self):
+        global set
+        print('\n----Reloading bouquets----')
+        try:
+            from enigma import eDVBDB
+            eDVBDB.getInstance().reloadBouquets()
+            print('bouquets reloaded...')        
+        except ImportError:
+            eDVBDB = None
+            os.system('wget -qO - http://127.0.0.1/web/servicelistreload?mode=2 > /dev/null 2>&1 &')
+            print('bouquets reloaded...')

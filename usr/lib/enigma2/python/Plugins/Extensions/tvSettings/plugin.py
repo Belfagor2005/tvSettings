@@ -8,7 +8,7 @@
 #Info http://t.me/tivustream
 from __future__ import print_function
 from . import _
-from Components.ActionMap import ActionMap, NumberActionMap
+from Components.ActionMap import ActionMap
 from Components.Button import Button
 from Components.Label import Label
 from Components.MenuList import MenuList
@@ -29,7 +29,6 @@ from Tools.LoadPixmap import LoadPixmap
 from enigma import *
 from enigma import RT_HALIGN_LEFT, loadPNG, RT_HALIGN_RIGHT, RT_HALIGN_CENTER
 from enigma import eTimer, eListboxPythonMultiContent, eListbox, eConsoleAppContainer, gFont
-from enigma import getDesktop
 from os import path, listdir, remove, mkdir, chmod
 from twisted.web.client import downloadPage, getPage
 from xml.dom import Node, minidom
@@ -49,17 +48,27 @@ currversion='1.7'
 title_plug='..:: TiVuStream Settings V. %s ::..' % currversion
 name_plug='TiVuStream Settings'
 category = 'lululla.xml'
+set = 0
 from six.moves.urllib.parse import quote_plus
 from six.moves.urllib.request import urlopen
 from six.moves.urllib.request import Request
 from six.moves.urllib.parse import urlparse
 from six.moves.urllib.parse import quote
 from six.moves.urllib.parse import urlencode
-from six.moves.urllib.error import HTTPError
-from six.moves.urllib.error import URLError
+# from six.moves.urllib.error import HTTPError
+# from six.moves.urllib.error import URLError
 from six.moves.urllib.request import urlretrieve
 # import six.moves.urllib.request
+try:
+    from Plugins.Extensions.tvSettings.Utils import *
+except:
+    from . import Utils
 
+try:
+    import zipfile
+except:
+    pass
+    
 if sys.version_info >= (2, 7, 9):
     try:
         import ssl
@@ -73,88 +82,34 @@ def ssl_urlopen(url):
     else:
         return urlopen(url)
 
-try:
-    from enigma import eDVBDB
-except ImportError:
-    eDVBDB=None
-
-try:
-    import zipfile
-except:
-    pass
-
-try:
-    _create_unverified_https_context=ssl._create_unverified_context
-except AttributeError:
-    pass
-else:
-    ssl._create_default_https_context=_create_unverified_https_context
-
-def checkStr(txt):
-    if six.PY3:
-        if isinstance(txt, type(bytes())):
-            txt=txt.decode('utf-8')
-    else:
-        if isinstance(txt, type(six.text_type())):
-            txt=txt.encode('utf-8')
-    return txt
-
-def make_request(url):
-    try:
-        import requests
-        link=requests.get(url, headers={'User-Agent': 'Mozilla/5.0'}).text
-        return link
-    except ImportError:
-        req=Request(url)
-        req.add_header('User-Agent', 'TVS')
-        response=urlopen(req, None, 3)
-        link=response.read()
-        response.close()
-        return link
-    except:
-        e=URLError #, e:
-        print('We failed to open "%s".' % url)
-        if hasattr(e, 'code'):
-            print('We failed with error code - %s.' % e.code)
-        if hasattr(e, 'reason'):
-            print('We failed to reach a server.')
-            print('Reason: ', e.reason)
-    return
-
 def ReloadBouquet():
     global set
     print('\n----Reloading bouquets----')
     if set == 1:
         set = 0
         terrestrial_rest()
-    if eDVBDB:
+    try:
+        from enigma import eDVBDB
         eDVBDB.getInstance().reloadBouquets()
-        print('bouquets reloaded...')
-    else:
+        print('bouquets reloaded...')        
+    except ImportError:
+        eDVBDB = None
         os.system('wget -qO - http://127.0.0.1/web/servicelistreload?mode=2 > /dev/null 2>&1 &')
         print('bouquets reloaded...')
 
-def deletetmp():
-    os.system('rm -rf /tmp/unzipped;rm -f /tmp/*.ipk;rm -f /tmp/*.tar;rm -f /tmp/*.zip;rm -f /tmp/*.tar.gz;rm -f /tmp/*.tar.bz2;rm -f /tmp/*.tar.tbz2;rm -f /tmp/*.tar.tbz')
-    return
-
 os.system('rm -fr /usr/lib/enigma2/python/Plugins/Extensions/tvSettings/temp/*')# clean /temp
-
-# DESKHEIGHT=getDesktop(0).size().height()
 plugin_path=os.path.dirname(sys.modules[__name__].__file__)
 ico_path=plugin_path + '/logo.png'
-HD=getDesktop(0).size()
-
 res_plugin_path=plugin_path + '/res/'
 pngl=res_plugin_path + 'pics/plugin.png'
 pngs=res_plugin_path + 'pics/setting.png'
 pngx=res_plugin_path + 'pics/plugins.png'
 
-if HD.width() > 1280:
+if isFHD():
     skin_path=res_plugin_path + 'skins/fhd/'
 else:
     skin_path=res_plugin_path + 'skins/hd/'
-if os.path.exists('/var/lib/dpkg/status'):
+if DreamOS():
     skin_path=skin_path + 'dreamOs/'
 
 Panel_Dlist=[
@@ -183,7 +138,7 @@ class SetList(MenuList):
         self.l.setFont(7, gFont('Regular', 34))
         self.l.setFont(8, gFont('Regular', 36))
         self.l.setFont(9, gFont('Regular', 40))
-        if HD.width() > 1280:
+        if isFHD():
             self.l.setItemHeight(50)
         else:
             self.l.setItemHeight(50)
@@ -191,7 +146,7 @@ class SetList(MenuList):
 class OneSetList(MenuList):
     def __init__(self, list):
         MenuList.__init__(self, list, True, eListboxPythonMultiContent)
-        if HD.width() > 1280:
+        if isFHD():
             self.l.setItemHeight(50)
             textfont=int(34)
             self.l.setFont(0, gFont('Regular', textfont))
@@ -202,7 +157,7 @@ class OneSetList(MenuList):
 
 def DListEntry(name, idx):
     res=[name]
-    if HD.width() > 1280:
+    if isFHD():
 
         res.append(MultiContentEntryPixmapAlphaTest(pos=(10, 12), size=(34, 25), png=loadPNG(pngs)))
         res.append(MultiContentEntryText(pos=(60, 0), size=(1900, 50), font=6, text=name, color= 0xa6d1fe, flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER))
@@ -214,7 +169,7 @@ def DListEntry(name, idx):
 
 def OneSetListEntry(name):
     res= [name]
-    if HD.width() > 1280:
+    if isFHD():
 
         res.append(MultiContentEntryPixmapAlphaTest(pos=(10, 12), size=(34, 25), png=loadPNG(pngx)))
         res.append(MultiContentEntryText(pos=(60, 0), size=(1900, 50), font=0, text=name, color= 0xa6d1fe, flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER))
@@ -249,11 +204,11 @@ class MainSetting(Screen):
         self['key_green']=Button(_('Select'))
         self['key_red']=Button(_('Exit'))
         self['key_yellow']=Button(_('Lcn'))
-        if os.path.exists('/var/lib/dpkg/status'):
+        if DreamOS():
                 self['key_yellow'].hide()
         self["key_blue"]=Button(_(''))
         self['key_blue'].hide()
-        self['actions']=NumberActionMap(['SetupActions', 'ColorActions', ], {'ok': self.okRun,
+        self['actions']=ActionMap(['SetupActions', 'ColorActions', ], {'ok': self.okRun,
          'green': self.okRun,
          'back': self.closerm,
          'red': self.closerm,
@@ -324,7 +279,7 @@ class MainSetting(Screen):
                 except:
                     return
             else:
-                session.open(MessageBox, "No Internet", MessageBox.TYPE_INFO)
+                self.mbox = self.session.open(MessageBox, "No Internet", MessageBox.TYPE_INFO)
 
     def okTERRESTRIAL(self):
         self.session.openWithCallback(self.okTerrInstall, MessageBox,(_("Do you want to install?")), MessageBox.TYPE_YESNO)
@@ -368,7 +323,7 @@ class SettingVhan(Screen):
         self.downloading=False
         self.timer=eTimer()
         self.timer.start(500, 1)
-        if os.path.exists('/var/lib/dpkg/status'):
+        if DreamOS():
             self.timer_conn=self.timer.timeout.connect(self.downxmlpage)
         else:
             self.timer.callback.append(self.downxmlpage)
@@ -380,7 +335,7 @@ class SettingVhan(Screen):
 
     def downxmlpage(self):
         url='http://sat.alfa-tech.net/upload/settings/vhannibal/'
-        r=make_request(url)
+        r=ReadUrl2(url)
         print('rrrrrrrr ', r)
         if six.PY3:
             r  = six.ensure_str(r)
@@ -459,7 +414,7 @@ class SettingMilenka6121(Screen):
         self.downloading=False
         self.timer=eTimer()
         self.timer.start(500, True)
-        if os.path.exists('/var/lib/dpkg/status'):
+        if DreamOS():
             self.timer_conn=self.timer.timeout.connect(self.downxmlpage)
         else:
             self.timer.callback.append(self.downxmlpage)
@@ -471,7 +426,7 @@ class SettingMilenka6121(Screen):
 
     def downxmlpage(self):
         url = 'http://178.63.156.75/tarGz/'
-        data = make_request(url)
+        data = ReadUrl2(url)
         r = data
         print('rrrrrrrr ', r)
         self.names  = []
@@ -526,7 +481,6 @@ class SettingMilenka6121(Screen):
         ReloadBouquet()
 
 class SettingManutek(Screen):
-
     def __init__(self, session):
         self.session=session
         skin=skin_path + 'settings.xml'
@@ -548,7 +502,7 @@ class SettingManutek(Screen):
         self.downloading=False
         self.timer=eTimer()
         self.timer.start(500, True)
-        if os.path.exists('/var/lib/dpkg/status'):
+        if DreamOS():
             self.timer_conn=self.timer.timeout.connect(self.downxmlpage)
         else:
             self.timer.callback.append(self.downxmlpage)
@@ -560,7 +514,7 @@ class SettingManutek(Screen):
 
     def downxmlpage(self):
         url = 'http://www.manutek.it/isetting/'
-        data = make_request(url)
+        data = ReadUrl2(url)
         r = data
         print('rrrrrrrr ', r)
         self.names  = []
@@ -648,7 +602,7 @@ class SettingMorpheus2(Screen):
         self.downloading=False
         self.timer=eTimer()
         self.timer.start(500, True)
-        if os.path.exists('/var/lib/dpkg/status'):
+        if DreamOS():
             self.timer_conn=self.timer.timeout.connect(self.downxmlpage)
         else:
             self.timer.callback.append(self.downxmlpage)
@@ -660,7 +614,7 @@ class SettingMorpheus2(Screen):
 
     def downxmlpage(self):
         url = r'http://morpheus883.altervista.org/download/index.php'
-        data = make_request(url)
+        data = ReadUrl2(url)
         r = data
         print('rrrrrrrr ', r)
         self.names  = []
@@ -760,7 +714,7 @@ class SettingCiefp(Screen):
         self.downloading = False
         self.timer = eTimer()
         self.timer.start(500, 1)
-        if os.path.exists('/var/lib/dpkg/status'):
+        if DreamOS():
             self.timer_conn = self.timer.timeout.connect(self.downxmlpage)
         else:
             self.timer.callback.append(self.downxmlpage)
@@ -776,7 +730,7 @@ class SettingCiefp(Screen):
 #<span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open Link--primary" title="ciefp-E2-10sat-39E-28E-23E-19E-16E-13E-9E-4.8E-1.9E-0.8W-14.08.2021.zip" data-pjax="#repo-content-pjax-container" href="/ciefp/ciefpsettings-enigma2-zipped/blob/master/ciefp-E2-10sat-39E-28E-23E-19E-16E-13E-9E-4.8E-1.9E-0.8W-14.08.2021.zip">ciefp-E2-10sat-39E-28E-23E-19E-16E-13E-9E-4.8E-1.9E-0.8W-14.08.2021.zip</a></span>
     def downxmlpage(self):
         url = 'https://github.com/ciefp/ciefpsettings-enigma2-zipped'
-        data = make_request(url)
+        data = ReadUrl2(url)
         r = data
         print('rrrrrrrr ', r)
         self.names  = []
@@ -868,7 +822,7 @@ class tvSettingBi58(Screen):
         self.downloading=False
         self.timer=eTimer()
         self.timer.start(500, True)
-        if os.path.exists('/var/lib/dpkg/status'):
+        if DreamOS():
             self.timer_conn=self.timer.timeout.connect(self.downxmlpage)
         else:
             self.timer.callback.append(self.downxmlpage)
@@ -880,7 +834,7 @@ class tvSettingBi58(Screen):
 
     def downxmlpage(self):
         url = 'http://178.63.156.75/paneladdons/Bi58/'
-        data = make_request(url)
+        data = ReadUrl2(url)
         r = data
         print('rrrrrrrr ', r)
         self.names  = []
@@ -957,7 +911,7 @@ class SettingPredrag(Screen):
         self.downloading=False
         self.timer=eTimer()
         self.timer.start(500, True)
-        if os.path.exists('/var/lib/dpkg/status'):
+        if DreamOS():
             self.timer_conn=self.timer.timeout.connect(self.downxmlpage)
         else:
             self.timer.callback.append(self.downxmlpage)
@@ -969,7 +923,7 @@ class SettingPredrag(Screen):
 
     def downxmlpage(self):
         url = 'http://178.63.156.75/paneladdons/Predr@g/'
-        data = make_request(url)
+        data = ReadUrl2(url)
         r = data
         print('rrrrrrrr ', r)
         self.names  = []
@@ -1047,7 +1001,7 @@ class CirusSetting(Screen):
         self.downloading=False
         self.timer=eTimer()
         self.timer.start(500, True)
-        if os.path.exists('/var/lib/dpkg/status'):
+        if DreamOS():
             self.timer_conn=self.timer.timeout.connect(self.downxmlpage)
         else:
             self.timer.callback.append(self.downxmlpage)
@@ -1059,7 +1013,7 @@ class CirusSetting(Screen):
 
     def downxmlpage(self):
         url = 'http://www.cyrussettings.com/Set_29_11_2011/Dreambox-IpBox/Config.xml'
-        data = make_request(url)
+        data = ReadUrl2(url)
         r = data
         print('rrrrrrrr ', r)
         self.names  = []
