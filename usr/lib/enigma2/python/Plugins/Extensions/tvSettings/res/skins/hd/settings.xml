@@ -7,7 +7,7 @@
   <!-- <ePixmap position="0,0" size="886,720" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/tvSettings/res/pics/main1.png" zPosition="2" /> -->
 	<ePixmap position="0,0" size="1280,720" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/tvSettings/res/pics/hd/main2.png" zPosition="1" />  
   <!-- Menu List -->
-  <widget name="text" position="146,103" size="686,398" font="Regular;20" itemHeight="33" scrollbarMode="showOnDemand" transparent="1" zPosition="5" foregroundColor="#00a0a0a0" foregroundColorSelected="#ffffff" backgroundColor="#20000000" backgroundColorSelected="#0b2049" selectionPixmap="/usr/lib/enigma2/python/Plugins/Extensions/tvSettings/res/pics/sliderb.png" />
+  <widget name="text" position="146,103" size="686,398" scrollbarMode="showOnDemand" transparent="1" zPosition="5" foregroundColor="#00a0a0a0" foregroundColorSelected="#ffffff" backgroundColor="#20000000" backgroundColorSelected="#0b2049" selectionPixmap="/usr/lib/enigma2/python/Plugins/Extensions/tvSettings/res/pics/sliderb.png" />
   <widget name="info" position="146,502" size="686,36" font="Regular;20" halign="center" foregroundColor="yellow" backgroundColor="#20000000" transparent="1" zPosition="5" />
 <!--   <widget name="pth" position="146,537" size="686,35" font="Regular;20" halign="center" foregroundColor="yellow" backgroundColor="#20000000" transparent="1" zPosition="5" />
   <widget name="pform" position="146,574" size="686,30" font="Regular;20" halign="center" foregroundColor="yellow" backgroundColor="#20000000" transparent="1" zPosition="5" />

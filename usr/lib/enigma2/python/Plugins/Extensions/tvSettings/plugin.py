@@ -24,7 +24,7 @@ from Screens.Console import Console
 from Screens.MessageBox import MessageBox
 from Screens.Screen import Screen
 from Tools.Directories import SCOPE_SKIN_IMAGE, SCOPE_PLUGINS
-from Tools.Directories import pathExists, fileExists, copyfile
+from Tools.Directories import pathExists, fileExists, resolveFilename, copyfile
 from Tools.LoadPixmap import LoadPixmap
 from enigma import *
 from enigma import RT_HALIGN_LEFT, RT_HALIGN_RIGHT, RT_HALIGN_CENTER, RT_VALIGN_CENTER, getDesktop, loadPNG
@@ -38,7 +38,6 @@ import gettext
 import os
 import re
 import sys
-
 import shutil
 import ssl
 import glob
@@ -48,12 +47,9 @@ try:
 except:
     from . import Utils
 from .Lcn import *
+
 global category
-global pngx, pngl, pngs
-currversion='1.7'
-title_plug='..:: TiVuStream Settings V. %s ::..' % currversion
-name_plug='TiVuStream Settings'
-category = 'lululla.xml'
+global set
 set = 0
 
 try:
@@ -117,17 +113,19 @@ def ReloadBouquet():
     ReloadBouquets()
 
 os.system('rm -fr /usr/lib/enigma2/python/Plugins/Extensions/tvSettings/temp/*')# clean /temp
+
+currversion='1.7'
+title_plug='..:: TiVuStream Settings V. %s ::..' % currversion
+name_plug='TiVuStream Settings'
+category = 'lululla.xml'
 plugin_path=os.path.dirname(sys.modules[__name__].__file__)
-ico_path=plugin_path + '/logo.png'
-res_plugin_path=plugin_path + '/res/'
-pngl=res_plugin_path + 'pics/plugin.png'
-pngs=res_plugin_path + 'pics/setting.png'
-pngx=res_plugin_path + 'pics/plugins.png'
+ico_path = resolveFilename(SCOPE_PLUGINS, "Extensions/{}/logo.png".format('tvSettings'))
+res_plugin_path= resolveFilename(SCOPE_PLUGINS, "Extensions/{}/res/".format('tvSettings'))
 
 if isFHD():
-    skin_path=res_plugin_path + 'skins/fhd/'
+    skin_path=resolveFilename(SCOPE_PLUGINS, "Extensions/{}/res/skins/fhd/".format('tvSettings'))
 else:
-    skin_path=res_plugin_path + 'skins/hd/'
+    skin_path=resolveFilename(SCOPE_PLUGINS, "Extensions/{}/res/skins/hd/".format('tvSettings'))
 if DreamOS():
     skin_path=skin_path + 'dreamOs/'
 
@@ -177,7 +175,7 @@ class OneSetList(MenuList):
 
 def DListEntry(name, idx):
     res=[name]
-
+    pngs=resolveFilename(SCOPE_PLUGINS, "Extensions/{}/res/pics/setting.png".format('tvSettings'))
     if isFHD():
 
         res.append(MultiContentEntryPixmapAlphaTest(pos=(10, 12), size=(34, 25), png=loadPNG(pngs)))
@@ -185,18 +183,18 @@ def DListEntry(name, idx):
     else:
 
         res.append(MultiContentEntryPixmapAlphaTest(pos=(10, 6), size=(34, 25), png=loadPNG(pngs)))
-        res.append(MultiContentEntryText(pos=(60, 0), size=(1000, 50), font=0, text=name, color= 0xa6d1fe, flags=RT_HALIGN_LEFT))
+        res.append(MultiContentEntryText(pos=(60, 0), size=(1000, 50), font=0, text=name, color= 0xa6d1fe, flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER))
     return res
 
 def OneSetListEntry(name):
     res= [name]
+    pngx=resolveFilename(SCOPE_PLUGINS, "Extensions/{}/res/pics/plugins.png".format('tvSettings'))
     if isFHD():
-
         res.append(MultiContentEntryPixmapAlphaTest(pos=(10, 12), size=(34, 25), png=loadPNG(pngx)))
         res.append(MultiContentEntryText(pos=(60, 0), size=(1900, 50), font=0, text=name, color= 0xa6d1fe, flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER))
     else:
         res.append(MultiContentEntryPixmapAlphaTest(pos=(10, 6), size=(34, 25), png=loadPNG(pngx)))
-        res.append(MultiContentEntryText(pos=(60, 0), size=(1000, 50), font=0, text=name, color= 0xa6d1fe, flags=RT_HALIGN_LEFT))
+        res.append(MultiContentEntryText(pos=(60, 0), size=(1000, 50), font=0, text=name, color= 0xa6d1fe, flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER))
     return res
 
 def showlist(data, list):
