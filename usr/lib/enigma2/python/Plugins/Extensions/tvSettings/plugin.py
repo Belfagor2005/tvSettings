@@ -52,17 +52,25 @@ global category
 global set
 set = 0
 
-try:
-    from urlparse import urlparse
-    from urllib import urlencode
-    from urllib2 import urlopen
-    from urllib2 import Request
-    from urllib2 import HTTPError, URLError
-except ImportError:
-    from urllib.parse import urlparse, urlencode
-    from urllib.request import Request
-    from urllib.error import HTTPError, URLError
-    from urllib.request import urlopen
+PY3 = sys.version_info.major >= 3
+if PY3:
+        import http.client
+        from http.client import HTTPConnection, CannotSendRequest, BadStatusLine, HTTPException
+        from urllib.error import URLError, HTTPError
+        from urllib.request import urlopen, Request
+        from urllib.parse import urlparse
+        from urllib.parse import parse_qs, urlencode, quote
+        unicode = str; unichr = chr; long = int
+        PY3 = True
+else:
+# if os.path.exists('/usr/lib/python2.7'):
+        from httplib import HTTPConnection, CannotSendRequest, BadStatusLine, HTTPException
+        from urllib2 import urlopen, Request, URLError, HTTPError
+        from urlparse import urlparse, parse_qs
+        from urllib import urlencode, quote
+        import httplib
+        import six
+
 try:
     import zipfile
 except:
@@ -143,24 +151,6 @@ Panel_Dlist=[
  ('UPDATE TERRESTRIAL.XML'),
  ]
 
-class SetList(MenuList):
-    def __init__(self, list):
-        MenuList.__init__(self, list, False, eListboxPythonMultiContent)
-        self.l.setFont(0, gFont('Regular', 20))
-        self.l.setFont(1, gFont('Regular', 22))
-        self.l.setFont(2, gFont('Regular', 24))
-        self.l.setFont(3, gFont('Regular', 26))
-        self.l.setFont(4, gFont('Regular', 28))
-        self.l.setFont(5, gFont('Regular', 30))
-        self.l.setFont(6, gFont('Regular', 32))
-        self.l.setFont(7, gFont('Regular', 34))
-        self.l.setFont(8, gFont('Regular', 36))
-        self.l.setFont(9, gFont('Regular', 40))
-        if isFHD():
-            self.l.setItemHeight(50)
-        else:
-            self.l.setItemHeight(50)
-
 class OneSetList(MenuList):
     def __init__(self, list):
         MenuList.__init__(self, list, True, eListboxPythonMultiContent)
@@ -177,12 +167,11 @@ def DListEntry(name, idx):
     res=[name]
     pngs=resolveFilename(SCOPE_PLUGINS, "Extensions/{}/res/pics/setting.png".format('tvSettings'))
     if isFHD():
-
-        res.append(MultiContentEntryPixmapAlphaTest(pos=(10, 12), size=(34, 25), png=loadPNG(pngs)))
-        res.append(MultiContentEntryText(pos=(60, 0), size=(1900, 50), font=6, text=name, color= 0xa6d1fe, flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER))
+        res.append(MultiContentEntryPixmapAlphaTest(pos=(10, 10), size=(34, 25), png=loadPNG(pngs)))
+        res.append(MultiContentEntryText(pos=(60, 0), size=(1900, 50), font=0, text=name, color= 0xa6d1fe, flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER))
     else:
 
-        res.append(MultiContentEntryPixmapAlphaTest(pos=(10, 6), size=(34, 25), png=loadPNG(pngs)))
+        res.append(MultiContentEntryPixmapAlphaTest(pos=(10, 10), size=(34, 25), png=loadPNG(pngs)))
         res.append(MultiContentEntryText(pos=(60, 0), size=(1000, 50), font=0, text=name, color= 0xa6d1fe, flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER))
     return res
 
@@ -190,10 +179,10 @@ def OneSetListEntry(name):
     res= [name]
     pngx=resolveFilename(SCOPE_PLUGINS, "Extensions/{}/res/pics/plugins.png".format('tvSettings'))
     if isFHD():
-        res.append(MultiContentEntryPixmapAlphaTest(pos=(10, 12), size=(34, 25), png=loadPNG(pngx)))
+        res.append(MultiContentEntryPixmapAlphaTest(pos=(10, 10), size=(34, 25), png=loadPNG(pngx)))
         res.append(MultiContentEntryText(pos=(60, 0), size=(1900, 50), font=0, text=name, color= 0xa6d1fe, flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER))
     else:
-        res.append(MultiContentEntryPixmapAlphaTest(pos=(10, 6), size=(34, 25), png=loadPNG(pngx)))
+        res.append(MultiContentEntryPixmapAlphaTest(pos=(10, 10), size=(34, 25), png=loadPNG(pngx)))
         res.append(MultiContentEntryText(pos=(60, 0), size=(1000, 50), font=0, text=name, color= 0xa6d1fe, flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER))
     return res
 
@@ -216,7 +205,7 @@ class MainSetting(Screen):
         self.setup_title= ('MainSetting')
         Screen.__init__(self, session)
         self.setTitle(_(title_plug))
-        self['text']=SetList([])
+        self['text']=OneSetList([])
         self['title']=Label(_(title_plug))
         self['info']=Label('')
         self['info'] = Label(_('Loading data... Please wait'))
@@ -371,7 +360,7 @@ class SettingVhan(Screen):
             urlsat='https://www.vhannibal.net/enigma2.php'
             r=make_request(urlsat)
             print('rrrrrrrr ', r)
-            if six.PY3:
+            if PY3:
                 r  = six.ensure_str(r)
             match   = re.compile('<td><a href="(.+?)" target="_blank">(.+?)</a></td>.*?<td>(.+?)</td>', re.DOTALL).findall(r)
             for url, name, date in match:
@@ -387,7 +376,7 @@ class SettingVhan(Screen):
             urldtt = 'https://www.vhannibal.net/enigma2dtt.php'
             r2=make_request(urldtt)
             print('rrrrrrrr ', r2)
-            if six.PY3:
+            if PY3:
                 r2  = six.ensure_str(r2)
             match2   = re.compile('<td><a href="(.+?)" target="_blank">(.+?)</a></td>.*?<td>(.+?)</td>', re.DOTALL).findall(r2)
             for url, name, date in match2:
@@ -492,7 +481,7 @@ class SettingVhan2(Screen):
         url='http://sat.alfa-tech.net/upload/settings/vhannibal/'
         r=make_request(url)
         print('rrrrrrrr ', r)
-        if six.PY3:
+        if PY3:
             r  = six.ensure_str(r)
         self.names=[]
         self.urls=[]
@@ -530,13 +519,13 @@ class SettingVhan2(Screen):
                     url = self.urls[idx]
                     self.dest = "/tmp/settings.zip"
                     print("url =", url)
-                    if six.PY3:
+                    if PY3:
                         url = six.ensure_binary(url)
                     if url.startswith(b"https") and sslverify:
                         parsed_uri = urlparse(url)
                         domain = parsed_uri.hostname
                         sniFactory = SNIFactory(domain)
-                        # if six.PY3:
+                        # if PY3:
                             # url = url.encode()
                         print('uurrll: ', url)
                         downloadPage(url, self.dest, sniFactory, timeout=5).addCallback(self.download, self.dest).addErrback(self.downloadError)
@@ -1395,7 +1384,7 @@ class tvConsole(Screen):
         return
 
     def dataAvail(self, data):
-        if six.PY3:
+        if PY3:
             data = data.decode("utf-8")
         try:
             self["text"].setText(self["text"].getText() + data)
