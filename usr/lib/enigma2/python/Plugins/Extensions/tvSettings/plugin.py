@@ -222,17 +222,18 @@ class MainSetting(Screen):
         self['key_blue'].hide()
         self['actions']=ActionMap(['SetupActions', 'ColorActions', ], {'ok': self.okRun,
          'green': self.okRun,
-         'back': self.closerm,
-         'red': self.closerm,
+         'back': self.cancel,
+         'red': self.cancel,
          'yellow': self.Lcn,
-         'cancel': self.closerm}, -1)
+         'cancel': self.cancel}, -1)
         self.onLayoutFinish.append(self.updateMenuList)
 
     def Lcn(self):
         self.mbox=self.session.open(MessageBox, _('Reorder Terrestrial channels with Lcn rules'), MessageBox.TYPE_INFO, timeout=5)
         lcnstart()
 
-    def closerm(self):
+    def cancel(self):
+        deletetmp()    
         self.close()
 
     def updateMenuList(self):
