@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
-from __future__ import print_function
-from enigma import eDVBDB, eServiceReference, eServiceCenter
+from __future__ import print_function                                     
+from enigma import eServiceReference, eServiceCenter
 from Screens.Screen import Screen
 from Screens.MessageBox import MessageBox
 from Components.ActionMap import ActionMap
@@ -14,11 +14,14 @@ import os
 import sys
 import re
 import shutil
-import xml.etree.ElementTree
+try:
+    from xml.etree.cElementTree import ElementTree
+except ImportError:
+    from xml.etree.ElementTree import ElementTree
 
 plugin_path      = os.path.dirname(sys.modules[__name__].__file__)
 rules            = plugin_path + '/rules.xml'
-
+        
 def Bouquet():
     for file in os.listdir('/etc/enigma2/'):
         if re.search('^userbouquet.*.tv', file):
@@ -27,7 +30,7 @@ def Bouquet():
             if re.search('#NAME Digitale Terrestre', x, flags=re.IGNORECASE):
                 return '/etc/enigma2/' + file
 
-class LCN():
+class LCN:
 # class LCN:
     service_types_tv = '1:7:1:0:0:0:0:0:0:0:(type == 1) || (type == 17) || (type == 22) || (type == 25) || (type == 134) || (type == 195)'
 
@@ -37,7 +40,7 @@ class LCN():
         self.lcnlist = []
         self.markers = []
         self.e2services = []
-        mdom = xml.etree.ElementTree.parse(rules)
+        mdom = xml.etree.cElementTree.parse(rules)
         self.root = None
         for x in mdom.getroot():
             if x.tag == 'ruleset' and x.get('name') == 'Italy':
@@ -97,10 +100,12 @@ class LCN():
                 try:
                     exec(cmd)
                 except Exception as e:
-                    print(str(e))
+                    print(e)
 
     def addMarker(self, position, text):
         self.markers.append([position, text])
+
+
 
     def read(self):
         self.readE2Services()
@@ -108,15 +113,14 @@ class LCN():
         try:
             f = open(self.dbfile)
         except Exception as e:
-            print(str(e))
+            print(e)
             return
 
         while True:
             line = f.readline()
             if line == '':
                 break
-
-            ##########
+            #########
             line = line.strip()
             if len(line) != 38:
                 continue
@@ -124,7 +128,7 @@ class LCN():
             if len(tmp) != 6:
                 continue
             self.addLcnToList(int(tmp[0], 16), int(tmp[1], 16), int(tmp[2], 16), int(tmp[3], 16), int(tmp[4]), int(tmp[5]))
-            ################
+            #########
         if self.root is not None:
             for x in self.root:
                 if x.tag == 'rule':
@@ -133,7 +137,7 @@ class LCN():
 
         self.markers.sort(key=lambda z: int(z[0]))
         return
-
+        
     def readE2Services(self):
         self.e2services = []
         refstr = '%s ORDER BY name' % self.service_types_tv
@@ -195,7 +199,7 @@ class LCN():
         try:
             f = open(self.bouquetfile, 'w')
         except Exception as e:
-            print(str(e))
+            print(e)
             return
 
         f.write('#NAME Digitale Terrestre\n')
@@ -219,8 +223,8 @@ class LCN():
         f.close()
         self.ClearDoubleMarker(self.bouquetfile)
 
+
     def ReloadBouquet(self):
-        global set
         print('\n----Reloading bouquets----')
         try:
             from enigma import eDVBDB
@@ -230,3 +234,4 @@ class LCN():
             eDVBDB = None
             os.system('wget -qO - http://127.0.0.1/web/servicelistreload?mode=2 > /dev/null 2>&1 &')
             print('bouquets reloaded...')
+

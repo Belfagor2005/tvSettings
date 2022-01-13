@@ -121,7 +121,6 @@ def ReloadBouquet():
     ReloadBouquets()
 
 os.system('rm -fr /usr/lib/enigma2/python/Plugins/Extensions/tvSettings/temp/*')# clean /temp
-
 currversion='1.7'
 title_plug='..:: TiVuStream Settings V. %s ::..' % currversion
 name_plug='TiVuStream Settings'
@@ -194,7 +193,6 @@ def showlist(data, list):
         plist.append(OneSetListEntry(name))
         icount= icount+1
         list.setList(plist)
-
 
 class MainSetting(Screen):
     def __init__(self, session):
@@ -287,12 +285,10 @@ class MainSetting(Screen):
                     url_sat_oealliance = 'http://raw.githubusercontent.com/oe-alliance/oe-alliance-tuxbox-common/master/src/satellites.xml'
                     link_sat = ssl_urlopen(url_sat_oealliance)
                     dirCopy = '/etc/tuxbox/satellites.xml'
-                    # urlretrieve(link_sat, dirCopy)
                     import requests
                     r = requests.get(link_sat)
                     with open(dirCopy,'wb') as f:
                       f.write(r.content)
-
                     self.session.open(MessageBox, _('Satellites.xml Updated!'), MessageBox.TYPE_INFO, timeout=5)
                     self['info'].setText(_('Installation done !!!'))
                 except:
@@ -310,7 +306,6 @@ class MainSetting(Screen):
                     url_sat_oealliance = 'https://raw.githubusercontent.com/oe-alliance/oe-alliance-tuxbox-common/master/src/terrestrial.xml'
                     link_ter = ssl_urlopen(url_sat_oealliance)
                     dirCopy = '/etc/tuxbox/terrestrial.xml'
-                    # urlretrieve(link_ter, dirCopy)
                     import requests
                     r = requests.get(link_ter)
                     with open(dirCopy,'wb') as f:
@@ -373,7 +368,6 @@ class SettingVhan(Screen):
                 print('name : ', name)
                 self.urls.append(url)
                 self.names.append(name)
-
             urldtt = 'https://www.vhannibal.net/enigma2dtt.php'
             r2=make_request(urldtt)
             print('rrrrrrrr ', r2)
@@ -410,7 +404,6 @@ class SettingVhan(Screen):
                 dest = "/tmp/settings.zip"
                 self.namel = ''
                 print("url =", url)
-                # urlretrieve(url, dest)
                 import requests
                 r = requests.get(url)
                 with open(dest,'wb') as f:
@@ -532,8 +525,8 @@ class SettingVhan2(Screen):
                         downloadPage(url, self.dest, sniFactory, timeout=5).addCallback(self.download, self.dest).addErrback(self.downloadError)
                     else:
                         downloadPage(url, self.dest).addCallback(self.download, self.dest).addErrback(self.downloadError)
-                except Exception as ex:
-                    print(ex)
+                except Exception as e:
+                    print(str(e))
                     print("Error: can't find file or read data")
 
     def download(self, data, dest):
@@ -564,17 +557,18 @@ class SettingVhan2(Screen):
             else:
                 self['info'].setText(_('Settings Not Installed ...'))
 
-        except Exception as ex:
-            print("* error ** %s" % ex)
+        except Exception as e:
+            print("* error ** %s" % str(e))
             self['info'].setText(_('Not Installed ...'))
 
     def downloadError(self, png):
         try:
             if fileExists(png):
                 self.poster_resize(no_cover)
-        except Exception as ex:
-            print(ex)
+        except Exception as e:
+            print(str(e))
             print('downloadError')
+
     def yes(self):
         ReloadBouquet()
 
@@ -653,7 +647,6 @@ class SettingMilenka6121(Screen):
                     # if not os.path.exists('/var/lib/dpkg/status'):
                         set = 1
                         terrestrial()
-                # urlretrieve(url, dest)
                 import requests
                 r = requests.get(url)
                 with open(dest,'wb') as f:
@@ -746,7 +739,6 @@ class SettingManutek(Screen):
                     # if not os.path.exists('/var/lib/dpkg/status'):
                         set = 1
                         terrestrial()
-                # urlretrieve(url, dest)
                 import requests
                 r = requests.get(url)
                 with open(dest,'wb') as f:
@@ -857,7 +849,6 @@ class SettingMorpheus2(Screen):
                     # if not os.path.exists('/var/lib/dpkg/status'):
                         set = 1
                         terrestrial()
-                # urlretrieve(url, dest)
                 import requests
                 r = requests.get(url)
                 with open(dest,'wb') as f:
@@ -975,7 +966,6 @@ class SettingCiefp(Screen):
                     # if not os.path.exists('/var/lib/dpkg/status'):
                         set = 1
                         terrestrial()
-                # urlretrieve(url, dest)
                 import requests
                 r = requests.get(url)
                 with open(dest,'wb') as f:
@@ -1080,7 +1070,6 @@ class tvSettingBi58(Screen):
                     # if not os.path.exists('/var/lib/dpkg/status'):
                         set = 1
                         terrestrial()
-                # urlretrieve(url, dest)
                 import requests
                 r = requests.get(url)
                 with open(dest,'wb') as f:
@@ -1145,7 +1134,7 @@ class SettingPredrag(Screen):
                     name = url
                     name = name.replace('-settings-e2-','Predrag ')
                     name = name + date1 + '-' + date2 + '-' + date3
-                    name = name.replace(".tar.gz", "")
+                    name = name.replace(".tar.gz", " ")
                     url = "http://178.63.156.75/paneladdons/Predr@g/predrag" + url
                     url = checkStr(url)
                     name = checkStr(name)
@@ -1175,7 +1164,6 @@ class SettingPredrag(Screen):
                     # if not os.path.exists('/var/lib/dpkg/status'):
                         set = 1
                         terrestrial()
-                # urlretrieve(url, dest)
                 import requests
                 r = requests.get(url)
                 with open(dest,'wb') as f:
@@ -1273,7 +1261,6 @@ class CirusSetting(Screen):
                     # if not os.path.exists('/var/lib/dpkg/status'):
                         set = 1
                         terrestrial()
-                # urlretrieve(url, dest)
                 import requests
                 r = requests.get(url)
                 with open(dest,'wb') as f:
@@ -1454,13 +1441,11 @@ def Plugins(**kwargs):
 
 def terrestrial():
     SavingProcessTerrestrialChannels=StartSavingTerrestrialChannels()
-    # run a rescue reload
     import time
     now=time.time()
     ttime=time.localtime(now)
     tt=str('{0:02d}'.format(ttime[2])) + str('{0:02d}'.format(ttime[1])) + str(ttime[0])[2:] + '_' + str('{0:02d}'.format(ttime[3])) + str('{0:02d}'.format(ttime[4])) + str('{0:02d}'.format(ttime[5]))
     os.system('tar -czvf /tmp/' + tt + '_enigma2settingsbackup.tar.gz' + ' -C / /etc/enigma2/*.tv /etc/enigma2/*.radio /etc/enigma2/lamedb')
-
     if SavingProcessTerrestrialChannels:
         print('ok')
     return
@@ -1513,7 +1498,7 @@ def StartSavingTerrestrialChannels():
                 if x.find('82000')== -1 and x.find('c0000')== -1:
                     return file
                     break
-        return
+        # return
 
     def ResearchBouquetTerrestrial(search):
         for file in sorted(glob.glob("/etc/enigma2/*.tv")):
@@ -1529,7 +1514,7 @@ def StartSavingTerrestrialChannels():
                     if x.find('eeee0000')!= -1:
                         return file
                         break
-        return
+        # return
 
     def SaveTrasponderService():
         TrasponderListOldLamedb=open(plugin_path +'/temp/TrasponderListOldLamedb', 'w')
@@ -1594,18 +1579,17 @@ def StartSavingTerrestrialChannels():
           return True
         except :
           pass
-        return
+        # return
 
     Service=SaveTrasponderService()
     if Service:
       if not SaveBouquetTerrestrial():
         CreateBouquetForce()
       return True
-    return
+    # return
 
 def LamedbRestore():
     try:
-
       TrasponderListNewLamedb=open(plugin_path +'/temp/TrasponderListNewLamedb', 'w')
       ServiceListNewLamedb=open(plugin_path +'/temp/ServiceListNewLamedb', 'w')
       inTransponder=False
