@@ -3,7 +3,7 @@
 #--------------------#
 #  coded by Lululla  #
 #   skin by MMark    #
-#     10/12/2021     #
+#     14/01/2022     #
 #--------------------#
 #Info http://t.me/tivustream
 from __future__ import print_function
@@ -128,11 +128,9 @@ category = 'lululla.xml'
 plugin_path=os.path.dirname(sys.modules[__name__].__file__)
 ico_path = resolveFilename(SCOPE_PLUGINS, "Extensions/{}/logo.png".format('tvSettings'))
 res_plugin_path= resolveFilename(SCOPE_PLUGINS, "Extensions/{}/res/".format('tvSettings'))
-
+skin_path=resolveFilename(SCOPE_PLUGINS, "Extensions/{}/res/skins/hd/".format('tvSettings'))
 if isFHD():
     skin_path=resolveFilename(SCOPE_PLUGINS, "Extensions/{}/res/skins/fhd/".format('tvSettings'))
-else:
-    skin_path=resolveFilename(SCOPE_PLUGINS, "Extensions/{}/res/skins/hd/".format('tvSettings'))
 if DreamOS():
     skin_path=skin_path + 'dreamOs/'
 
@@ -252,11 +250,7 @@ class MainSetting(Screen):
 
     def keyNumberGlobalCB(self, idx):
         sel=self.menu_list[idx]
-        if sel== _('UPDATE SATELLITES.XML'):
-            self.okSATELLITE()
-        elif sel== _('UPDATE TERRESTRIAL.XML'):
-            self.okTERRESTRIAL()
-        elif sel== ('SETTINGS CIEFP'):
+        if sel== ('SETTINGS CIEFP'):
             self.session.open(SettingCiefp)
         elif sel== ('SETTINGS CYRUS'):
             self.session.open(CirusSetting)
@@ -274,7 +268,11 @@ class MainSetting(Screen):
             self.session.open(SettingVhan)
         elif sel == ('SETTINGS VHANNIBAL 2'):
             self.session.open(SettingVhan2)
-
+        elif sel== _('UPDATE SATELLITES.XML'):
+            self.okSATELLITE()
+        elif sel== _('UPDATE TERRESTRIAL.XML'):
+            self.okTERRESTRIAL()
+            
     def okSATELLITE(self):
         self.session.openWithCallback(self.okSatInstall, MessageBox,(_("Do you want to install?")), MessageBox.TYPE_YESNO)
 
