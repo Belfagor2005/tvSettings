@@ -20,12 +20,11 @@ import shutil
 # import xml.etree.cElementTree as ET
 
 try:
-    from xml.etree.cElementTree import ElementTree as ET
-    from xml.etree.cElementTree import fromstring
-    
-except ImportError:
     from xml.etree.ElementTree import ElementTree as  ET
     from xml.etree.ElementTree import fromstring
+except ImportError:
+    from xml.etree.cElementTree import ElementTree as ET
+    from xml.etree.cElementTree import fromstring
 
 #NAME Digitale Terrestre
 plugin_path      = os.path.dirname(sys.modules[__name__].__file__)
@@ -49,7 +48,7 @@ class LCN:
         self.lcnlist = []
         self.markers = []
         self.e2services = []
-        mdom = ET.parse('/usr/lib/enigma2/python/Plugins/Extensions/tvaddon/rules.xml')
+        mdom = ET.parse('/usr/lib/enigma2/python/Plugins/Extensions/tvSettings/rules.xml')
         self.root = None
         for x in mdom.getroot():
             if x.tag == 'ruleset' and x.get('name') == 'Italy':
