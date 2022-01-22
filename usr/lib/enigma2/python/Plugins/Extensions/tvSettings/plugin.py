@@ -112,6 +112,21 @@ def make_request(url):
         return
     return
 
+def ReloadBouquets():
+    # global set
+    print('\n----Reloading bouquets----\n')
+    # if set == 1:
+        # set = 0
+        # terrestrial_rest()
+    try:
+        from enigma import eDVBDB
+        eDVBDB.getInstance().reloadBouquets()
+        print('bouquets reloaded...')
+    except ImportError:
+        eDVBDB = None
+        os.system('wget -qO - http://127.0.0.1/web/servicelistreload?mode=2 > /dev/null 2>&1 &')
+        print('bouquets reloaded...')
+
 def ReloadBouquet():
     global set
     print('\n----Reloading bouquets----')
@@ -1480,7 +1495,8 @@ def lcnstart():
         lcn.read()
         if len(lcn.lcnlist) > 0:
             lcn.writeBouquet()
-            lcn.reloadBouquets()
+            # lcn.reloadBouquets()
+            ReloadBouquets()
     return
 
 def StartSavingTerrestrialChannels():
