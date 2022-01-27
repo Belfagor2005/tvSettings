@@ -16,9 +16,6 @@ import sys
 import re
 import shutil
 
-    
-# import xml.etree.cElementTree as ET
-
 try:
     from xml.etree.ElementTree import ElementTree as  ET
     from xml.etree.ElementTree import fromstring
