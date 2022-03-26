@@ -236,9 +236,19 @@ class MainSetting(Screen):
          'cancel': self.cancel}, -1)
         self.onLayoutFinish.append(self.updateMenuList)
 
+    # def Lcn(self):
+        # self.mbox=self.session.open(MessageBox, _('Reorder Terrestrial channels with Lcn rules'), MessageBox.TYPE_INFO, timeout=5)
+        # lcnstart()
+
     def Lcn(self):
-        self.mbox=self.session.open(MessageBox, _('Reorder Terrestrial channels with Lcn rules'), MessageBox.TYPE_INFO, timeout=5)
-        lcnstart()
+        if self.LcnOn:
+            lcn = LCN()
+            lcn.read()
+            if len(lcn.lcnlist) > 0:
+                lcn.writeBouquet()
+                lcn.ReloadBouquet()
+                self.session.open(MessageBox, _('Sorting Terrestrial channels with Lcn rules Completed'), MessageBox.TYPE_INFO, timeout=5)
+                
 
     def cancel(self):
         deletetmp()    
@@ -378,6 +388,8 @@ class SettingVhan(Screen):
                 print('name : ', name)
                 self.urls.append(url)
                 self.names.append(name)
+            
+            
             urldtt = 'https://www.vhannibal.net/enigma2dtt.php'
             r2=make_request(urldtt)
             print('rrrrrrrr ', r2)
@@ -393,6 +405,7 @@ class SettingVhan(Screen):
                 print('name : ', name)
                 self.urls.append(url)
                 self.names.append(name)
+                
             self.downloading = True
             self['info'].setText(_('Please select ...'))
             showlist(self.names, self['text'])
@@ -707,7 +720,7 @@ class SettingManutek(Screen):
          'cancel': self.close}, -2)
 
     def downxmlpage(self):
-        url = 'http://www.manutek.it/isetting/'
+        url = 'http://www.manutek.it/isetting/index.php'
         data = make_request(url)
         r = data
         print('rrrrrrrr ', r)
@@ -882,7 +895,7 @@ class SettingMorpheus2(Screen):
                     os.system("cp -rf  '/tmp/unzipped/" + str(self.namel) + "/'* " + fdest2)
                     title = _("Installation Settings")
                     self.session.openWithCallback(self.yes, tvConsole, title=_(title), cmdlist=["wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"],closeOnSuccess =False)
-                self['info'].setText(_('Settings Installed ...'))
+                    self['info'].setText(_('Settings Installed ...'))
             else:
                 self['info'].setText(_('Settings Not Installed ...'))
 
@@ -997,7 +1010,7 @@ class SettingCiefp(Screen):
                     os.system("cp -rf  '/tmp/unzipped/" + str(self.namel) + "/'* " + fdest2)
                     title = _("Installation Settings")
                     self.session.openWithCallback(self.yes, tvConsole, title=_(title), cmdlist=["wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"] , closeOnSuccess =False)
-                self['info'].setText(_('Settings Installed ...'))
+                    self['info'].setText(_('Settings Installed ...'))
             else:
                 self['info'].setText(_('Settings Not Installed ...'))
 
@@ -1090,7 +1103,7 @@ class tvSettingBi58(Screen):
                     os.system('rm -rf /etc/enigma2/*.tv')
                     title = _("Installation Settings")
                     self.session.openWithCallback(self.yes, tvConsole, title=_(title), cmdlist=["tar -xvf /tmp/settings.tar.gz -C /; wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"], closeOnSuccess =False)
-                self['info'].setText(_('Settings Installed ...'))
+                    self['info'].setText(_('Settings Installed ...'))
             else:
                 self['info'].setText(_('Settings Not Installed ...'))
 
@@ -1184,7 +1197,7 @@ class SettingPredrag(Screen):
                     os.system('rm -rf /etc/enigma2/*.tv')
                     title = _("Installation Settings")
                     self.session.openWithCallback(self.yes, tvConsole, title=_(title), cmdlist=["tar -xvf /tmp/settings.tar.gz -C /; wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"], closeOnSuccess =False)
-                self['info'].setText(_('Settings Installed ...'))
+                    self['info'].setText(_('Settings Installed ...'))
             else:
                 self['info'].setText(_('Settings Not Installed ...'))
 
@@ -1292,7 +1305,7 @@ class CirusSetting(Screen):
                     os.system("cp -rf  '/tmp/unzipped/" + str(self.namel) + "/'* " + fdest2)
                     title = _("Installation Settings")
                     self.session.openWithCallback(self.yes, tvConsole, title=_(title), cmdlist=["wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"] , closeOnSuccess =False)
-                self['info'].setText(_('Settings Installed ...'))
+                    self['info'].setText(_('Settings Installed ...'))
             else:
                 self['info'].setText(_('Settings Not Installed ...'))
 
@@ -1492,9 +1505,9 @@ def lcnstart():
         lcn.read()
         if len(lcn.lcnlist) > 0:
             lcn.writeBouquet()
-            # lcn.reloadBouquets()
             ReloadBouquets()
     return
+
 
 def StartSavingTerrestrialChannels():
     def ForceSearchBouquetTerrestrial():
@@ -1502,7 +1515,8 @@ def StartSavingTerrestrialChannels():
             if 'tivustream' in file:
                 continue
             f=open(file, "r").read()
-            x=f.strip().lower()
+            x=f.strip()
+            x = x.lower()
             if x.find('http'):
                 continue
             if x.find('eeee0000')!= -1:
@@ -1516,7 +1530,8 @@ def StartSavingTerrestrialChannels():
             if 'tivustream' in file:
                 continue
             f=open(file, "r").read()
-            x=f.strip().lower()
+            x=f.strip()
+            x = x.lower()
             x1=f.strip()
             if x1.find("#NAME") != -1:
                 if x.lower().find((search.lower())) != -1:
@@ -1573,7 +1588,7 @@ def StartSavingTerrestrialChannels():
 
     def CreateBouquetForce():
         WritingBouquetTemporary=open(plugin_path +'/temp/TerrestrialChannelListArchive','w')
-        WritingBouquetTemporary.write('#NAME Terrestre\n')
+        WritingBouquetTemporary.write('#NAME Digitale Terrestre\n')
         ReadingTempServicelist=open(plugin_path +'/temp/ServiceListOldLamedb').readlines()
         for jx in ReadingTempServicelist:
           if jx.find('eeee') != -1:
@@ -1597,8 +1612,8 @@ def StartSavingTerrestrialChannels():
       if not SaveBouquetTerrestrial():
         CreateBouquetForce()
       return True
-    # return
 
+        
 def LamedbRestore():
     try:
       TrasponderListNewLamedb=open(plugin_path +'/temp/TrasponderListNewLamedb', 'w')
