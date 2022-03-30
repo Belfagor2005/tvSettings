@@ -3,7 +3,7 @@
 #--------------------#
 #  coded by Lululla  #
 #   skin by MMark    #
-#     24/01/2022     #
+#     24/03/2022     #
 #--------------------#
 #Info http://t.me/tivustream
 from __future__ import print_function
@@ -63,7 +63,6 @@ if PY3:
         unicode = str; unichr = chr; long = int
         PY3 = True
 else:
-# if os.path.exists('/usr/lib/python2.7'):
         from httplib import HTTPConnection, CannotSendRequest, BadStatusLine, HTTPException
         from urllib2 import urlopen, Request, URLError, HTTPError
         from urlparse import urlparse, parse_qs
