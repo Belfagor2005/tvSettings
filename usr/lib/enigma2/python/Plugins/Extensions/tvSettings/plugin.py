@@ -3,7 +3,7 @@
 #--------------------#
 #  coded by Lululla  #
 #   skin by MMark    #
-#     24/03/2022     #
+#     10/04/2022     #
 #--------------------#
 #Info http://t.me/tivustream
 from __future__ import print_function
@@ -449,6 +449,7 @@ class SettingVhan(Screen):
                     os.system('rm -rf /etc/enigma2/lamedb')
                     os.system('rm -rf /etc/enigma2/*.radio')
                     os.system('rm -rf /etc/enigma2/*.tv')
+                    os.system('rm -rf /etc/enigma2/*.del')
                     os.system("cp -rf  '/tmp/unzipped/" + str(self.namel) + "/'* " + fdest2)
                     title = _("Installation Settings")
                     self.session.openWithCallback(self.yes, tvConsole, title=_(title), cmdlist=["wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &; sleep 3"], closeOnSuccess =False)
@@ -460,6 +461,10 @@ class SettingVhan(Screen):
 
     def yes(self):
         ReloadBouquet()
+
+
+
+        
 
 class SettingVhan2(Screen):
     def __init__(self, session):
@@ -572,6 +577,7 @@ class SettingVhan2(Screen):
                 os.system('rm -rf /etc/enigma2/lamedb')
                 os.system('rm -rf /etc/enigma2/*.radio')
                 os.system('rm -rf /etc/enigma2/*.tv')
+                os.system('rm -rf /etc/enigma2/*.del')
                 os.system("cp -rf  '/tmp/unzipped/" + str(self.namel) + "/'* " + fdest2)
                 title = _("Installation Settings")
                 self.session.openWithCallback(self.yes, tvConsole, title=_(title), cmdlist=["wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &; sleep 3"], closeOnSuccess =False)
@@ -677,6 +683,7 @@ class SettingMilenka6121(Screen):
                     os.system('rm -rf /etc/enigma2/lamedb')
                     os.system('rm -rf /etc/enigma2/*.radio')
                     os.system('rm -rf /etc/enigma2/*.tv')
+                    os.system('rm -rf /etc/enigma2/*.del')
                     title = _("Installation Settings")
                     self.session.openWithCallback(self.yes, tvConsole, title=_(title), cmdlist=["tar -xvf /tmp/settings.tar.gz -C /; wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"], closeOnSuccess =False)
                 self['info'].setText(_('Settings Installed ...'))
@@ -780,6 +787,7 @@ class SettingManutek(Screen):
                     os.system('rm -rf /etc/enigma2/lamedb')
                     os.system('rm -rf /etc/enigma2/*.radio')
                     os.system('rm -rf /etc/enigma2/*.tv')
+                    os.system('rm -rf /etc/enigma2/*.del')
                     os.system("cp -rf  '/tmp/unzipped/" + str(self.namel) + "/'* " + fdest2)
                     title = _("Installation Settings")
                     self.session.openWithCallback(self.yes, tvConsole, title=_(title), cmdlist=["wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &; sleep 3"], closeOnSuccess =False)
@@ -891,6 +899,7 @@ class SettingMorpheus2(Screen):
                     os.system('rm -rf /etc/enigma2/lamedb')
                     os.system('rm -rf /etc/enigma2/*.radio')
                     os.system('rm -rf /etc/enigma2/*.tv')
+                    os.system('rm -rf /etc/enigma2/*.del')
                     os.system("cp -rf  '/tmp/unzipped/" + str(self.namel) + "/'* " + fdest2)
                     title = _("Installation Settings")
                     self.session.openWithCallback(self.yes, tvConsole, title=_(title), cmdlist=["wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"],closeOnSuccess =False)
@@ -1006,6 +1015,7 @@ class SettingCiefp(Screen):
                     os.system('rm -rf /etc/enigma2/lamedb')
                     os.system('rm -rf /etc/enigma2/*.radio')
                     os.system('rm -rf /etc/enigma2/*.tv')
+                    os.system('rm -rf /etc/enigma2/*.del')
                     os.system("cp -rf  '/tmp/unzipped/" + str(self.namel) + "/'* " + fdest2)
                     title = _("Installation Settings")
                     self.session.openWithCallback(self.yes, tvConsole, title=_(title), cmdlist=["wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"] , closeOnSuccess =False)
@@ -1100,6 +1110,7 @@ class tvSettingBi58(Screen):
                     os.system('rm -rf /etc/enigma2/lamedb')
                     os.system('rm -rf /etc/enigma2/*.radio')
                     os.system('rm -rf /etc/enigma2/*.tv')
+                    os.system('rm -rf /etc/enigma2/*.del')
                     title = _("Installation Settings")
                     self.session.openWithCallback(self.yes, tvConsole, title=_(title), cmdlist=["tar -xvf /tmp/settings.tar.gz -C /; wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"], closeOnSuccess =False)
                     self['info'].setText(_('Settings Installed ...'))
@@ -1194,6 +1205,7 @@ class SettingPredrag(Screen):
                     os.system('rm -rf /etc/enigma2/lamedb')
                     os.system('rm -rf /etc/enigma2/*.radio')
                     os.system('rm -rf /etc/enigma2/*.tv')
+                    os.system('rm -rf /etc/enigma2/*.del')
                     title = _("Installation Settings")
                     self.session.openWithCallback(self.yes, tvConsole, title=_(title), cmdlist=["tar -xvf /tmp/settings.tar.gz -C /; wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"], closeOnSuccess =False)
                     self['info'].setText(_('Settings Installed ...'))
@@ -1301,6 +1313,7 @@ class CirusSetting(Screen):
                     os.system('rm -rf /etc/enigma2/lamedb')
                     os.system('rm -rf /etc/enigma2/*.radio')
                     os.system('rm -rf /etc/enigma2/*.tv')
+                    os.system('rm -rf /etc/enigma2/*.del')
                     os.system("cp -rf  '/tmp/unzipped/" + str(self.namel) + "/'* " + fdest2)
                     title = _("Installation Settings")
                     self.session.openWithCallback(self.yes, tvConsole, title=_(title), cmdlist=["wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"] , closeOnSuccess =False)

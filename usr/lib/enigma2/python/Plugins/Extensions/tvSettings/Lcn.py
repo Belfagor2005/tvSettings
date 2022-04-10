@@ -55,7 +55,7 @@ class LCN:
             if x.tag == 'ruleset' and x.get('name') == 'Italy':
                 self.root = x
                 return
-        return
+        # return
 
     def addLcnToList(self, namespace, nid, tsid, sid, lcn, signal):
         for x in self.lcnlist:
