@@ -3,7 +3,7 @@
 #--------------------#
 #  coded by Lululla  #
 #   skin by MMark    #
-#     10/04/2022     #
+#     24/04/2022     #
 #--------------------#
 #Info http://t.me/tivustream
 from __future__ import print_function
@@ -42,11 +42,11 @@ import shutil
 import ssl
 import glob
 import six
-try:
-    from Plugins.Extensions.tvSettings.Utils import *
-except:
-    from . import Utils
-from .Lcn import *
+# try:
+    # from Plugins.Extensions.tvSettings.Utils import *
+# except:
+from . import Utils
+from .Lcn import LCN
 
 global category
 global set
@@ -143,9 +143,9 @@ plugin_path=os.path.dirname(sys.modules[__name__].__file__)
 ico_path = resolveFilename(SCOPE_PLUGINS, "Extensions/{}/logo.png".format('tvSettings'))
 res_plugin_path= resolveFilename(SCOPE_PLUGINS, "Extensions/{}/res/".format('tvSettings'))
 skin_path=resolveFilename(SCOPE_PLUGINS, "Extensions/{}/res/skins/hd/".format('tvSettings'))
-if isFHD():
+if Utils.isFHD():
     skin_path=resolveFilename(SCOPE_PLUGINS, "Extensions/{}/res/skins/fhd/".format('tvSettings'))
-if DreamOS():
+if Utils.DreamOS():
     skin_path=skin_path + 'dreamOs/'
 
 Panel_Dlist=[
@@ -165,33 +165,35 @@ Panel_Dlist=[
 class OneSetList(MenuList):
     def __init__(self, list):
         MenuList.__init__(self, list, True, eListboxPythonMultiContent)
-        self.l.setItemHeight(50)
-        textfont=int(22)
-        self.l.setFont(0, gFont('Regular', textfont))        
-        if isFHD():
+        if Utils.isFHD():
             self.l.setItemHeight(50)
             textfont=int(34)
             self.l.setFont(0, gFont('Regular', textfont))
-
+        else:    
+            self.l.setItemHeight(50)
+            textfont=int(22)            
+            self.l.setFont(0, gFont('Regular', textfont))  
 
 def DListEntry(name, idx):
     res=[name]
     pngs=resolveFilename(SCOPE_PLUGINS, "Extensions/{}/res/pics/setting.png".format('tvSettings'))
-    res.append(MultiContentEntryPixmapAlphaTest(pos=(10, 12), size=(34, 25), png=loadPNG(pngs)))
-    res.append(MultiContentEntryText(pos=(60, 0), size=(1000, 50), font=0, text=name, color= 0xa6d1fe, flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER))    
-    if isFHD():
+    if Utils.isFHD():
         res.append(MultiContentEntryPixmapAlphaTest(pos=(10, 12), size=(34, 25), png=loadPNG(pngs)))
         res.append(MultiContentEntryText(pos=(60, 0), size=(1900, 50), font=0, text=name, color= 0xa6d1fe, flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER))
+    else:    
+        res.append(MultiContentEntryPixmapAlphaTest(pos=(10, 12), size=(34, 25), png=loadPNG(pngs)))
+        res.append(MultiContentEntryText(pos=(60, 0), size=(1000, 50), font=0, text=name, color= 0xa6d1fe, flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER))         
     return res
 
 def OneSetListEntry(name):
     res= [name]
     pngx=resolveFilename(SCOPE_PLUGINS, "Extensions/{}/res/pics/plugins.png".format('tvSettings'))
-    res.append(MultiContentEntryPixmapAlphaTest(pos=(10, 12), size=(34, 25), png=loadPNG(pngx)))
-    res.append(MultiContentEntryText(pos=(60, 0), size=(1000, 50), font=0, text=name, color= 0xa6d1fe, flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER))    
-    if isFHD():
+    if Utils.isFHD():
         res.append(MultiContentEntryPixmapAlphaTest(pos=(10, 12), size=(34, 25), png=loadPNG(pngx)))
         res.append(MultiContentEntryText(pos=(60, 0), size=(1900, 50), font=0, text=name, color= 0xa6d1fe, flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER))
+    else:
+        res.append(MultiContentEntryPixmapAlphaTest(pos=(10, 12), size=(34, 25), png=loadPNG(pngx)))
+        res.append(MultiContentEntryText(pos=(60, 0), size=(1000, 50), font=0, text=name, color= 0xa6d1fe, flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER))            
     return res
 
 def showlist(data, list):
@@ -241,16 +243,15 @@ class MainSetting(Screen):
 
     def Lcn(self):
         if self.LcnOn:
-            lcn = LCN()
+            lcn = Lcn.LCN()
             lcn.read()
             if len(lcn.lcnlist) > 0:
                 lcn.writeBouquet()
                 lcn.ReloadBouquet()
                 self.session.open(MessageBox, _('Sorting Terrestrial channels with Lcn rules Completed'), MessageBox.TYPE_INFO, timeout=5)
-                
 
     def cancel(self):
-        deletetmp()    
+        Utils.deletetmp()    
         self.close()
 
     def updateMenuList(self):
@@ -299,7 +300,7 @@ class MainSetting(Screen):
 
     def okSatInstall(self, result):
         if result:
-            if checkInternet():
+            if Utils.checkInternet():
                 try:
                     url_sat_oealliance = 'http://raw.githubusercontent.com/oe-alliance/oe-alliance-tuxbox-common/master/src/satellites.xml'
                     link_sat = ssl_urlopen(url_sat_oealliance)
@@ -320,7 +321,7 @@ class MainSetting(Screen):
 
     def okTerrInstall(self, result):
         if result:
-            if checkInternet():
+            if Utils.checkInternet():
                 try:
                     url_sat_oealliance = 'https://raw.githubusercontent.com/oe-alliance/oe-alliance-tuxbox-common/master/src/terrestrial.xml'
                     link_ter = ssl_urlopen(url_sat_oealliance)
@@ -357,7 +358,7 @@ class SettingVhan(Screen):
         self['key_blue'].hide()
         self.downloading=False
         self.timer=eTimer()
-        if DreamOS():
+        if Utils.DreamOS():
             self.timer_conn=self.timer.timeout.connect(self.downxmlpage)
         else:
             self.timer.callback.append(self.downxmlpage)
@@ -381,8 +382,8 @@ class SettingVhan(Screen):
             for url, name, date in match:
                 name = name + ' ' + date
                 url = "https://www.vhannibal.net/" + url
-                url = checkStr(url)
-                name = checkStr(name)
+                url = Utils.checkStr(url)
+                name = Utils.checkStr(name)
                 print('url : ', url)
                 print('name : ', name)
                 self.urls.append(url)
@@ -398,8 +399,8 @@ class SettingVhan(Screen):
             for url, name, date in match2:
                 name = name + ' ' + date
                 url = "https://www.vhannibal.net/" + url
-                url = checkStr(url)
-                name = checkStr(name)
+                url = Utils.checkStr(url)
+                name = Utils.checkStr(name)
                 print('url : ', url)
                 print('name : ', name)
                 self.urls.append(url)
@@ -413,6 +414,10 @@ class SettingVhan(Screen):
             self['info'].setText(_('Download page get failed ...'))                                                                   
 
     def okRun(self):
+        i = len(self.names)
+        print('iiiiii= ',i)
+        if i < 1:
+            return    
         self.session.openWithCallback(self.okInstall, MessageBox,(_("Do you want to install?")), MessageBox.TYPE_YESNO)
 
     def okInstall(self, result):
@@ -463,9 +468,6 @@ class SettingVhan(Screen):
         ReloadBouquet()
 
 
-
-        
-
 class SettingVhan2(Screen):
     def __init__(self, session):
         self.session=session
@@ -487,7 +489,7 @@ class SettingVhan2(Screen):
         self['key_blue'].hide()
         self.downloading=False
         self.timer=eTimer()
-        if DreamOS():
+        if Utils.DreamOS():
             self.timer_conn=self.timer.timeout.connect(self.downxmlpage)
         else:
             self.timer.callback.append(self.downxmlpage)
@@ -515,8 +517,8 @@ class SettingVhan2(Screen):
                 name = "Vhannibal" + url
                 name = name.replace(".zip", "").replace("%20", " ")
                 url = "http://sat.alfa-tech.net/upload/settings/vhannibal/Vhannibal" + url + '.zip'
-                url = checkStr(url)
-                name = checkStr(name)
+                url = Utils.checkStr(url)
+                name = Utils.checkStr(name)
                 self.urls.append(url)
                 self.names.append(name)
                 self.downloading = True
@@ -527,6 +529,10 @@ class SettingVhan2(Screen):
             self['info'].setText(_('Download page get failed ...'))                                                                   
 
     def okRun(self):
+        i = len(self.names)
+        print('iiiiii= ',i)
+        if i < 1:
+            return    
         self.session.openWithCallback(self.okInstall, MessageBox,(_("Do you want to install?")), MessageBox.TYPE_YESNO)
 
     def okInstall(self, result):
@@ -621,7 +627,7 @@ class SettingMilenka6121(Screen):
         self['key_blue'].hide()
         self.downloading=False
         self.timer=eTimer()
-        if DreamOS():
+        if Utils.DreamOS():
             self.timer_conn=self.timer.timeout.connect(self.downxmlpage)
         else:
             self.timer.callback.append(self.downxmlpage)
@@ -648,8 +654,8 @@ class SettingMilenka6121(Screen):
                     name = name + ' ' + date1 + '-' + date2 + '-' + date3
                     name = name.replace("_", " ").replace(".tar.gz", "")
                     url = "http://178.63.156.75/tarGz/Satvenus" + url
-                    url = checkStr(url)
-                    name = checkStr(name)
+                    url = Utils.checkStr(url)
+                    name = Utils.checkStr(name)
                     self.urls.append(url)
                     self.names.append(name)
                     self.downloading = True
@@ -660,6 +666,10 @@ class SettingMilenka6121(Screen):
             self['info'].setText(_('Download page get failed ...'))                                                                   
 
     def okRun(self):
+        i = len(self.names)
+        print('iiiiii= ',i)
+        if i < 1:
+            return    
         self.session.openWithCallback(self.okInstall, MessageBox,(_("Do you want to install?")), MessageBox.TYPE_YESNO)
 
     def okInstall(self, result):
@@ -714,7 +724,7 @@ class SettingManutek(Screen):
         self['key_blue'].hide()
         self.downloading=False
         self.timer=eTimer()
-        if DreamOS():
+        if Utils.DreamOS():
             self.timer_conn=self.timer.timeout.connect(self.downxmlpage)
         else:
             self.timer.callback.append(self.downxmlpage)
@@ -740,8 +750,8 @@ class SettingManutek(Screen):
                 name = url
                 name = name.replace(".zip", "").replace("%20", " ").replace("NemoxyzRLS_", "").replace("_", " ")
                 url = 'http://www.manutek.it/isetting/enigma2/' + url + '.zip'
-                url = checkStr(url)
-                name = checkStr(name)
+                url = Utils.checkStr(url)
+                name = Utils.checkStr(name)
                 self.urls.append(url)
                 self.names.append(name)
                 self.downloading = True
@@ -752,6 +762,10 @@ class SettingManutek(Screen):
             self['info'].setText(_('Download page get failed ...'))                                                                   
 
     def okRun(self):
+        i = len(self.names)
+        print('iiiiii= ',i)
+        if i < 1:
+            return    
         self.session.openWithCallback(self.okInstall, MessageBox,(_("Do you want to install?")), MessageBox.TYPE_YESNO)
 
     def okInstall(self, result):
@@ -819,7 +833,7 @@ class SettingMorpheus2(Screen):
         self['key_blue'].hide()
         self.downloading=False
         self.timer=eTimer()
-        if DreamOS():
+        if Utils.DreamOS():
             self.timer_conn=self.timer.timeout.connect(self.downxmlpage)
         else:
             self.timer.callback.append(self.downxmlpage)
@@ -849,8 +863,8 @@ class SettingMorpheus2(Screen):
                     name = name.replace(".zip", "").replace("%20", " ").replace("_", " ")
                     name = name.replace("Morph883", "Morpheus883").replace("E2", "")
                     url = "http://morpheus883.altervista.org/settings/" + url
-                    url = checkStr(url)
-                    name = checkStr(name)
+                    url = Utils.checkStr(url)
+                    name = Utils.checkStr(name)
                     self.urls.append(url)
                     self.names.append(name)
                     print("url =", url)
@@ -862,6 +876,10 @@ class SettingMorpheus2(Screen):
             self['info'].setText(_('Download page get failed ...'))                                                                   
 
     def okRun(self):
+        i = len(self.names)
+        print('iiiiii= ',i)
+        if i < 1:
+            return    
         self.session.openWithCallback(self.okInstall, MessageBox,(_("Do you want to install?")), MessageBox.TYPE_YESNO)
 
     def okInstall(self, result):
@@ -936,7 +954,7 @@ class SettingCiefp(Screen):
         self['key_blue'].hide()
         self.downloading = False
         self.timer = eTimer()
-        if DreamOS():
+        if Utils.DreamOS():
             self.timer_conn = self.timer.timeout.connect(self.downxmlpage)
         else:
             self.timer.callback.append(self.downxmlpage)
@@ -966,10 +984,10 @@ class SettingCiefp(Screen):
                         continue
                     if 'Sat' in name.lower():
                         continue
-                    name = checkStr(name)
+                    name = Utils.checkStr(name)
                     url = url.replace('blob', 'raw')
                     url = 'https://github.com' + url
-                    url = checkStr(url)
+                    url = Utils.checkStr(url)
                     print('name ', name)
                     print('url ', url)
                     self.urls.append(url)
@@ -982,6 +1000,10 @@ class SettingCiefp(Screen):
             self['info'].setText(_('Download page get failed ...'))                                                                   
 
     def okRun(self):
+        i = len(self.names)
+        print('iiiiii= ',i)
+        if i < 1:
+            return    
         self.session.openWithCallback(self.okInstall, MessageBox,(_("Do you want to install?")), MessageBox.TYPE_YESNO)
 
     def okInstall(self, result):
@@ -1047,7 +1069,7 @@ class tvSettingBi58(Screen):
         self['key_blue'].hide()
         self.downloading=False
         self.timer=eTimer()
-        if DreamOS():
+        if Utils.DreamOS():
             self.timer_conn=self.timer.timeout.connect(self.downxmlpage)
         else:
             self.timer.callback.append(self.downxmlpage)
@@ -1075,8 +1097,8 @@ class tvSettingBi58(Screen):
                     name = name.replace(".tar.gz", "")
                     name = name.replace("%20", " ")
                     url = "http://178.63.156.75/paneladdons/Bi58/bi58-e2" + url
-                    url = checkStr(url)
-                    name = checkStr(name)
+                    url = Utils.checkStr(url)
+                    name = Utils.checkStr(name)
                     self.urls.append(url)
                     self.names.append(name)
                     self.downloading = True
@@ -1087,6 +1109,10 @@ class tvSettingBi58(Screen):
             self['info'].setText(_('Download page get failed ...'))                                                                   
 
     def okRun(self):
+        i = len(self.names)
+        print('iiiiii= ',i)
+        if i < 1:
+            return    
         self.session.openWithCallback(self.okInstall, MessageBox,(_("Do you want to install?")), MessageBox.TYPE_YESNO)
 
     def okInstall(self, result):
@@ -1141,7 +1167,7 @@ class SettingPredrag(Screen):
         self['key_blue'].hide()
         self.downloading=False
         self.timer=eTimer()
-        if DreamOS():
+        if Utils.DreamOS():
             self.timer_conn=self.timer.timeout.connect(self.downxmlpage)
         else:
             self.timer.callback.append(self.downxmlpage)
@@ -1169,8 +1195,8 @@ class SettingPredrag(Screen):
                     name = name + date1 + '-' + date2 + '-' + date3
                     name = name.replace(".tar.gz", " ")
                     url = "http://178.63.156.75/paneladdons/Predr@g/predrag" + url
-                    url = checkStr(url)
-                    name = checkStr(name)
+                    url = Utils.checkStr(url)
+                    name = Utils.checkStr(name)
                     self.urls.append(url)
                     self.names.append(name)
                     self.downloading = True
@@ -1181,6 +1207,10 @@ class SettingPredrag(Screen):
             self['info'].setText(_('Download page get failed ...'))                                                                   
 
     def okRun(self):
+        i = len(self.names)
+        print('iiiiii= ',i)
+        if i < 1:
+            return    
         self.session.openWithCallback(self.okInstall, MessageBox,(_("Do you want to install?")), MessageBox.TYPE_YESNO)
 
     def okInstall(self, result):
@@ -1237,7 +1267,7 @@ class CirusSetting(Screen):
         self.downloading=False
         self.timer=eTimer()
 
-        if DreamOS():
+        if Utils.DreamOS():
             self.timer_conn=self.timer.timeout.connect(self.downxmlpage)
         else:
             self.timer.callback.append(self.downxmlpage)
@@ -1268,8 +1298,8 @@ class CirusSetting(Screen):
                     if 'Sat' in name.lower():
                         continue
                     name = name + ' ' + date
-                    name = checkStr(name)
-                    url = checkStr(url)
+                    name = Utils.checkStr(name)
+                    url = Utils.checkStr(url)
                     self.urls.append(url)
                     self.names.append(name)
                     self.downloading = True
@@ -1280,6 +1310,10 @@ class CirusSetting(Screen):
             self['info'].setText(_('Download page get failed ...'))                                                                   
 
     def okRun(self):
+        i = len(self.names)
+        print('iiiiii= ',i)
+        if i < 1:
+            return    
         self.session.openWithCallback(self.okInstall, MessageBox,(_("Do you want to install?")), MessageBox.TYPE_YESNO)
 
     def okInstall(self, result):
@@ -1443,15 +1477,11 @@ class tvConsole(Screen):
                 self.show()
 
 def main(session, **kwargs):
-    try:
-        from Plugins.Extensions.tvSettings.Utils import checkInternet
-    except:
-        from . import Utils
-    checkInternet()
-    if checkInternet():
+    from . import Utils
+    if Utils.checkInternet():
         try:
-            from Plugins.Extensions.tvSettings.Update import upd_done
-            upd_done()
+            from . import Update
+            Update.upd_done()
         except:
             pass
     session.open(MainSetting)
@@ -1513,7 +1543,7 @@ def terrestrial_rest():
 def lcnstart():
     print(' lcnstart ')
     if os.path.exists('/etc/enigma2/lcndb'):
-        lcn=LCN()
+        lcn=Lcn.LCN()
         lcn.read()
         if len(lcn.lcnlist) > 0:
             lcn.writeBouquet()
