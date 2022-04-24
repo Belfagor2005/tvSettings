@@ -2,7 +2,7 @@
 	<widget name="title" position="440,8" size="384,66" font="Regular;24" halign="left" valign="center" foregroundColor="#002a79b8" backgroundColor="black" transparent="1" zPosition="5"/>
 	<widget name="info" position="146,502" size="686,36" font="Regular;20" halign="center" foregroundColor="yellow" backgroundColor="#20000000" transparent="1" zPosition="5"/>
 	<eLabel position="76,0" size="826,720" backgroundColor="#60000000" zPosition="1"/>
-	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/tvSettings/res/pics/hd/tvs.png" position="149,11" size="280,50" zPosition="5"/>
+	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/tvSettings/res/pics/hd/tvs.png" alphatest="blend" position="149,11" size="280,50" zPosition="5"/>
 	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/tvSettings/res/pics/hd/main2.png" position="0,0" size="1280,720" zPosition="1"/>
 	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/tvSettings/res/pics/sep.png" position="146,86" size="686,5" zPosition="5"/>
 	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/tvSettings/res/pics/sep.png" position="146,606" size="686,5" zPosition="5"/>
