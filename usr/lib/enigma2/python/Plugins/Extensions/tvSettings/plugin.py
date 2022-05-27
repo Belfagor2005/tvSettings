@@ -370,16 +370,17 @@ class SettingVhan(Screen):
          'red': self.close,
          'cancel': self.close}, -2)
 
+
     def downxmlpage(self):
         self.names=[]
         self.urls=[]
         try:
-            urlsat='https://www.vhannibal.net/enigma2.php'
+            urlsat='https://www.vhannibal.net/asd.php'
             r=make_request(urlsat)
             print('rrrrrrrr ', r)
             if PY3:
                 r  = six.ensure_str(r)
-            match   = re.compile('<td><a href="(.+?)" target="_blank">(.+?)</a></td>.*?<td>(.+?)</td>', re.DOTALL).findall(r)
+            match   = re.compile('<td><a href="(.+?)">(.+?)</a></td>.*?<td>(.+?)</td>', re.DOTALL).findall(r)
             for url, name, date in match:
                 name = name + ' ' + date
                 url = "https://www.vhannibal.net/" + url
@@ -388,19 +389,19 @@ class SettingVhan(Screen):
                 self.urls.append(Utils.checkStr(url.strip()))
                 self.names.append(Utils.checkStr(name.strip()))
             
-            urldtt = 'https://www.vhannibal.net/enigma2dtt.php'
-            r2=make_request(urldtt)
-            print('rrrrrrrr ', r2)
-            if PY3:
-                r2  = six.ensure_str(r2)
-            match2   = re.compile('<td><a href="(.+?)" target="_blank">(.+?)</a></td>.*?<td>(.+?)</td>', re.DOTALL).findall(r2)
-            for url, name, date in match2:
-                name = name + ' ' + date
-                url = "https://www.vhannibal.net/" + url
-                print('url : ', url)
-                print('name : ', name)
-                self.urls.append(Utils.checkStr(url.strip()))
-                self.names.append(Utils.checkStr(name.strip()))
+            # urldtt = 'https://www.vhannibal.net/enigma2dtt.php'
+            # r2=make_request(urldtt)
+            # print('rrrrrrrr ', r2)
+            # if PY3:
+                # r2  = six.ensure_str(r2)
+            # match2   = re.compile('<td><a href="(.+?)" target="_blank">(.+?)</a></td>.*?<td>(.+?)</td>', re.DOTALL).findall(r2)
+            # for url, name, date in match2:
+                # name = name + ' ' + date
+                # url = "https://www.vhannibal.net/" + url
+                # print('url : ', url)
+                # print('name : ', name)
+                # self.urls.append(Utils.checkStr(url.strip()))
+                # self.names.append(Utils.checkStr(name.strip()))
                 
             self.downloading = True
             self['info'].setText(_('Please select ...'))
