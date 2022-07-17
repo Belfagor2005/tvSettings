@@ -3,7 +3,7 @@
 #--------------------#
 #  coded by Lululla  #
 #   skin by MMark    #
-#     01/05/2022     #
+#     01/07/2022     #
 #--------------------#
 #Info http://t.me/tivustream
 from __future__ import print_function
@@ -169,10 +169,10 @@ class OneSetList(MenuList):
             self.l.setItemHeight(50)
             textfont=int(34)
             self.l.setFont(0, gFont('Regular', textfont))
-        else:    
+        else:
             self.l.setItemHeight(50)
-            textfont=int(22)            
-            self.l.setFont(0, gFont('Regular', textfont))  
+            textfont=int(22)
+            self.l.setFont(0, gFont('Regular', textfont))
 
 def DListEntry(name, idx):
     res=[name]
@@ -180,9 +180,9 @@ def DListEntry(name, idx):
     if Utils.isFHD():
         res.append(MultiContentEntryPixmapAlphaTest(pos=(10, 12), size=(34, 25), png=loadPNG(pngs)))
         res.append(MultiContentEntryText(pos=(60, 0), size=(1900, 50), font=0, text=name, color= 0xa6d1fe, flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER))
-    else:    
+    else:
         res.append(MultiContentEntryPixmapAlphaTest(pos=(10, 12), size=(34, 25), png=loadPNG(pngs)))
-        res.append(MultiContentEntryText(pos=(60, 0), size=(1000, 50), font=0, text=name, color= 0xa6d1fe, flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER))         
+        res.append(MultiContentEntryText(pos=(60, 0), size=(1000, 50), font=0, text=name, color= 0xa6d1fe, flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER))
     return res
 
 def OneSetListEntry(name):
@@ -193,7 +193,7 @@ def OneSetListEntry(name):
         res.append(MultiContentEntryText(pos=(60, 0), size=(1900, 50), font=0, text=name, color= 0xa6d1fe, flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER))
     else:
         res.append(MultiContentEntryPixmapAlphaTest(pos=(10, 12), size=(34, 25), png=loadPNG(pngx)))
-        res.append(MultiContentEntryText(pos=(60, 0), size=(1000, 50), font=0, text=name, color= 0xa6d1fe, flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER))            
+        res.append(MultiContentEntryText(pos=(60, 0), size=(1000, 50), font=0, text=name, color= 0xa6d1fe, flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER))
     return res
 
 def showlist(data, list):
@@ -222,6 +222,7 @@ class MainSetting(Screen):
         self['key_red']=Button(_('Exit'))
         self['key_yellow'] = Button('')
         self['key_yellow'].hide()
+        self['key_green'].hide()                                
         self.LcnOn = False
         if os.path.exists('/etc/enigma2/lcndb'):
           self['key_yellow'].show()
@@ -251,7 +252,7 @@ class MainSetting(Screen):
                 self.session.open(MessageBox, _('Sorting Terrestrial channels with Lcn rules Completed'), MessageBox.TYPE_INFO, timeout=5)
 
     def cancel(self):
-        Utils.deletetmp()    
+        Utils.deletetmp()
         self.close()
 
     def updateMenuList(self):
@@ -265,6 +266,7 @@ class MainSetting(Screen):
             self.menu_list.append(x)
             idx += 1
         self['text'].setList(list)
+        self['key_green'].show()                                
         self['info'].setText(_('Please select ...'))
 
     def okRun(self):
@@ -294,7 +296,7 @@ class MainSetting(Screen):
             self.okSATELLITE()
         elif sel== _('UPDATE TERRESTRIAL.XML'):
             self.okTERRESTRIAL()
-            
+
     def okSATELLITE(self):
         self.session.openWithCallback(self.okSatInstall, MessageBox,(_("Do you want to install?")), MessageBox.TYPE_YESNO)
 
@@ -311,7 +313,8 @@ class MainSetting(Screen):
                       f.write(r.content)
                     self.session.open(MessageBox, _('Satellites.xml Updated!'), MessageBox.TYPE_INFO, timeout=5)
                     self['info'].setText(_('Installation done !!!'))
-                except:
+                except Exception as e:
+                    print('error: ', str(e))
                     return
             else:
                 session.open(MessageBox, "No Internet", MessageBox.TYPE_INFO)
@@ -332,7 +335,8 @@ class MainSetting(Screen):
                       f.write(r.content)
                     self.session.open(MessageBox, _('Terrestrial.xml Updated!'), MessageBox.TYPE_INFO, timeout=5)
                     self['info'].setText(_('Installation done !!!'))
-                except:
+                except Exception as e:
+                    print('error: ', str(e))
                     return
             else:
                 self.session.open(MessageBox, "No Internet", MessageBox.TYPE_INFO)
@@ -388,7 +392,7 @@ class SettingVhan(Screen):
                 print('name : ', name)
                 self.urls.append(Utils.checkStr(url.strip()))
                 self.names.append(Utils.checkStr(name.strip()))
-            
+
             # urldtt = 'https://www.vhannibal.net/enigma2dtt.php'
             # r2=make_request(urldtt)
             # print('rrrrrrrr ', r2)
@@ -402,20 +406,20 @@ class SettingVhan(Screen):
                 # print('name : ', name)
                 # self.urls.append(Utils.checkStr(url.strip()))
                 # self.names.append(Utils.checkStr(name.strip()))
-                
+
             self.downloading = True
             self['info'].setText(_('Please select ...'))
             self['key_green'].show()
             showlist(self.names, self['text'])
         except Exception as e:
             print(('downxmlpage get failed: ', str(e)))
-            self['info'].setText(_('Download page get failed ...'))                                                                   
+            self['info'].setText(_('Download page get failed ...'))
 
     def okRun(self):
         i = len(self.names)
         print('iiiiii= ',i)
         if i < 1:
-            return    
+            return
         self.session.openWithCallback(self.okInstall, MessageBox,(_("Do you want to install?")), MessageBox.TYPE_YESNO)
 
     def okInstall(self, result):
@@ -524,13 +528,13 @@ class SettingVhan2(Screen):
             showlist(self.names, self['text'])
         except Exception as e:
             print(('downxmlpage get failed: ', str(e)))
-            self['info'].setText(_('Download page get failed ...'))                                                                   
+            self['info'].setText(_('Download page get failed ...'))
 
     def okRun(self):
         i = len(self.names)
         print('iiiiii= ',i)
         if i < 1:
-            return    
+            return
         self.session.openWithCallback(self.okInstall, MessageBox,(_("Do you want to install?")), MessageBox.TYPE_YESNO)
 
     def okInstall(self, result):
@@ -645,12 +649,12 @@ class SettingMilenka6121(Screen):
         self.names  = []
         self.urls   = []
         try:
-            regex   = '<a href="Satvenus(.+?)".*?align="right">(.*?) </td>'                                  
+            regex   = '<a href="Satvenus(.+?)".*?align="right">(.*?) </td>'
             # regex   = '<a href="Satvenus(.+?)".+?align="right">(.*?)-(.*?)-(.*?) .+?</td'
             match   = re.compile(regex).findall(r)
-            for url, txt in match:            
+            for url, txt in match:
                 if url.find('.tar.gz') != -1 :
-                    name = url.replace('_EX-YU_Lista_za_milenka61_', '')                
+                    name = url.replace('_EX-YU_Lista_za_milenka61_', '')
                     date = re.search("(.+?)-(.+?)-(.+?) ",txt).group()
                     name = name + ' ' + date
                     name = name.replace("_", " ").replace(".tar.gz", "")
@@ -663,13 +667,13 @@ class SettingMilenka6121(Screen):
             showlist(self.names, self['text'])
         except Exception as e:
             print(('downxmlpage get failed: ', str(e)))
-            self['info'].setText(_('Download page get failed ...'))                                                                   
+            self['info'].setText(_('Download page get failed ...'))
 
     def okRun(self):
         i = len(self.names)
         print('iiiiii= ',i)
         if i < 1:
-            return    
+            return
         self.session.openWithCallback(self.okInstall, MessageBox,(_("Do you want to install?")), MessageBox.TYPE_YESNO)
 
     def okInstall(self, result):
@@ -744,11 +748,11 @@ class SettingManutek(Screen):
         self.names  = []
         self.urls   = []
         try:
-            regex   = 'href="/isetting/.*?file=(.+?).zip">'            
+            regex   = 'href="/isetting/.*?file=(.+?).zip">'
             match   = re.compile(regex).findall(r)
             for url in match:
                 name = url
-                url = 'http://www.manutek.it/isetting/enigma2/' + url + '.zip'                
+                url = 'http://www.manutek.it/isetting/enigma2/' + url + '.zip'
                 name = name.replace("NemoxyzRLS_Manutek_", "").replace("_", " ").replace("%20", " ")
                 self.urls.append(Utils.checkStr(url.strip()))
                 self.names.append(Utils.checkStr(name.strip()))
@@ -758,13 +762,13 @@ class SettingManutek(Screen):
             showlist(self.names, self['text'])
         except Exception as e:
             print(('downxmlpage get failed: ', str(e)))
-            self['info'].setText(_('Download page get failed ...'))                                                                   
+            self['info'].setText(_('Download page get failed ...'))
 
     def okRun(self):
         i = len(self.names)
         print('iiiiii= ',i)
         if i < 1:
-            return    
+            return
         self.session.openWithCallback(self.okInstall, MessageBox,(_("Do you want to install?")), MessageBox.TYPE_YESNO)
 
     def okInstall(self, result):
@@ -867,17 +871,17 @@ class SettingMorpheus2(Screen):
                     print("url =", url)
                     print("name =", name)
             self['info'].setText(_('Please select ...'))
-            self['key_green'].show()        
+            self['key_green'].show()
             showlist(self.names, self['text'])
         except Exception as e:
             print(('downxmlpage get failed: ', str(e)))
-            self['info'].setText(_('Download page get failed ...'))                                                                   
+            self['info'].setText(_('Download page get failed ...'))
 
     def okRun(self):
         i = len(self.names)
         print('iiiiii= ',i)
         if i < 1:
-            return    
+            return
         self.session.openWithCallback(self.okInstall, MessageBox,(_("Do you want to install?")), MessageBox.TYPE_YESNO)
 
     def okInstall(self, result):
@@ -964,7 +968,7 @@ class SettingCiefp(Screen):
          'red': self.close,
          'cancel': self.close}, -2)
 
-                    
+
     def downxmlpage(self):
         url = 'https://github.com/ciefp/ciefpsettings-enigma2-zipped'
         data = make_request(url)
@@ -996,13 +1000,13 @@ class SettingCiefp(Screen):
             showlist(self.names, self['text'])
         except Exception as e:
             print(('downxmlpage get failed: ', str(e)))
-            self['info'].setText(_('Download page get failed ...'))                                                                   
+            self['info'].setText(_('Download page get failed ...'))
 
     def okRun(self):
         i = len(self.names)
         print('iiiiii= ',i)
         if i < 1:
-            return    
+            return
         self.session.openWithCallback(self.okInstall, MessageBox,(_("Do you want to install?")), MessageBox.TYPE_YESNO)
 
     def okInstall(self, result):
@@ -1100,18 +1104,18 @@ class tvSettingBi58(Screen):
                     self.urls.append(Utils.checkStr(url.strip()))
                     self.names.append(Utils.checkStr(name.strip()))
                     self.downloading = True
-            self['key_green'].show()        
+            self['key_green'].show()
             self['info'].setText(_('Please select ...'))
             showlist(self.names, self['text'])
         except Exception as e:
             print(('downxmlpage get failed: ', str(e)))
-            self['info'].setText(_('Download page get failed ...'))                                                                   
+            self['info'].setText(_('Download page get failed ...'))
 
     def okRun(self):
         i = len(self.names)
         print('iiiiii= ',i)
         if i < 1:
-            return    
+            return
         self.session.openWithCallback(self.okInstall, MessageBox,(_("Do you want to install?")), MessageBox.TYPE_YESNO)
 
     def okInstall(self, result):
@@ -1164,7 +1168,7 @@ class SettingPredrag(Screen):
         self["key_blue"]=Button(_(''))
         self['key_yellow'].hide()
         self['key_blue'].hide()
-        self['key_green'].hide()        
+        self['key_green'].hide()
         self.downloading=False
         self.timer=eTimer()
         if Utils.DreamOS():
@@ -1193,23 +1197,23 @@ class SettingPredrag(Screen):
                     name = url.replace('-settings-e2-','Predrag ')
                     date = re.search("(.+?)-(.+?)-(.+?) ",txt).group()
                     name = name + ' ' + date
-                    name = name.replace(".tar.gz", "").replace("%20", " ")  
+                    name = name.replace(".tar.gz", "").replace("%20", " ")
                     url = "http://178.63.156.75/paneladdons/Predr@g/predrag" + url
                     self.urls.append(Utils.checkStr(url.strip()))
                     self.names.append(Utils.checkStr(name.strip()))
                     self.downloading = True
-            self['key_green'].show()  
+            self['key_green'].show()
             self['info'].setText(_('Please select ...'))
             showlist(self.names, self['text'])
         except Exception as e:
             print(('downxmlpage get failed: ', str(e)))
-            self['info'].setText(_('Download page get failed ...'))                                                                   
+            self['info'].setText(_('Download page get failed ...'))
 
     def okRun(self):
         i = len(self.names)
         print('iiiiii= ',i)
         if i < 1:
-            return    
+            return
         self.session.openWithCallback(self.okInstall, MessageBox,(_("Do you want to install?")), MessageBox.TYPE_YESNO)
 
     def okInstall(self, result):
@@ -1300,18 +1304,18 @@ class CirusSetting(Screen):
                     self.urls.append(Utils.checkStr(url.strip()))
                     self.names.append(Utils.checkStr(name.strip()))
                     self.downloading = True
-            self['key_green'].show()  
+            self['key_green'].show()
             self['info'].setText(_('Please select ...'))
             showlist(self.names, self['text'])
         except Exception as e:
             print(('downxmlpage get failed: ', str(e)))
-            self['info'].setText(_('Download page get failed ...'))                                                                   
+            self['info'].setText(_('Download page get failed ...'))
 
     def okRun(self):
         i = len(self.names)
         print('iiiiii= ',i)
         if i < 1:
-            return    
+            return
         self.session.openWithCallback(self.okInstall, MessageBox,(_("Do you want to install?")), MessageBox.TYPE_YESNO)
 
     def okInstall(self, result):
@@ -1474,15 +1478,39 @@ class tvConsole(Screen):
             else:
                 self.show()
 
+def intCheck():
+    import socket
+    try:
+        socket.setdefaulttimeout(1)
+        socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect(("8.8.8.8", 53))
+        return True
+    except:
+        return False
+
 def main(session, **kwargs):
-    from . import Utils
-    if Utils.checkInternet():
-        try:
-            from . import Update
-            Update.upd_done()
-        except:
-            pass
-    session.open(MainSetting)
+    try:
+        if intCheck():
+                from . import Update
+                Update.upd_done()
+                session.open(MainSetting)
+        else:
+            from Screens.MessageBox import MessageBox
+            from Tools.Notifications import AddPopup
+            AddPopup(_("Sorry but No Internet :("),MessageBox.TYPE_INFO, 10, 'Sorry')  
+    except:
+        import traceback
+        traceback.print_exc() 
+        pass
+
+# def main(session, **kwargs):
+    # from . import Utils
+    # if Utils.checkInternet():
+        # try:
+            # from . import Update
+            # Update.upd_done()
+        # except:
+            # pass
+    # session.open(MainSetting)
 
 
 def StartSetup(menuid):
@@ -1653,7 +1681,7 @@ def StartSavingTerrestrialChannels():
         CreateBouquetForce()
       return True
 
-        
+
 def LamedbRestore():
     try:
       TrasponderListNewLamedb=open(plugin_path +'/temp/TrasponderListNewLamedb', 'w')
