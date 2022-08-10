@@ -3,7 +3,7 @@
 #--------------------#
 #  coded by Lululla  #
 #   skin by MMark    #
-#     01/07/2022     #
+#     10/08/2022     #
 #--------------------#
 #Info http://t.me/tivustream
 from __future__ import print_function
@@ -23,8 +23,7 @@ from Plugins.Plugin import PluginDescriptor
 from Screens.Console import Console
 from Screens.MessageBox import MessageBox
 from Screens.Screen import Screen
-from Tools.Directories import SCOPE_SKIN_IMAGE, SCOPE_PLUGINS
-from Tools.Directories import pathExists, fileExists, resolveFilename, copyfile
+from Tools.Directories import SCOPE_SKIN_IMAGE, SCOPE_PLUGINS, pathExists, fileExists, resolveFilename, copyfile
 from Tools.LoadPixmap import LoadPixmap
 from enigma import *
 from enigma import RT_HALIGN_LEFT, RT_HALIGN_RIGHT, RT_HALIGN_CENTER, RT_VALIGN_CENTER, getDesktop, loadPNG
@@ -135,6 +134,7 @@ def ReloadBouquet():
     ReloadBouquets()
 
 os.system('rm -fr /usr/lib/enigma2/python/Plugins/Extensions/tvSettings/temp/*')# clean /temp
+
 currversion='1.7'
 title_plug='..:: TiVuStream Settings V. %s ::..' % currversion
 name_plug='TiVuStream Settings'
@@ -143,6 +143,7 @@ plugin_path=os.path.dirname(sys.modules[__name__].__file__)
 ico_path = resolveFilename(SCOPE_PLUGINS, "Extensions/{}/logo.png".format('tvSettings'))
 res_plugin_path= resolveFilename(SCOPE_PLUGINS, "Extensions/{}/res/".format('tvSettings'))
 skin_path=resolveFilename(SCOPE_PLUGINS, "Extensions/{}/res/skins/hd/".format('tvSettings'))
+
 if Utils.isFHD():
     skin_path=resolveFilename(SCOPE_PLUGINS, "Extensions/{}/res/skins/fhd/".format('tvSettings'))
 if Utils.DreamOS():
@@ -180,6 +181,7 @@ def DListEntry(name, idx):
     if Utils.isFHD():
         res.append(MultiContentEntryPixmapAlphaTest(pos=(10, 12), size=(34, 25), png=loadPNG(pngs)))
         res.append(MultiContentEntryText(pos=(60, 0), size=(1900, 50), font=0, text=name, color= 0xa6d1fe, flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER))
+
     else:
         res.append(MultiContentEntryPixmapAlphaTest(pos=(10, 12), size=(34, 25), png=loadPNG(pngs)))
         res.append(MultiContentEntryText(pos=(60, 0), size=(1000, 50), font=0, text=name, color= 0xa6d1fe, flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER))
@@ -222,7 +224,7 @@ class MainSetting(Screen):
         self['key_red']=Button(_('Exit'))
         self['key_yellow'] = Button('')
         self['key_yellow'].hide()
-        self['key_green'].hide()                                
+        self['key_green'].hide()
         self.LcnOn = False
         if os.path.exists('/etc/enigma2/lcndb'):
           self['key_yellow'].show()
@@ -252,6 +254,7 @@ class MainSetting(Screen):
                 self.session.open(MessageBox, _('Sorting Terrestrial channels with Lcn rules Completed'), MessageBox.TYPE_INFO, timeout=5)
 
     def cancel(self):
+
         Utils.deletetmp()
         self.close()
 
@@ -266,7 +269,7 @@ class MainSetting(Screen):
             self.menu_list.append(x)
             idx += 1
         self['text'].setList(list)
-        self['key_green'].show()                                
+        self['key_green'].show()
         self['info'].setText(_('Please select ...'))
 
     def okRun(self):
@@ -343,6 +346,7 @@ class MainSetting(Screen):
 
 class SettingVhan(Screen):
     def __init__(self, session):
+
         self.session=session
         skin=skin_path + 'settings.xml'
         with open(skin, 'r') as f:
@@ -356,8 +360,8 @@ class SettingVhan(Screen):
         self['info'] = Label(_('Loading data... Please wait'))
         self['key_green']=Button(_('Install'))
         self['key_red']=Button(_('Back'))
-        self['key_yellow']=Button(_(''))
-        self["key_blue"]=Button(_(''))
+        self['key_yellow']=Button('')
+        self["key_blue"]=Button('')
         self['key_yellow'].hide()
         self['key_blue'].hide()
         self['key_green'].hide()
@@ -374,9 +378,9 @@ class SettingVhan(Screen):
          'red': self.close,
          'cancel': self.close}, -2)
 
-
     def downxmlpage(self):
         self.names=[]
+
         self.urls=[]
         try:
             urlsat='https://www.vhannibal.net/asd.php'
@@ -412,7 +416,7 @@ class SettingVhan(Screen):
             self['key_green'].show()
             showlist(self.names, self['text'])
         except Exception as e:
-            print(('downxmlpage get failed: ', str(e)))
+            print('downxmlpage get failed: ', str(e))
             self['info'].setText(_('Download page get failed ...'))
 
     def okRun(self):
@@ -469,7 +473,6 @@ class SettingVhan(Screen):
     def yes(self):
         ReloadBouquet()
 
-
 class SettingVhan2(Screen):
     def __init__(self, session):
         self.session=session
@@ -485,8 +488,8 @@ class SettingVhan2(Screen):
         self['info'] = Label(_('Loading data... Please wait'))
         self['key_green']=Button(_('Install'))
         self['key_red']=Button(_('Back'))
-        self['key_yellow']=Button(_(''))
-        self["key_blue"]=Button(_(''))
+        self['key_yellow']=Button('')
+        self["key_blue"]=Button('')
         self['key_yellow'].hide()
         self['key_blue'].hide()
         self['key_green'].hide()
@@ -527,7 +530,7 @@ class SettingVhan2(Screen):
             self['key_green'].show()
             showlist(self.names, self['text'])
         except Exception as e:
-            print(('downxmlpage get failed: ', str(e)))
+            print('downxmlpage get failed: ', str(e))
             self['info'].setText(_('Download page get failed ...'))
 
     def okRun(self):
@@ -623,8 +626,8 @@ class SettingMilenka6121(Screen):
         self['info'] = Label(_('Loading data... Please wait'))
         self['key_green']=Button(_('Install'))
         self['key_red']=Button(_('Back'))
-        self['key_yellow']=Button(_(''))
-        self["key_blue"]=Button(_(''))
+        self['key_yellow']=Button('')
+        self["key_blue"]=Button('')
         self['key_yellow'].hide()
         self['key_blue'].hide()
         self['key_green'].hide()
@@ -666,7 +669,7 @@ class SettingMilenka6121(Screen):
             self['key_green'].show()
             showlist(self.names, self['text'])
         except Exception as e:
-            print(('downxmlpage get failed: ', str(e)))
+            print('downxmlpage get failed: ', str(e))
             self['info'].setText(_('Download page get failed ...'))
 
     def okRun(self):
@@ -689,6 +692,7 @@ class SettingMilenka6121(Screen):
                     # if not os.path.exists('/var/lib/dpkg/status'):
                         set = 1
                         terrestrial()
+
                 import requests
                 r = requests.get(url)
                 with open(dest,'wb') as f:
@@ -722,8 +726,8 @@ class SettingManutek(Screen):
         self['info'] = Label(_('Loading data... Please wait'))
         self['key_green']=Button(_('Install'))
         self['key_red']=Button(_('Back'))
-        self['key_yellow']=Button(_(''))
-        self["key_blue"]=Button(_(''))
+        self['key_yellow']=Button('')
+        self["key_blue"]=Button('')
         self['key_yellow'].hide()
         self['key_blue'].hide()
         self['key_green'].hide()
@@ -761,7 +765,7 @@ class SettingManutek(Screen):
             self['key_green'].show()
             showlist(self.names, self['text'])
         except Exception as e:
-            print(('downxmlpage get failed: ', str(e)))
+            print('downxmlpage get failed: ', str(e))
             self['info'].setText(_('Download page get failed ...'))
 
     def okRun(self):
@@ -830,8 +834,8 @@ class SettingMorpheus2(Screen):
         self['info'] = Label(_('Loading data... Please wait'))
         self['key_green']=Button(_('Install'))
         self['key_red']=Button(_('Back'))
-        self['key_yellow']=Button(_(''))
-        self["key_blue"]=Button(_(''))
+        self['key_yellow']=Button('')
+        self["key_blue"]=Button('')
         self['key_yellow'].hide()
         self['key_blue'].hide()
         self['key_green'].hide()
@@ -874,7 +878,7 @@ class SettingMorpheus2(Screen):
             self['key_green'].show()
             showlist(self.names, self['text'])
         except Exception as e:
-            print(('downxmlpage get failed: ', str(e)))
+            print('downxmlpage get failed: ', str(e))
             self['info'].setText(_('Download page get failed ...'))
 
     def okRun(self):
@@ -899,6 +903,7 @@ class SettingMorpheus2(Screen):
                     # if not os.path.exists('/var/lib/dpkg/status'):
                         set = 1
                         terrestrial()
+
                 import requests
                 r = requests.get(url)
                 with open(dest,'wb') as f:
@@ -950,8 +955,8 @@ class SettingCiefp(Screen):
         # self['progresstext'] = StaticText()
         self['key_green'] = Button(_('Install'))
         self['key_red'] = Button(_('Back'))
-        self['key_yellow'] = Button(_(''))
-        self["key_blue"] = Button(_(''))
+        self['key_yellow'] = Button('')
+        self["key_blue"] = Button('')
         self['key_yellow'].hide()
         self['key_blue'].hide()
         self['key_green'].hide()
@@ -968,7 +973,6 @@ class SettingCiefp(Screen):
          'red': self.close,
          'cancel': self.close}, -2)
 
-
     def downxmlpage(self):
         url = 'https://github.com/ciefp/ciefpsettings-enigma2-zipped'
         data = make_request(url)
@@ -977,17 +981,17 @@ class SettingCiefp(Screen):
         self.names  = []
         self.urls   = []
         try:
-            n1 = r.find('Details">', 0)
+            n1 = r.find('title="README.txt', 0)
             n2 = r.find('href="#readme">', n1)
             r = r[n1:n2]
             regex   = 'title="ciefp-E2-(.*?).zip".*?href="(.*?)"'
             match   = re.compile(regex).findall(r)
             for name, url in match:
                 if url.find('.zip') != -1 :
-                    if 'ddt' in name.lower():
-                        continue
-                    if 'Sat' in name.lower():
-                        continue
+                    # if 'ddt' in name.lower():
+                        # continue
+                    # if 'Sat' in name.lower():
+                        # continue
                     url = url.replace('blob', 'raw')
                     url = 'https://github.com' + url
                     print('name ', name)
@@ -999,7 +1003,7 @@ class SettingCiefp(Screen):
             self['info'].setText(_('Please select ...'))
             showlist(self.names, self['text'])
         except Exception as e:
-            print(('downxmlpage get failed: ', str(e)))
+            print('downxmlpage get failed: ', str(e))
             self['info'].setText(_('Download page get failed ...'))
 
     def okRun(self):
@@ -1022,6 +1026,7 @@ class SettingCiefp(Screen):
                     # if not os.path.exists('/var/lib/dpkg/status'):
                         set = 1
                         terrestrial()
+
                 import requests
                 r = requests.get(url)
                 with open(dest,'wb') as f:
@@ -1066,8 +1071,8 @@ class tvSettingBi58(Screen):
         self['info'] = Label(_('Loading data... Please wait'))
         self['key_green']=Button(_('Install'))
         self['key_red']=Button(_('Back'))
-        self['key_yellow']=Button(_(''))
-        self["key_blue"]=Button(_(''))
+        self['key_yellow']=Button('')
+        self["key_blue"]=Button('')
         self['key_yellow'].hide()
         self['key_blue'].hide()
         self['key_green'].hide()
@@ -1108,7 +1113,7 @@ class tvSettingBi58(Screen):
             self['info'].setText(_('Please select ...'))
             showlist(self.names, self['text'])
         except Exception as e:
-            print(('downxmlpage get failed: ', str(e)))
+            print('downxmlpage get failed: ', str(e))
             self['info'].setText(_('Download page get failed ...'))
 
     def okRun(self):
@@ -1131,6 +1136,7 @@ class tvSettingBi58(Screen):
                     # if not os.path.exists('/var/lib/dpkg/status'):
                         set = 1
                         terrestrial()
+
                 import requests
                 r = requests.get(url)
                 with open(dest,'wb') as f:
@@ -1164,8 +1170,8 @@ class SettingPredrag(Screen):
         self['info'] = Label(_('Loading data... Please wait'))
         self['key_green']=Button(_('Install'))
         self['key_red']=Button(_('Back'))
-        self['key_yellow']=Button(_(''))
-        self["key_blue"]=Button(_(''))
+        self['key_yellow']=Button('')
+        self["key_blue"]=Button('')
         self['key_yellow'].hide()
         self['key_blue'].hide()
         self['key_green'].hide()
@@ -1206,7 +1212,7 @@ class SettingPredrag(Screen):
             self['info'].setText(_('Please select ...'))
             showlist(self.names, self['text'])
         except Exception as e:
-            print(('downxmlpage get failed: ', str(e)))
+            print('downxmlpage get failed: ', str(e))
             self['info'].setText(_('Download page get failed ...'))
 
     def okRun(self):
@@ -1230,6 +1236,7 @@ class SettingPredrag(Screen):
                     # if not os.path.exists('/var/lib/dpkg/status'):
                         set = 1
                         terrestrial()
+
                 import requests
                 r = requests.get(url)
                 with open(dest,'wb') as f:
@@ -1263,13 +1270,12 @@ class CirusSetting(Screen):
         self['info'] = Label(_('Loading data... Please wait'))
         self['key_green']=Button(_('Install'))
         self['key_red']=Button(_('Back'))
-        self['key_yellow']=Button(_(''))
-        self["key_blue"]=Button(_(''))
+        self['key_yellow']=Button('')
+        self["key_blue"]=Button('')
         self['key_yellow'].hide()
         self['key_blue'].hide()
         self.downloading=False
         self.timer=eTimer()
-
         if Utils.DreamOS():
             self.timer_conn=self.timer.timeout.connect(self.downxmlpage)
         else:
@@ -1308,7 +1314,7 @@ class CirusSetting(Screen):
             self['info'].setText(_('Please select ...'))
             showlist(self.names, self['text'])
         except Exception as e:
-            print(('downxmlpage get failed: ', str(e)))
+            print('downxmlpage get failed: ', str(e))
             self['info'].setText(_('Download page get failed ...'))
 
     def okRun(self):
@@ -1331,6 +1337,7 @@ class CirusSetting(Screen):
                     # if not os.path.exists('/var/lib/dpkg/status'):
                         set = 1
                         terrestrial()
+
                 import requests
                 r = requests.get(url)
                 with open(dest,'wb') as f:
@@ -1490,16 +1497,21 @@ def intCheck():
 def main(session, **kwargs):
     try:
         if intCheck():
+            try:
                 from . import Update
                 Update.upd_done()
                 session.open(MainSetting)
+            except:
+                pass
+
+
         else:
             from Screens.MessageBox import MessageBox
             from Tools.Notifications import AddPopup
-            AddPopup(_("Sorry but No Internet :("),MessageBox.TYPE_INFO, 10, 'Sorry')  
+            AddPopup(_("Sorry but No Internet :("),MessageBox.TYPE_INFO, 10, 'Sorry')
     except:
         import traceback
-        traceback.print_exc() 
+        traceback.print_exc()
         pass
 
 # def main(session, **kwargs):
@@ -1573,9 +1585,9 @@ def lcnstart():
         lcn.read()
         if len(lcn.lcnlist) > 0:
             lcn.writeBouquet()
+
             ReloadBouquets()
     return
-
 
 def StartSavingTerrestrialChannels():
     def ForceSearchBouquetTerrestrial():
@@ -1680,7 +1692,6 @@ def StartSavingTerrestrialChannels():
       if not SaveBouquetTerrestrial():
         CreateBouquetForce()
       return True
-
 
 def LamedbRestore():
     try:
