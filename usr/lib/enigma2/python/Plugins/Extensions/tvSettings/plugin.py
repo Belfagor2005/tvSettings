@@ -7,7 +7,7 @@
 #--------------------#
 #Info http://t.me/tivustream
 from __future__ import print_function
-from . import _
+from .__init__ import _
 from Components.ActionMap import ActionMap
 from Components.Button import Button
 from Components.Label import Label
@@ -1496,15 +1496,13 @@ def intCheck():
 
 def main(session, **kwargs):
     try:
-        if intCheck():
+        if Utils.zCheckInternet(0):
             try:
                 from . import Update
                 Update.upd_done()
                 session.open(MainSetting)
             except:
                 pass
-
-
         else:
             from Screens.MessageBox import MessageBox
             from Tools.Notifications import AddPopup
@@ -1513,17 +1511,6 @@ def main(session, **kwargs):
         import traceback
         traceback.print_exc()
         pass
-
-# def main(session, **kwargs):
-    # from . import Utils
-    # if Utils.checkInternet():
-        # try:
-            # from . import Update
-            # Update.upd_done()
-        # except:
-            # pass
-    # session.open(MainSetting)
-
 
 def StartSetup(menuid):
     if menuid== 'scan':
