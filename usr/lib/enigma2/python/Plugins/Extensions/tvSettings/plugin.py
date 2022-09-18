@@ -1,11 +1,13 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+
 #--------------------#
 #  coded by Lululla  #
 #   skin by MMark    #
 #     10/08/2022     #
 #--------------------#
 #Info http://t.me/tivustream
+
 from __future__ import print_function
 from .__init__ import _
 from Components.ActionMap import ActionMap
@@ -41,9 +43,7 @@ import shutil
 import ssl
 import glob
 import six
-# try:
-    # from Plugins.Extensions.tvSettings.Utils import *
-# except:
+
 from . import Utils
 from .Lcn import LCN
 
@@ -239,10 +239,6 @@ class MainSetting(Screen):
          'yellow': self.Lcn,
          'cancel': self.cancel}, -1)
         self.onLayoutFinish.append(self.updateMenuList)
-
-    # def Lcn(self):
-        # self.mbox=self.session.open(MessageBox, _('Reorder Terrestrial channels with Lcn rules'), MessageBox.TYPE_INFO, timeout=5)
-        # lcnstart()
 
     def Lcn(self):
         if self.LcnOn:

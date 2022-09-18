@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
+
 from __future__ import print_function                                     
 from enigma import eDVBDB                  
 from enigma import eServiceReference, eServiceCenter
@@ -24,7 +25,6 @@ except ImportError:
     from xml.etree.cElementTree import ElementTree as ET
     from xml.etree.cElementTree import fromstring
 
-#NAME Digitale Terrestre
 plugin_path      = os.path.dirname(sys.modules[__name__].__file__)
 rules            = plugin_path + '/rules.xml'
         
@@ -110,7 +110,6 @@ class LCN:
             if len(tmp) != 6:
                 continue
             self.addLcnToList(int(tmp[0], 16), int(tmp[1], 16), int(tmp[2], 16), int(tmp[3], 16), int(tmp[4]), int(tmp[5]))
-            #########
         # if self.root is not None:
             # for x in self.root:
                 # if x.tag == 'rule':
