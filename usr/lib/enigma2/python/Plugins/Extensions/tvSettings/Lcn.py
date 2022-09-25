@@ -1,33 +1,23 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-from __future__ import print_function                                     
-from enigma import eDVBDB                  
+from __future__ import print_function
+from enigma import eDVBDB
 from enigma import eServiceReference, eServiceCenter
-from Screens.Screen import Screen
-from Screens.MessageBox import MessageBox
-from Components.ActionMap import ActionMap
-from Components.Button import Button
-from Components.ConfigList import ConfigListScreen
-from Components.config import getConfigListEntry, config, ConfigSubsection, ConfigYesNo, ConfigSelection, configfile
-from Tools.Directories import resolveFilename, SCOPE_CONFIG
-from enigma import *
 import os
 import sys
 import re
-import shutil
 
-    
 try:
-    from xml.etree.ElementTree import ElementTree as  ET
-    from xml.etree.ElementTree import fromstring
+    from xml.etree.ElementTree import ElementTree as ET
 except ImportError:
     from xml.etree.cElementTree import ElementTree as ET
-    from xml.etree.cElementTree import fromstring
 
-plugin_path      = os.path.dirname(sys.modules[__name__].__file__)
-rules            = plugin_path + '/rules.xml'
-        
+# NAME Digitale Terrestre
+plugin_path = os.path.dirname(sys.modules[__name__].__file__)
+rules = plugin_path + '/rules.xml'
+
+
 def Bouquet():
     for file in os.listdir('/etc/enigma2/'):
         if re.search('^userbouquet.*.tv', file):
@@ -47,9 +37,9 @@ class LCN:
         self.markers = []
         self.e2services = []
         # mdom = ET.parse('/usr/lib/enigma2/python/Plugins/Extensions/tvaddon/rules.xml')
-        with open(rules,'rt') as f:
+        with open(rules, 'rt') as f:
             mdom = ET()
-            mdom.parse(f) 
+            mdom.parse(f)
         self.root = None
         for x in mdom.getroot():
             if x.tag == 'ruleset' and x.get('name') == 'Italy':
@@ -102,7 +92,6 @@ class LCN:
             line = f.readline()
             if line == '':
                 break
-            #########
             line = line.strip()
             if len(line) != 38:
                 continue
@@ -126,7 +115,7 @@ class LCN:
                         # self.lcnlist.sort(key=lambda z: int(z[0]))
                     if x.get("type") == "marker":
                         self.addMarker(int(x.get("position")), x.text)
-        self.markers.sort(key=lambda z: int(z[0]))        
+        self.markers.sort(key=lambda z: int(z[0]))
 
     def renumberLcn(self, range, rule):
         tmp = range.split('-')
@@ -136,7 +125,7 @@ class LCN:
         max = int(tmp[1])
         for x in self.lcnlist:
             if x[0] >= min and x[0] <= max:
-                value = x[0]
+                # value = x[0]
                 cmd = 'x[0] = ' + rule
                 try:
                     exec(cmd)
@@ -225,15 +214,13 @@ class LCN:
         f.close()
         self.ClearDoubleMarker(self.bouquetfile)
 
-
     def ReloadBouquet(self):
         print('\n----Reloading bouquets----')
         try:
             from enigma import eDVBDB
             eDVBDB.getInstance().reloadBouquets()
-            print('bouquets reloaded...')        
+            print('bouquets reloaded...')
         except ImportError:
             eDVBDB = None
             os.system('wget -qO - http://127.0.0.1/web/servicelistreload?mode=2 > /dev/null 2>&1 &')
             print('bouquets reloaded...')
-

@@ -5,11 +5,11 @@ from Components.Language import language
 from Tools.Directories import resolveFilename, SCOPE_PLUGINS
 import gettext
 import os
-
 PluginLanguageDomain = 'tvSetting'
 PluginLanguagePath = 'Extensions/tvSetting/res/locale'
-
 isDreamOS = False
+
+
 if os.path.exists("/var/lib/dpkg/status"):
     isDreamOS = True
 
@@ -32,4 +32,3 @@ else:
             return gettext.gettext(txt)
 localeInit()
 language.addCallback(localeInit)
-    
