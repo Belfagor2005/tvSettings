@@ -29,9 +29,9 @@ def upd_done():
 
 def upd_last(fplug):
     import time
+    import os
     time.sleep(5)
     if os.path.isfile(fdest) and os.stat(fdest).st_size > 10000:
-        import os
         cmd = "tar -xvf /tmp/tvsettings.tar -C /"
         print("cmd A =", cmd)
         os.system(cmd)
