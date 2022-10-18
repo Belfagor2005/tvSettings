@@ -1,12 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import os
 import sys
 from twisted.web.client import downloadPage
 PY3 = sys.version_info.major >= 3
 print("Update.py")
-fdest = "/tmp/tvsettings.tar"
 
 
 def upd_done():
@@ -20,6 +18,7 @@ def upd_done():
     if response.status_code == 200:
         # print(response.headers['content-length'])
         print("Code 200 upd_done xfile =", xfile)
+        fdest = "/tmp/tvsettings.tar"
         downloadPage(xfile, fdest).addCallback(upd_last)
     elif response.status_code == 404:
         print("Error 404")
@@ -31,6 +30,7 @@ def upd_last(fplug):
     import time
     import os
     time.sleep(5)
+    fdest = "/tmp/tvsettings.tar"
     if os.path.isfile(fdest) and os.stat(fdest).st_size > 10000:
         cmd = "tar -xvf /tmp/tvsettings.tar -C /"
         print("cmd A =", cmd)

@@ -203,12 +203,12 @@ def DListEntry(name, idx):
     res = [name]
     pngs = resolveFilename(SCOPE_PLUGINS, "Extensions/{}/res/pics/setting.png".format('tvSettings'))
     if Utils.isFHD():
-        res.append(MultiContentEntryPixmapAlphaTest(pos=(10, 12), size=(34, 25), png=loadPNG(pngs)))
-        res.append(MultiContentEntryText(pos=(60, 0), size=(1900, 50), font=0, text=name, color=0xa6d1fe, flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER))
+        res.append(MultiContentEntryPixmapAlphaTest(pos=(10, 0), size=(50, 50), png=loadPNG(pngs)))
+        res.append(MultiContentEntryText(pos=(80, 0), size=(1900, 50), font=0, text=name, color=0xa6d1fe, flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER))
 
     else:
-        res.append(MultiContentEntryPixmapAlphaTest(pos=(10, 12), size=(34, 25), png=loadPNG(pngs)))
-        res.append(MultiContentEntryText(pos=(60, 0), size=(1000, 50), font=0, text=name, color=0xa6d1fe, flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER))
+        res.append(MultiContentEntryPixmapAlphaTest(pos=(10, 0), size=(50, 50), png=loadPNG(pngs)))
+        res.append(MultiContentEntryText(pos=(80, 0), size=(1000, 50), font=0, text=name, color=0xa6d1fe, flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER))
     return res
 
 
@@ -216,11 +216,11 @@ def OneSetListEntry(name):
     res = [name]
     pngx = resolveFilename(SCOPE_PLUGINS, "Extensions/{}/res/pics/plugins.png".format('tvSettings'))
     if Utils.isFHD():
-        res.append(MultiContentEntryPixmapAlphaTest(pos=(10, 12), size=(34, 25), png=loadPNG(pngx)))
-        res.append(MultiContentEntryText(pos=(60, 0), size=(1900, 50), font=0, text=name, color=0xa6d1fe, flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER))
+        res.append(MultiContentEntryPixmapAlphaTest(pos=(10, 0), size=(50, 50), png=loadPNG(pngx)))
+        res.append(MultiContentEntryText(pos=(80, 0), size=(1900, 50), font=0, text=name, color=0xa6d1fe, flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER))
     else:
-        res.append(MultiContentEntryPixmapAlphaTest(pos=(10, 12), size=(34, 25), png=loadPNG(pngx)))
-        res.append(MultiContentEntryText(pos=(60, 0), size=(1000, 50), font=0, text=name, color=0xa6d1fe, flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER))
+        res.append(MultiContentEntryPixmapAlphaTest(pos=(10, 0), size=(50, 50), png=loadPNG(pngx)))
+        res.append(MultiContentEntryText(pos=(80, 0), size=(1000, 50), font=0, text=name, color=0xa6d1fe, flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER))
     return res
 
 
@@ -243,7 +243,7 @@ class MainSetting(Screen):
         self.setup_title = ('MainSetting')
         Screen.__init__(self, session)
         self.setTitle(_(title_plug))
-        self['text'] = OneSetList([])
+        self['list'] = OneSetList([])
         self['title'] = Label(_(title_plug))
         self['info'] = Label('')
         self['info'] = Label(_('Loading data... Please wait'))
@@ -290,12 +290,12 @@ class MainSetting(Screen):
             list.append(DListEntry(x, idx))
             self.menu_list.append(x)
             idx += 1
-        self['text'].setList(list)
+        self['list'].setList(list)
         self['key_green'].show()
         self['info'].setText(_('Please select ...'))
 
     def okRun(self):
-        self.keyNumberGlobalCB(self['text'].getSelectedIndex())
+        self.keyNumberGlobalCB(self['list'].getSelectedIndex())
 
     def keyNumberGlobalCB(self, idx):
         sel = self.menu_list[idx]
@@ -377,7 +377,7 @@ class SettingVhan(Screen):
         Screen.__init__(self, session)
         self.setTitle(_(title_plug))
         self.list = []
-        self['text'] = OneSetList([])
+        self['list'] = OneSetList([])
         self.icount = 0
         self['info'] = Label(_('Loading data... Please wait'))
         self['key_green'] = Button(_('Install'))
@@ -435,7 +435,7 @@ class SettingVhan(Screen):
             self.downloading = True
             self['info'].setText(_('Please select ...'))
             self['key_green'].show()
-            showlist(self.names, self['text'])
+            showlist(self.names, self['list'])
         except Exception as e:
             print('downxmlpage get failed: ', str(e))
             self['info'].setText(_('Download page get failed ...'))
@@ -505,7 +505,7 @@ class SettingVhan2(Screen):
         Screen.__init__(self, session)
         self.setTitle(_(title_plug))
         self.list = []
-        self['text'] = OneSetList([])
+        self['list'] = OneSetList([])
         self.icount = 0
         self['info'] = Label(_('Loading data... Please wait'))
         self['key_green'] = Button(_('Install'))
@@ -550,7 +550,7 @@ class SettingVhan2(Screen):
                 self.downloading = True
             self['info'].setText(_('Please select ...'))
             self['key_green'].show()
-            showlist(self.names, self['text'])
+            showlist(self.names, self['list'])
         except Exception as e:
             print('downxmlpage get failed: ', str(e))
             self['info'].setText(_('Download page get failed ...'))
@@ -644,7 +644,7 @@ class SettingMilenka6121(Screen):
         Screen.__init__(self, session)
         self.setTitle(_(title_plug))
         self.list = []
-        self['text'] = OneSetList([])
+        self['list'] = OneSetList([])
         self.icount = 0
         self['info'] = Label(_('Loading data... Please wait'))
         self['key_green'] = Button(_('Install'))
@@ -690,7 +690,7 @@ class SettingMilenka6121(Screen):
                     self.downloading = True
             self['info'].setText(_('Please select ...'))
             self['key_green'].show()
-            showlist(self.names, self['text'])
+            showlist(self.names, self['list'])
         except Exception as e:
             print('downxmlpage get failed: ', str(e))
             self['info'].setText(_('Download page get failed ...'))
@@ -744,7 +744,7 @@ class SettingManutek(Screen):
         Screen.__init__(self, session)
         self.setTitle(_(title_plug))
         self.list = []
-        self['text'] = OneSetList([])
+        self['list'] = OneSetList([])
         self.icount = 0
         self['info'] = Label(_('Loading data... Please wait'))
         self['key_green'] = Button(_('Install'))
@@ -786,7 +786,7 @@ class SettingManutek(Screen):
                 self.downloading = True
             self['info'].setText(_('Please select ...'))
             self['key_green'].show()
-            showlist(self.names, self['text'])
+            showlist(self.names, self['list'])
         except Exception as e:
             print('downxmlpage get failed: ', str(e))
             self['info'].setText(_('Download page get failed ...'))
@@ -853,7 +853,7 @@ class SettingMorpheus2(Screen):
         Screen.__init__(self, session)
         self.setTitle(_(title_plug))
         self.list = []
-        self['text'] = OneSetList([])
+        self['list'] = OneSetList([])
         self.icount = 0
         self['info'] = Label(_('Loading data... Please wait'))
         self['key_green'] = Button(_('Install'))
@@ -900,7 +900,7 @@ class SettingMorpheus2(Screen):
                     print("name =", name)
             self['info'].setText(_('Please select ...'))
             self['key_green'].show()
-            showlist(self.names, self['text'])
+            showlist(self.names, self['list'])
         except Exception as e:
             print('downxmlpage get failed: ', str(e))
             self['info'].setText(_('Download page get failed ...'))
@@ -969,7 +969,7 @@ class SettingCiefp(Screen):
         Screen.__init__(self, session)
         self.setTitle(_(title_plug))
         self.list = []
-        self['text'] = OneSetList([])
+        self['list'] = OneSetList([])
         self.icount = 0
         self['info'] = Label(_('Getting the list, please wait ...'))
         self['pth'] = Label('')
@@ -1025,7 +1025,7 @@ class SettingCiefp(Screen):
                     self.downloading = True
             self['key_green'].show()
             self['info'].setText(_('Please select ...'))
-            showlist(self.names, self['text'])
+            showlist(self.names, self['list'])
         except Exception as e:
             print('downxmlpage get failed: ', str(e))
             self['info'].setText(_('Download page get failed ...'))
@@ -1091,7 +1091,7 @@ class tvSettingBi58(Screen):
         Screen.__init__(self, session)
         self.setTitle(_(title_plug))
         self.list = []
-        self['text'] = OneSetList([])
+        self['list'] = OneSetList([])
         self.icount = 0
         self['info'] = Label(_('Loading data... Please wait'))
         self['key_green'] = Button(_('Install'))
@@ -1136,7 +1136,7 @@ class tvSettingBi58(Screen):
                     self.downloading = True
             self['key_green'].show()
             self['info'].setText(_('Please select ...'))
-            showlist(self.names, self['text'])
+            showlist(self.names, self['list'])
         except Exception as e:
             print('downxmlpage get failed: ', str(e))
             self['info'].setText(_('Download page get failed ...'))
@@ -1191,7 +1191,7 @@ class SettingPredrag(Screen):
         Screen.__init__(self, session)
         self.setTitle(_(title_plug))
         self.list = []
-        self['text'] = OneSetList([])
+        self['list'] = OneSetList([])
         self.icount = 0
         self['info'] = Label(_('Loading data... Please wait'))
         self['key_green'] = Button(_('Install'))
@@ -1236,7 +1236,7 @@ class SettingPredrag(Screen):
                     self.downloading = True
             self['key_green'].show()
             self['info'].setText(_('Please select ...'))
-            showlist(self.names, self['text'])
+            showlist(self.names, self['list'])
         except Exception as e:
             print('downxmlpage get failed: ', str(e))
             self['info'].setText(_('Download page get failed ...'))
@@ -1292,7 +1292,7 @@ class CirusSetting(Screen):
         Screen.__init__(self, session)
         self.setTitle(_(title_plug))
         self.list = []
-        self['text'] = OneSetList([])
+        self['list'] = OneSetList([])
         self.icount = 0
         self['info'] = Label(_('Loading data... Please wait'))
         self['key_green'] = Button(_('Install'))
@@ -1339,7 +1339,7 @@ class CirusSetting(Screen):
                     self.downloading = True
             self['key_green'].show()
             self['info'].setText(_('Please select ...'))
-            showlist(self.names, self['text'])
+            showlist(self.names, self['list'])
         except Exception as e:
             print('downxmlpage get failed: ', str(e))
             self['info'].setText(_('Download page get failed ...'))
@@ -1408,13 +1408,15 @@ class tvConsole(Screen):
         self.endstr = endstr
         self.errorOcurred = False
         self['title'] = Label(_(title_plug))
-        self['text'] = ScrollLabel('')
-        self['actions'] = ActionMap(['WizardActions', 'DirectionActions', 'ColorActions'], {'ok': self.cancel,
-                                                                                            'back': self.cancel,
-                                                                                            'red': self.cancel,
-                                                                                            "blue": self.restartenigma,
-                                                                                            'up': self['text'].pageUp,
-                                                                                            'down': self['text'].pageDown}, -1)
+        self['list'] = ScrollLabel('')
+        self['actions'] = ActionMap(['WizardActions',
+                                     'DirectionActions',
+                                     'ColorActions'], {'ok': self.cancel,
+                                                       'back': self.cancel,
+                                                       'red': self.cancel,
+                                                       'blue': self.restartenigma,
+                                                       'up': self['list'].pageUp,
+                                                       'down': self['list'].pageDown}, -1)
         self.cmdlist = cmdlist
         self.newtitle = _(title_plug)
         self.onShown.append(self.updateTitle)
@@ -1432,7 +1434,7 @@ class tvConsole(Screen):
         self.setTitle(self.newtitle)
 
     def startRun(self):
-        self['text'].setText(_('Execution Progress:') + '\n\n')
+        self['list'].setText(_('Execution Progress:') + '\n\n')
         print('Console: executing in run', self.run, ' the command:', self.cmdlist[self.run])
         if self.container.execute(self.cmdlist[self.run]):
             self.runFinished(-1)
