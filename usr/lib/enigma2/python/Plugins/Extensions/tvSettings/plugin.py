@@ -4,7 +4,7 @@
 # --------------------#
 #  coded by Lululla  #
 #   skin by MMark    #
-#     25/09/2022     #
+#     05/11/2022     #
 # --------------------#
 # Info http://t.me/tivustream
 
@@ -165,6 +165,7 @@ plugin_path = os.path.dirname(sys.modules[__name__].__file__)
 ico_path = resolveFilename(SCOPE_PLUGINS, "Extensions/{}/logo.png".format('tvSettings'))
 res_plugin_path = resolveFilename(SCOPE_PLUGINS, "Extensions/{}/res/".format('tvSettings'))
 skin_path = resolveFilename(SCOPE_PLUGINS, "Extensions/{}/res/skins/hd/".format('tvSettings'))
+_firstStarttvsset = True
 
 if Utils.isFHD():
     skin_path = resolveFilename(SCOPE_PLUGINS, "Extensions/{}/res/skins/fhd/".format('tvSettings'))
@@ -1515,19 +1516,38 @@ class tvConsole(Screen):
                 self.show()
 
 
+class AutoStartTimertvsset:
+
+    def __init__(self, session):
+        self.session = session
+        global _firstStarttvsset
+        print("*** running AutoStartTimertvsset ***")
+        if _firstStarttvsset:
+            self.runUpdate()
+
+    def runUpdate(self):
+        print("*** running update ***")
+        try:
+            from . import Update
+            Update.upd_done()
+            _firstStarttvsset = False
+        except Exception as e:
+            print('error Fxy', str(e))
+
+def autostart(reason, session=None, **kwargs):
+    print("*** running autostart ***")
+    global autoStartTimertvsset
+    global _firstStarttvsset
+    if reason == 0:
+        if session is not None:
+            _firstStarttvsset = True
+            autoStartTimertvsset = AutoStartTimertvsset(session)
+    return
+
+
 def main(session, **kwargs):
     try:
-        if Utils.zCheckInternet(1):
-            try:
-                from . import Update
-                Update.upd_done()
-                session.open(MainSetting)
-            except:
-                pass
-        else:
-            from Screens.MessageBox import MessageBox
-            from Tools.Notifications import AddPopup
-            AddPopup(_("Sorry but No Internet :("), MessageBox.TYPE_INFO, 10, 'Sorry')
+        session.open(MainSetting)
     except:
         import traceback
         traceback.print_exc()
@@ -1549,6 +1569,7 @@ def Plugins(**kwargs):
     if not os.path.exists('/var/lib/dpkg/status'):
         ico_path = plugin_path + '/res/pics/logo.png'
     return [PluginDescriptor(name=name_plug, description=_(title_plug), where=[PluginDescriptor.WHERE_PLUGINMENU], icon=ico_path, fnc=main),
+            PluginDescriptor(name=name_plug, description=title_plug, where=[PluginDescriptor.WHERE_SESSIONSTART], fnc=autostart),
             PluginDescriptor(name=_(name_plug), description=_(title_plug), where=PluginDescriptor.WHERE_MENU, fnc=StartSetup),
             PluginDescriptor(name=name_plug, description=_(title_plug), where=PluginDescriptor.WHERE_EXTENSIONSMENU, fnc=main)]
 
