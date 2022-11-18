@@ -14,19 +14,20 @@ from Components.ActionMap import ActionMap
 from Components.Button import Button
 from Components.Label import Label
 from Components.MenuList import MenuList
-from Components.MultiContent import MultiContentEntryText, MultiContentEntryPixmapAlphaTest
+from Components.MultiContent import MultiContentEntryText
+from Components.MultiContent import MultiContentEntryPixmapAlphaTest
 from Components.Pixmap import Pixmap
-from Components.PluginComponent import plugins
 from Components.ScrollLabel import ScrollLabel
-from Components.Sources.List import List
 from Components.Sources.StaticText import StaticText
+from Screens.Standby import TryQuitMainloop
 from Plugins.Plugin import PluginDescriptor
 from Screens.MessageBox import MessageBox
 from Screens.Screen import Screen
 from Tools.Directories import SCOPE_PLUGINS, fileExists, resolveFilename
 from Tools.LoadPixmap import LoadPixmap
 from enigma import RT_HALIGN_LEFT, RT_VALIGN_CENTER, loadPNG
-from enigma import eListbox, eTimer, eListboxPythonMultiContent, eConsoleAppContainer, gFont
+from enigma import eTimer, eListboxPythonMultiContent
+from enigma import eConsoleAppContainer, gFont
 from twisted.web.client import downloadPage
 import base64
 import gettext
@@ -47,16 +48,16 @@ set = 0
 
 PY3 = sys.version_info.major >= 3
 if PY3:
-        from urllib.error import URLError
-        from urllib.request import urlopen, Request
-        from urllib.parse import urlparse
-        unicode = str
-        unichr = chr
-        long = int
-        PY3 = True
+    from urllib.error import URLError
+    from urllib.request import urlopen, Request
+    from urllib.parse import urlparse
+    unicode = str
+    unichr = chr
+    long = int
+    PY3 = True
 else:
-        from urllib2 import urlopen, Request, URLError
-        from urlparse import urlparse
+    from urllib2 import urlopen, Request, URLError
+    from urlparse import urlparse
 
 try:
     import zipfile
@@ -1532,7 +1533,8 @@ class AutoStartTimertvsset:
             Update.upd_done()
             _firstStarttvsset = False
         except Exception as e:
-            print('error Fxy', str(e))
+            print('error tvsetting', str(e))
+
 
 def autostart(reason, session=None, **kwargs):
     print("*** running autostart ***")
