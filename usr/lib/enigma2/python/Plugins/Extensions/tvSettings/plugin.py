@@ -261,12 +261,13 @@ class MainSetting(Screen):
             self.LcnOn = True
         self["key_blue"] = Button('')
         self['key_blue'].hide()
-        self['actions'] = ActionMap(['SetupActions', 'ColorActions', ], {'ok': self.okRun,
-                                                                         'green': self.okRun,
-                                                                         'back': self.cancel,
-                                                                         'red': self.cancel,
-                                                                         'yellow': self.Lcn,
-                                                                         'cancel': self.cancel}, -1)
+        self['actions'] = ActionMap(['OkCancelActions',
+                                     'ColorActions'], {'ok': self.okRun,
+                                                       'green': self.okRun,
+                                                       'back': self.cancel,
+                                                       'red': self.cancel,
+                                                       'yellow': self.Lcn,
+                                                       'cancel': self.cancel}, -1)
         self.onLayoutFinish.append(self.updateMenuList)
 
     def Lcn(self):
@@ -397,10 +398,11 @@ class SettingVhan(Screen):
             self.timer.callback.append(self.downxmlpage)
         self.timer.start(500, 1)
         self['title'] = Label(_(title_plug))
-        self['actions'] = ActionMap(['SetupActions', 'ColorActions'], {'ok': self.okRun,
-                                                                       'green': self.okRun,
-                                                                       'red': self.close,
-                                                                       'cancel': self.close}, -2)
+        self['actions'] = ActionMap(['OkCancelActions',
+                                     'ColorActions'], {'ok': self.okRun,
+                                                       'green': self.okRun,
+                                                       'red': self.close,
+                                                       'cancel': self.close}, -2)
 
     def downxmlpage(self):
         self.names = []
@@ -525,10 +527,11 @@ class SettingVhan2(Screen):
             self.timer.callback.append(self.downxmlpage)
         self.timer.start(500, 1)
         self['title'] = Label(_(title_plug))
-        self['actions'] = ActionMap(['SetupActions', 'ColorActions'], {'ok': self.okRun,
-                                                                       'green': self.okRun,
-                                                                       'red': self.close,
-                                                                       'cancel': self.close}, -2)
+        self['actions'] = ActionMap(['OkCancelActions',
+                                     'ColorActions'], {'ok': self.okRun,
+                                                       'green': self.okRun,
+                                                       'red': self.close,
+                                                       'cancel': self.close}, -2)
 
     def downxmlpage(self):
         url = 'http://sat.alfa-tech.net/upload/settings/vhannibal/'
@@ -664,10 +667,11 @@ class SettingMilenka6121(Screen):
             self.timer.callback.append(self.downxmlpage)
         self.timer.start(500, 1)
         self['title'] = Label(_(title_plug))
-        self['actions'] = ActionMap(['SetupActions', 'ColorActions'], {'ok': self.okRun,
-                                                                       'green': self.okRun,
-                                                                       'red': self.close,
-                                                                       'cancel': self.close}, -2)
+        self['actions'] = ActionMap(['OkCancelActions',
+                                     'ColorActions'], {'ok': self.okRun,
+                                                       'green': self.okRun,
+                                                       'red': self.close,
+                                                       'cancel': self.close}, -2)
 
     def downxmlpage(self):
         url = 'http://178.63.156.75/tarGz/'
@@ -764,10 +768,11 @@ class SettingManutek(Screen):
             self.timer.callback.append(self.downxmlpage)
         self.timer.start(500, 1)
         self['title'] = Label(_(title_plug))
-        self['actions'] = ActionMap(['SetupActions', 'ColorActions'], {'ok': self.okRun,
-                                                                       'green': self.okRun,
-                                                                       'red': self.close,
-                                                                       'cancel': self.close}, -2)
+        self['actions'] = ActionMap(['OkCancelActions',
+                                     'ColorActions'], {'ok': self.okRun,
+                                                       'green': self.okRun,
+                                                       'red': self.close,
+                                                       'cancel': self.close}, -2)
 
     def downxmlpage(self):
         url = 'http://www.manutek.it/isetting/index.php'
@@ -873,10 +878,11 @@ class SettingMorpheus2(Screen):
             self.timer.callback.append(self.downxmlpage)
         self.timer.start(500, 1)
         self['title'] = Label(_(title_plug))
-        self['actions'] = ActionMap(['SetupActions', 'ColorActions'], {'ok': self.okRun,
-                                                                       'green': self.okRun,
-                                                                       'red': self.close,
-                                                                       'cancel': self.close}, -2)
+        self['actions'] = ActionMap(['OkCancelActions',
+                                     'ColorActions'], {'ok': self.okRun,
+                                                       'green': self.okRun,
+                                                       'red': self.close,
+                                                       'cancel': self.close}, -2)
 
     def downxmlpage(self):
         url = r'http://morpheus883.altervista.org/download/index.php'
@@ -994,10 +1000,11 @@ class SettingCiefp(Screen):
             self.timer.callback.append(self.downxmlpage)
         self.timer.start(500, 1)
         self['title'] = Label(_(title_plug))
-        self['actions'] = ActionMap(['SetupActions', 'ColorActions'], {'ok': self.okRun,
-                                                                       'green': self.okRun,
-                                                                       'red': self.close,
-                                                                       'cancel': self.close}, -2)
+        self['actions'] = ActionMap(['OkCancelActions',
+                                     'ColorActions'], {'ok': self.okRun,
+                                                       'green': self.okRun,
+                                                       'red': self.close,
+                                                       'cancel': self.close}, -2)
 
     def downxmlpage(self):
         url = 'https://github.com/ciefp/ciefpsettings-enigma2-zipped'
@@ -1111,10 +1118,11 @@ class tvSettingBi58(Screen):
             self.timer.callback.append(self.downxmlpage)
         self.timer.start(500, 1)
         self['title'] = Label(_(title_plug))
-        self['actions'] = ActionMap(['SetupActions', 'ColorActions'], {'ok': self.okRun,
-                                                                       'green': self.okRun,
-                                                                       'red': self.close,
-                                                                       'cancel': self.close}, -2)
+        self['actions'] = ActionMap(['OkCancelActions',
+                                     'ColorActions'], {'ok': self.okRun,
+                                                       'green': self.okRun,
+                                                       'red': self.close,
+                                                       'cancel': self.close}, -2)
 
     def downxmlpage(self):
         url = 'http://178.63.156.75/paneladdons/Bi58/'
@@ -1211,10 +1219,11 @@ class SettingPredrag(Screen):
             self.timer.callback.append(self.downxmlpage)
         self.timer.start(500, 1)
         self['title'] = Label(_(title_plug))
-        self['actions'] = ActionMap(['SetupActions', 'ColorActions'], {'ok': self.okRun,
-                                                                       'green': self.okRun,
-                                                                       'red': self.close,
-                                                                       'cancel': self.close}, -2)
+        self['actions'] = ActionMap(['OkCancelActions',
+                                     'ColorActions'], {'ok': self.okRun,
+                                                       'green': self.okRun,
+                                                       'red': self.close,
+                                                       'cancel': self.close}, -2)
 
     def downxmlpage(self):
         url = 'http://178.63.156.75/paneladdons/Predr@g/'
@@ -1311,10 +1320,11 @@ class CirusSetting(Screen):
             self.timer.callback.append(self.downxmlpage)
         self.timer.start(500, 1)
         self['title'] = Label(_(title_plug))
-        self['actions'] = ActionMap(['SetupActions', 'ColorActions'], {'ok': self.okRun,
-                                                                       'green': self.okRun,
-                                                                       'red': self.close,
-                                                                       'cancel': self.close}, -2)
+        self['actions'] = ActionMap(['OkCancelActions',
+                                     'ColorActions'], {'ok': self.okRun,
+                                                       'green': self.okRun,
+                                                       'red': self.close,
+                                                       'cancel': self.close}, -2)
 
     def downxmlpage(self):
         url = 'http://www.cyrussettings.com/Set_29_11_2011/Dreambox-IpBox/Config.xml'
