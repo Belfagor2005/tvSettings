@@ -262,6 +262,7 @@ class MainSetting(Screen):
         self["key_blue"] = Button('')
         self['key_blue'].hide()
         self['actions'] = ActionMap(['OkCancelActions',
+                                     'ButtonSetupActions',
                                      'ColorActions'], {'ok': self.okRun,
                                                        'green': self.okRun,
                                                        'back': self.cancel,
@@ -399,6 +400,7 @@ class SettingVhan(Screen):
         self.timer.start(500, 1)
         self['title'] = Label(_(title_plug))
         self['actions'] = ActionMap(['OkCancelActions',
+                                     'ButtonSetupActions',
                                      'ColorActions'], {'ok': self.okRun,
                                                        'green': self.okRun,
                                                        'red': self.close,
@@ -528,6 +530,7 @@ class SettingVhan2(Screen):
         self.timer.start(500, 1)
         self['title'] = Label(_(title_plug))
         self['actions'] = ActionMap(['OkCancelActions',
+                                     'ButtonSetupActions',
                                      'ColorActions'], {'ok': self.okRun,
                                                        'green': self.okRun,
                                                        'red': self.close,
@@ -668,6 +671,7 @@ class SettingMilenka6121(Screen):
         self.timer.start(500, 1)
         self['title'] = Label(_(title_plug))
         self['actions'] = ActionMap(['OkCancelActions',
+                                     'ButtonSetupActions',
                                      'ColorActions'], {'ok': self.okRun,
                                                        'green': self.okRun,
                                                        'red': self.close,
@@ -769,6 +773,7 @@ class SettingManutek(Screen):
         self.timer.start(500, 1)
         self['title'] = Label(_(title_plug))
         self['actions'] = ActionMap(['OkCancelActions',
+                                     'ButtonSetupActions',
                                      'ColorActions'], {'ok': self.okRun,
                                                        'green': self.okRun,
                                                        'red': self.close,
@@ -879,6 +884,7 @@ class SettingMorpheus2(Screen):
         self.timer.start(500, 1)
         self['title'] = Label(_(title_plug))
         self['actions'] = ActionMap(['OkCancelActions',
+                                     'ButtonSetupActions',
                                      'ColorActions'], {'ok': self.okRun,
                                                        'green': self.okRun,
                                                        'red': self.close,
@@ -1001,6 +1007,7 @@ class SettingCiefp(Screen):
         self.timer.start(500, 1)
         self['title'] = Label(_(title_plug))
         self['actions'] = ActionMap(['OkCancelActions',
+                                     'ButtonSetupActions',
                                      'ColorActions'], {'ok': self.okRun,
                                                        'green': self.okRun,
                                                        'red': self.close,
@@ -1119,6 +1126,7 @@ class tvSettingBi58(Screen):
         self.timer.start(500, 1)
         self['title'] = Label(_(title_plug))
         self['actions'] = ActionMap(['OkCancelActions',
+                                     'ButtonSetupActions',
                                      'ColorActions'], {'ok': self.okRun,
                                                        'green': self.okRun,
                                                        'red': self.close,
@@ -1220,6 +1228,7 @@ class SettingPredrag(Screen):
         self.timer.start(500, 1)
         self['title'] = Label(_(title_plug))
         self['actions'] = ActionMap(['OkCancelActions',
+                                     'ButtonSetupActions',
                                      'ColorActions'], {'ok': self.okRun,
                                                        'green': self.okRun,
                                                        'red': self.close,
@@ -1321,6 +1330,7 @@ class CirusSetting(Screen):
         self.timer.start(500, 1)
         self['title'] = Label(_(title_plug))
         self['actions'] = ActionMap(['OkCancelActions',
+                                     'ButtonSetupActions',
                                      'ColorActions'], {'ok': self.okRun,
                                                        'green': self.okRun,
                                                        'red': self.close,
