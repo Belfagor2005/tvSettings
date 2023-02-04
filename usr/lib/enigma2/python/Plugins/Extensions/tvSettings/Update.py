@@ -35,4 +35,5 @@ def upd_last(fplug):
         cmd = "tar -xvf /tmp/tvsettings.tar -C /"
         print("cmd A =", cmd)
         os.system(cmd)
+        os.remove('/tmp/tvsettings.tar')
     return

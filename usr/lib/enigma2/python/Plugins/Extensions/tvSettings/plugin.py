@@ -10,6 +10,8 @@
 
 from __future__ import print_function
 from .__init__ import _
+from . import Utils
+from .Lcn import LCN
 from Components.ActionMap import ActionMap
 from Components.Button import Button
 from Components.Label import Label
@@ -38,9 +40,6 @@ import shutil
 import ssl
 import glob
 import six
-
-from . import Utils
-from .Lcn import LCN
 
 global category
 global set
@@ -162,14 +161,15 @@ currversion = '1.7'
 title_plug = '..:: TiVuStream Settings V. %s ::..' % currversion
 name_plug = 'TiVuStream Settings'
 category = 'lululla.xml'
-plugin_path = os.path.dirname(sys.modules[__name__].__file__)
-ico_path = resolveFilename(SCOPE_PLUGINS, "Extensions/{}/logo.png".format('tvSettings'))
-res_plugin_path = resolveFilename(SCOPE_PLUGINS, "Extensions/{}/res/".format('tvSettings'))
-skin_path = resolveFilename(SCOPE_PLUGINS, "Extensions/{}/res/skins/hd/".format('tvSettings'))
+# plugin_path = os.path.dirname(sys.modules[__name__].__file__)
+plugin_path = '/usr/lib/enigma2/python/Plugins/Extensions/WorldCam'
+ico_path = os.path.join(plugin_path, 'logo.png')
+res_plugin_path = os.path.join(plugin_path, 'res/')
+skin_path = os.path.join(plugin_path, 'res/skins/hd/')
 _firstStarttvsset = True
 
 if Utils.isFHD():
-    skin_path = resolveFilename(SCOPE_PLUGINS, "Extensions/{}/res/skins/fhd/".format('tvSettings'))
+    skin_path = os.path.join(plugin_path, 'res/skins/fhd/')
 if Utils.DreamOS():
     skin_path = skin_path + 'dreamOs/'
 
@@ -240,7 +240,7 @@ def showlist(data, list):
 class MainSetting(Screen):
     def __init__(self, session):
         self.session = session
-        skin = skin_path + 'settings.xml'
+        skin = os.path.join(skin_path, 'settings.xml')
         with open(skin, 'r') as f:
             self.skin = f.read()
         self.setup_title = ('MainSetting')
@@ -375,7 +375,7 @@ class MainSetting(Screen):
 class SettingVhan(Screen):
     def __init__(self, session):
         self.session = session
-        skin = skin_path + 'settings.xml'
+        skin = os.path.join(skin_path, 'settings.xml')
         with open(skin, 'r') as f:
             self.skin = f.read()
         self.setup_title = ('Setting Vhannibal')
@@ -505,7 +505,7 @@ class SettingVhan(Screen):
 class SettingVhan2(Screen):
     def __init__(self, session):
         self.session = session
-        skin = skin_path + 'settings.xml'
+        skin = os.path.join(skin_path, 'settings.xml')
         with open(skin, 'r') as f:
             self.skin = f.read()
         self.setup_title = ('Setting Vhannibal')
@@ -646,7 +646,7 @@ class SettingVhan2(Screen):
 class SettingMilenka6121(Screen):
     def __init__(self, session):
         self.session = session
-        skin = skin_path + 'settings.xml'
+        skin = os.path.join(skin_path, 'settings.xml')
         with open(skin, 'r') as f:
             self.skin = f.read()
         self.setup_title = ('Setting Milenka61')
@@ -748,7 +748,7 @@ class SettingMilenka6121(Screen):
 class SettingManutek(Screen):
     def __init__(self, session):
         self.session = session
-        skin = skin_path + 'settings.xml'
+        skin = os.path.join(skin_path, 'settings.xml')
         with open(skin, 'r') as f:
             self.skin = f.read()
         self.setup_title = ('Setting Manutek')
@@ -859,7 +859,7 @@ class SettingManutek(Screen):
 class SettingMorpheus2(Screen):
     def __init__(self, session):
         self.session = session
-        skin = skin_path + 'settings.xml'
+        skin = os.path.join(skin_path, 'settings.xml')
         with open(skin, 'r') as f:
             self.skin = f.read()
         self.setup_title = ('Setting Morpheus')
@@ -977,7 +977,7 @@ class SettingMorpheus2(Screen):
 class SettingCiefp(Screen):
     def __init__(self, session):
         self.session = session
-        skin = skin_path + 'settings.xml'
+        skin = os.path.join(skin_path, 'settings.xml')
         with open(skin, 'r') as f:
             self.skin = f.read()
         self.setup_title = ('Setting Ciefp')
@@ -1101,7 +1101,7 @@ class SettingCiefp(Screen):
 class tvSettingBi58(Screen):
     def __init__(self, session):
         self.session = session
-        skin = skin_path + 'settings.xml'
+        skin = os.path.join(skin_path, 'settings.xml')
         with open(skin, 'r') as f:
             self.skin = f.read()
         self.setup_title = ('Setting Bi58')
@@ -1203,7 +1203,7 @@ class tvSettingBi58(Screen):
 class SettingPredrag(Screen):
     def __init__(self, session):
         self.session = session
-        skin = skin_path + 'settings.xml'
+        skin = os.path.join(skin_path, 'settings.xml')
         with open(skin, 'r') as f:
             self.skin = f.read()
         self.setup_title = ('Setting Predrag')
@@ -1306,7 +1306,7 @@ class SettingPredrag(Screen):
 class CirusSetting(Screen):
     def __init__(self, session):
         self.session = session
-        skin = skin_path + 'settings.xml'
+        skin = os.path.join(skin_path, 'settings.xml')
         with open(skin, 'r') as f:
             self.skin = f.read()
         self.setup_title = ('Setting Cyrus')
@@ -1420,7 +1420,7 @@ class CirusSetting(Screen):
 class tvConsole(Screen):
     def __init__(self, session, title="Console", cmdlist=None, finishedCallback=None, closeOnSuccess=False, endstr=''):
         self.session = session
-        skin = skin_path + 'tvConsole.xml'
+        skin = os.path.join(skin_path, 'tvConsole.xml')
         with open(skin, 'r') as f:
             self.skin = f.read()
         self.setup_title = ('Console')
