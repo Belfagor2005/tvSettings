@@ -15,7 +15,7 @@ except ImportError:
 
 # NAME Digitale Terrestre
 plugin_path = os.path.dirname(sys.modules[__name__].__file__)
-rules = plugin_path + '/rules.xml'
+rules = os.path.join(plugin_path, 'rules.xml')
 
 
 def Bouquet():
