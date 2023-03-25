@@ -164,6 +164,8 @@ if Utils.DreamOS():
     skin_path = skin_path + 'dreamOs/'
 
 Panel_Dlist = [
+               ('SAVE DTT BOUQUET'),
+               ('RESTORE DTT BOUQUET'),
                ('SETTINGS BI58'),
                ('SETTINGS CIEFP'),
                ('SETTINGS CYRUS'),
@@ -294,7 +296,11 @@ class MainSetting(Screen):
 
     def keyNumberGlobalCB(self, idx):
         sel = self.menu_list[idx]
-        if sel == ('SETTINGS CIEFP'):
+        if sel == ('SAVE DTT BOUQUET'):
+            self.terrestrialsave()
+        elif sel == ('RESTORE DTT BOUQUET'):
+            self.terrestrial_restore()        
+        elif sel == ('SETTINGS CIEFP'):
             self.session.open(SettingCiefp)
         elif sel == ('SETTINGS CYRUS'):
             self.session.open(CirusSetting)
@@ -317,11 +323,22 @@ class MainSetting(Screen):
         elif sel == _('UPDATE TERRESTRIAL.XML'):
             self.okTERRESTRIAL()
 
-    def okSATELLITE(self):
-        self.session.openWithCallback(self.okSatInstall, MessageBox, (_("Do you want to install?")), MessageBox.TYPE_YESNO)
+    def terrestrial_restore(self, answer=None):
+        if answer is None:
+            self.session.openWithCallback(self.terrestrial_restore, MessageBox, _("This operation restore your Favorite channel Dtt\nfrom =>>THISPLUGIN/temp/TerrestrialChannelListArchive\nDo you really want to continue?"))
+        else:
+            terrestrial_rest()
 
-    def okSatInstall(self, result):
-        if result:
+    def terrestrialsave(self, answer=None):
+        if answer is None:
+            self.session.openWithCallback(self.terrestrialsave, MessageBox, _("This operation save your Favorite channel Dtt\nto =>>/tmp/*_enigma2settingsbackup.tar.gz\nDo you really want to continue?"))
+        else:
+            terrestrial()
+
+    def okSATELLITE(self, answer=None):
+        if answer is None:
+            self.session.openWithCallback(self.okSATELLITE, MessageBox, _("Do you want to install?"))
+        else:
             if Utils.checkInternet():
                 try:
                     url_sat_oealliance = 'http://raw.githubusercontent.com/oe-alliance/oe-alliance-tuxbox-common/master/src/satellites.xml'
@@ -338,11 +355,10 @@ class MainSetting(Screen):
             else:
                 self.session.open(MessageBox, "No Internet", MessageBox.TYPE_INFO)
 
-    def okTERRESTRIAL(self):
-        self.session.openWithCallback(self.okTerrInstall, MessageBox, (_("Do you want to install?")), MessageBox.TYPE_YESNO)
-
-    def okTerrInstall(self, result):
-        if result:
+    def okTERRESTRIAL(self, answer=None):
+        if answer is None:
+            self.session.openWithCallback(self.okTERRESTRIAL, MessageBox, _("Do you want to install?"))
+        else:
             if Utils.checkInternet():
                 try:
                     url_sat_oealliance = 'https://raw.githubusercontent.com/oe-alliance/oe-alliance-tuxbox-common/master/src/terrestrial.xml'
@@ -420,17 +436,11 @@ class SettingVhan(Screen):
             print('downxmlpage get failed: ', str(e))
             self['info'].setText(_('Download page get failed ...'))
 
-    def okRun(self):
-        i = len(self.names)
-        print('iiiiii= ', i)
-        if i < 0:
-            return
-        self.session.openWithCallback(self.okInstall, MessageBox, (_("Do you want to install?")), MessageBox.TYPE_YESNO)
-
-    def okInstall(self, result):
-        global set
-        set = 0
-        if result:
+    def okRun(self, answer=None):
+        if answer is None:
+            self.session.openWithCallback(self.okRun, MessageBox, _("Do you want to install?"))
+        else:
+            set = 0
             if self.downloading is True:
                 idx = self["list"].getSelectionIndex()
                 self.name = self.names[idx]
@@ -537,17 +547,12 @@ class SettingVhan2(Screen):
             print('downxmlpage get failed: ', str(e))
             self['info'].setText(_('Download page get failed ...'))
 
-    def okRun(self):
-        i = len(self.names)
-        print('iiiiii= ', i)
-        if i < 0:
-            return
-        self.session.openWithCallback(self.okInstall, MessageBox, (_("Do you want to install?")), MessageBox.TYPE_YESNO)
-
-    def okInstall(self, result):
-        global set
-        set = 0
-        if result:
+    def okRun(self, answer=None):
+        if answer is None:
+            self.session.openWithCallback(self.okRun, MessageBox, _("Do you want to install?"))
+        else:
+            global set
+            set = 0
             if self.downloading is True:
                 try:
                     idx = self["list"].getSelectionIndex()
@@ -679,17 +684,12 @@ class SettingMilenka6121(Screen):
             print('downxmlpage get failed: ', str(e))
             self['info'].setText(_('Download page get failed ...'))
 
-    def okRun(self):
-        i = len(self.names)
-        print('iiiiii= ', i)
-        if i < 0:
-            return
-        self.session.openWithCallback(self.okInstall, MessageBox, (_("Do you want to install?")), MessageBox.TYPE_YESNO)
-
-    def okInstall(self, result):
-        global set
-        set = 0
-        if result:
+    def okRun(self, answer=None):
+        if answer is None:
+            self.session.openWithCallback(self.okRun, MessageBox, _("Do you want to install?"))
+        else:
+            global set
+            set = 0
             if self.downloading is True:
                 idx = self["list"].getSelectionIndex()
                 url = self.urls[idx]
@@ -777,17 +777,12 @@ class SettingManutek(Screen):
             print('downxmlpage get failed: ', str(e))
             self['info'].setText(_('Download page get failed ...'))
 
-    def okRun(self):
-        i = len(self.names)
-        print('iiiiii= ', i)
-        if i < 0:
-            return
-        self.session.openWithCallback(self.okInstall, MessageBox, (_("Do you want to install?")), MessageBox.TYPE_YESNO)
-
-    def okInstall(self, result):
-        global set
-        set = 0
-        if result:
+    def okRun(self, answer=None):
+        if answer is None:
+            self.session.openWithCallback(self.okRun, MessageBox, _("Do you want to install?"))
+        else:
+            global set
+            set = 0
             if self.downloading is True:
                 idx = self["list"].getSelectionIndex()
                 url = self.urls[idx]
@@ -899,18 +894,12 @@ class SettingMorpheus2(Screen):
             print('downxmlpage get failed: ', str(e))
             self['info'].setText(_('Download page get failed ...'))
 
-    def okRun(self):
-        i = len(self.names)
-        print('iiiiii= ', i)
-        if i < 0:
-            return
-        self.session.openWithCallback(self.okInstall, MessageBox, (_("Do you want to install?")), MessageBox.TYPE_YESNO)
-
-    def okInstall(self, result):
-        global set
-        set = 0
-        print("self.downloading is =", self.downloading)
-        if result:
+    def okRun(self, answer=None):
+        if answer is None:
+            self.session.openWithCallback(self.okRun, MessageBox, _("Do you want to install?"))
+        else:
+            global set
+            set = 0
             if self.downloading is True:
                 idx = self["list"].getSelectionIndex()
                 url = self.urls[idx]
@@ -1025,17 +1014,12 @@ class SettingCiefp(Screen):
             print('downxmlpage get failed: ', str(e))
             self['info'].setText(_('Download page get failed ...'))
 
-    def okRun(self):
-        i = len(self.names)
-        print('iiiiii= ', i)
-        if i < 0:
-            return
-        self.session.openWithCallback(self.okInstall, MessageBox, (_("Do you want to install?")), MessageBox.TYPE_YESNO)
-
-    def okInstall(self, result):
-        global set
-        set = 0
-        if result:
+    def okRun(self, answer=None):
+        if answer is None:
+            self.session.openWithCallback(self.okRun, MessageBox, _("Do you want to install?"))
+        else:
+            global set
+            set = 0
             if self.downloading is True:
                 idx = self["list"].getSelectionIndex()
                 url = self.urls[idx]
@@ -1137,17 +1121,12 @@ class tvSettingBi58(Screen):
             print('downxmlpage get failed: ', str(e))
             self['info'].setText(_('Download page get failed ...'))
 
-    def okRun(self):
-        i = len(self.names)
-        print('iiiiii= ', i)
-        if i < 0:
-            return
-        self.session.openWithCallback(self.okInstall, MessageBox, (_("Do you want to install?")), MessageBox.TYPE_YESNO)
-
-    def okInstall(self, result):
-        global set
-        set = 0
-        if result:
+    def okRun(self, answer=None):
+        if answer is None:
+            self.session.openWithCallback(self.okRun, MessageBox, _("Do you want to install?"))
+        else:
+            global set
+            set = 0
             if self.downloading is True:
                 idx = self["list"].getSelectionIndex()
                 url = self.urls[idx]
@@ -1238,17 +1217,12 @@ class SettingPredrag(Screen):
             print('downxmlpage get failed: ', str(e))
             self['info'].setText(_('Download page get failed ...'))
 
-    def okRun(self):
-        i = len(self.names)
-        print('iiiiii= ', i)
-        if i < 0:
-            return
-        self.session.openWithCallback(self.okInstall, MessageBox, (_("Do you want to install?")), MessageBox.TYPE_YESNO)
-
-    def okInstall(self, result):
-        global set
-        set = 0
-        if result:
+    def okRun(self, answer=None):
+        if answer is None:
+            self.session.openWithCallback(self.okRun, MessageBox, _("Do you want to install?"))
+        else:
+            global set
+            set = 0
             if self.downloading is True:
                 idx = self["list"].getSelectionIndex()
                 url = self.urls[idx]
@@ -1341,17 +1315,12 @@ class CirusSetting(Screen):
             print('downxmlpage get failed: ', str(e))
             self['info'].setText(_('Download page get failed ...'))
 
-    def okRun(self):
-        i = len(self.names)
-        print('iiiiii= ', i)
-        if i < 0:
-            return
-        self.session.openWithCallback(self.okInstall, MessageBox, (_("Do you want to install?")), MessageBox.TYPE_YESNO)
-
-    def okInstall(self, result):
-        global set
-        set = 0
-        if result:
+    def okRun(self, answer=None):
+        if answer is None:
+            self.session.openWithCallback(self.okRun, MessageBox, _("Do you want to install?"))
+        else:
+            global set
+            set = 0
             if self.downloading is True:
                 idx = self["list"].getSelectionIndex()
                 url = self.urls[idx]
@@ -1563,7 +1532,7 @@ def StartSetup(menuid, **kwargs):
 def Plugins(**kwargs):
     ico_path = 'logo.png'
     if not os.path.exists('/var/lib/dpkg/status'):
-        ico_path = plugin_path + '/res/pics/logo.png'
+        ico_path = os.path.join(plugin_path, 'res/pics/logo.png')
     return [PluginDescriptor(name=name_plug, description=title_plug, where=[PluginDescriptor.WHERE_PLUGINMENU], icon=ico_path, fnc=main),
             PluginDescriptor(name=name_plug, description=title_plug, where=[PluginDescriptor.WHERE_SESSIONSTART], fnc=autostart),
             PluginDescriptor(name=name_plug, description=title_plug, where=PluginDescriptor.WHERE_MENU, fnc=StartSetup),
@@ -1585,7 +1554,7 @@ def terrestrial():
 def terrestrial_rest():
     if LamedbRestore():
         TransferBouquetTerrestrialFinal()
-        terrr = plugin_path + '/temp/TerrestrialChannelListArchive'
+        terrr = os.path.join(plugin_path, 'temp/TerrestrialChannelListArchive')
         if os.path.exists(terrr):
             os.system("cp -rf " + plugin_path + "/temp/TerrestrialChannelListArchive /etc/enigma2/userbouquet.terrestrial.tv")
         os.system('cp -rf /etc/enigma2/bouquets.tv /etc/enigma2/backup_bouquets.tv')
