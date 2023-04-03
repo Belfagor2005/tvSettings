@@ -20,18 +20,16 @@ from Components.MultiContent import MultiContentEntryText
 from Components.MultiContent import MultiContentEntryPixmapAlphaTest
 from Components.Pixmap import Pixmap
 from Components.ScrollLabel import ScrollLabel
-from Components.Sources.StaticText import StaticText
+# from Components.Sources.StaticText import StaticText
 from Screens.Standby import TryQuitMainloop
 from Plugins.Plugin import PluginDescriptor
 from Screens.MessageBox import MessageBox
 from Screens.Screen import Screen
 from Tools.Directories import SCOPE_PLUGINS, fileExists, resolveFilename
-from Tools.LoadPixmap import LoadPixmap
 from enigma import RT_HALIGN_LEFT, RT_VALIGN_CENTER, loadPNG
 from enigma import eTimer, eListboxPythonMultiContent
 from enigma import eConsoleAppContainer, gFont
 from twisted.web.client import downloadPage
-import base64
 import os
 import re
 import sys
@@ -57,6 +55,7 @@ else:
     from urllib2 import urlopen, Request, URLError
     from urlparse import urlparse
 
+
 if sys.version_info >= (2, 7, 9):
     try:
         import ssl
@@ -70,6 +69,16 @@ def ssl_urlopen(url):
         return urlopen(url, context=sslContext)
     else:
         return urlopen(url)
+
+
+def trace_error():
+    import sys
+    import traceback
+    try:
+        traceback.print_exc(file=sys.stdout)
+        traceback.print_exc(file=open('/tmp/traceback.log', 'a'))
+    except:
+        pass
 
 
 try:
@@ -105,11 +114,9 @@ def make_request(url):
         return link
     except:
         e = URLError
-        print('We failed to open "%s".' % url)
         if hasattr(e, 'code'):
             print('We failed with error code - %s.' % e.code)
         if hasattr(e, 'reason'):
-            print('We failed to reach a server.')
             print('Reason: ', e.reason)
         return
     return
@@ -118,6 +125,11 @@ def make_request(url):
 def ReloadBouquets():
     from enigma import eDVBDB
     print("\n----Reloading bouquets----")
+    global set
+    if set == 1:
+        set = 0
+        print("\n----Reloading Terrestrial----")
+        terrestrial_rest()
     if eDVBDB:
         eDVBDB.getInstance().reloadServicelist()
         eDVBDB.getInstance().reloadBouquets()
@@ -128,24 +140,6 @@ def ReloadBouquets():
         print("wGET: bouquets reloaded...")
 
 
-def ReloadBouquet():
-    global set
-    print('\n----Reloading bouquets----')
-    if set == 1:
-        set = 0
-        terrestrial_rest()
-    ReloadBouquets()
-
-
-def trace_error():
-    import traceback
-    try:
-        traceback.print_exc(file=sys.stdout)
-        traceback.print_exc(file=open('/tmp/traceback.log', 'a'))
-    except:
-        pass
-
-
 os.system('rm -fr /usr/lib/enigma2/python/Plugins/Extensions/tvSettings/temp/*')  # clean /temp
 currversion = '1.7'
 title_plug = '..:: TiVuStream Settings V. %s ::..' % currversion
@@ -154,6 +148,7 @@ category = 'lululla.xml'
 # plugin_path = os.path.dirname(sys.modules[__name__].__file__)
 plugin_path = '/usr/lib/enigma2/python/Plugins/Extensions/tvSettings'
 ico_path = os.path.join(plugin_path, 'logo.png')
+no_cover = os.path.join(plugin_path, 'no_coverArt.png')
 res_plugin_path = os.path.join(plugin_path, 'res/')
 skin_path = os.path.join(plugin_path, 'res/skins/hd/')
 _firstStarttvsset = True
@@ -185,10 +180,10 @@ class OneSetList(MenuList):
         MenuList.__init__(self, list, True, eListboxPythonMultiContent)
         if Utils.isFHD():
             self.l.setItemHeight(50)
-            textfont = int(30)
+            textfont = int(32)
             self.l.setFont(0, gFont('Regular', textfont))
         else:
-            self.l.setItemHeight(30)
+            self.l.setItemHeight(50)
             textfont = int(24)
             self.l.setFont(0, gFont('Regular', textfont))
 
@@ -201,8 +196,8 @@ def DListEntry(name, idx):
         res.append(MultiContentEntryText(pos=(70, 0), size=(1000, 50), font=0, text=name, color=0xa6d1fe, flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER))
 
     else:
-        res.append(MultiContentEntryPixmapAlphaTest(pos=(3, 3), size=(30, 30), png=loadPNG(pngs)))
-        res.append(MultiContentEntryText(pos=(50, 0), size=(500, 30), font=0, text=name, color=0xa6d1fe, flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER))
+        res.append(MultiContentEntryPixmapAlphaTest(pos=(3, 10), size=(40, 40), png=loadPNG(pngs)))
+        res.append(MultiContentEntryText(pos=(50, 0), size=(500, 50), font=0, text=name, color=0xa6d1fe, flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER))
     return res
 
 
@@ -214,8 +209,8 @@ def OneSetListEntry(name):
         res.append(MultiContentEntryText(pos=(70, 0), size=(1000, 50), font=0, text=name, color=0xa6d1fe, flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER))
 
     else:
-        res.append(MultiContentEntryPixmapAlphaTest(pos=(3, 3), size=(30, 30), png=loadPNG(pngx)))
-        res.append(MultiContentEntryText(pos=(50, 0), size=(500, 30), font=0, text=name, color=0xa6d1fe, flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER))
+        res.append(MultiContentEntryPixmapAlphaTest(pos=(3, 10), size=(40, 40), png=loadPNG(pngx)))
+        res.append(MultiContentEntryText(pos=(50, 0), size=(500, 50), font=0, text=name, color=0xa6d1fe, flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER))
     return res
 
 
@@ -255,7 +250,6 @@ class MainSetting(Screen):
         self["key_blue"] = Button('')
         self['key_blue'].hide()
         self['actions'] = ActionMap(['OkCancelActions',
-                                     'ButtonSetupActions',
                                      'ColorActions'], {'ok': self.okRun,
                                                        'green': self.okRun,
                                                        'back': self.cancel,
@@ -270,11 +264,12 @@ class MainSetting(Screen):
             lcn.read()
             if len(lcn.lcnlist) > 0:
                 lcn.writeBouquet()
-                lcn.ReloadBouquet()
+                lcn.ReloadBouquets()
                 self.session.open(MessageBox, _('Sorting Terrestrial channels with Lcn rules Completed'), MessageBox.TYPE_INFO, timeout=5)
+        # self.session.open(MessageBox, _('Reorder Terrestrial channels with Lcn rules'), MessageBox.TYPE_INFO, timeout=5)
+        # lcnstart()
 
     def cancel(self):
-        Utils.deletetmp()
         self.close()
 
     def updateMenuList(self):
@@ -299,19 +294,19 @@ class MainSetting(Screen):
         if sel == ('SAVE DTT BOUQUET'):
             self.terrestrialsave()
         elif sel == ('RESTORE DTT BOUQUET'):
-            self.terrestrial_restore()        
+            self.terrestrial_restore()
         elif sel == ('SETTINGS CIEFP'):
             self.session.open(SettingCiefp)
         elif sel == ('SETTINGS CYRUS'):
-            self.session.open(CirusSetting)
+            self.session.open(SettingCyrus)
         elif sel == ('SETTINGS BI58'):
-            self.session.open(tvSettingBi58)
+            self.session.open(SettingBi58)
         elif sel == ('SETTINGS MANUTEK'):
             self.session.open(SettingManutek)
         elif sel == ('SETTINGS MILENKA61'):
-            self.session.open(SettingMilenka6121)
+            self.session.open(SettingMilenka61)
         elif sel == ('SETTINGS MORPHEUS'):
-            self.session.open(SettingMorpheus2)
+            self.session.open(SettingMorpheus)
         elif sel == ('SETTINGS PREDRAG'):
             self.session.open(SettingPredrag)
         elif sel == ('SETTINGS VHANNIBAL'):
@@ -387,7 +382,6 @@ class SettingVhan(Screen):
         self.setTitle(_(title_plug))
         self.list = []
         self['list'] = OneSetList([])
-        self.icount = 0
         self['info'] = Label(_('Loading data... Please wait'))
         self['key_green'] = Button(_('Install'))
         self['key_red'] = Button(_('Back'))
@@ -405,7 +399,6 @@ class SettingVhan(Screen):
         self.timer.start(500, 1)
         self['title'] = Label(_(title_plug))
         self['actions'] = ActionMap(['OkCancelActions',
-                                     'ButtonSetupActions',
                                      'ColorActions'], {'ok': self.okRun,
                                                        'green': self.okRun,
                                                        'red': self.close,
@@ -417,15 +410,12 @@ class SettingVhan(Screen):
         try:
             urlsat = 'https://www.vhannibal.net/asd.php'
             r = make_request(urlsat)
-            print('rrrrrrrr ', r)
             if PY3:
                 r = six.ensure_str(r)
             match = re.compile('<td><a href="(.+?)">(.+?)</a></td>.*?<td>(.+?)</td>', re.DOTALL).findall(r)
             for url, name, date in match:
                 name = name + ' ' + date
                 url = "https://www.vhannibal.net/" + url
-                print('url : ', url)
-                print('name : ', name)
                 self.urls.append(Utils.checkStr(url.strip()))
                 self.names.append(Utils.checkStr(name.strip()))
             self.downloading = True
@@ -440,6 +430,7 @@ class SettingVhan(Screen):
         if answer is None:
             self.session.openWithCallback(self.okRun, MessageBox, _("Do you want to install?"))
         else:
+            global set
             set = 0
             if self.downloading is True:
                 idx = self["list"].getSelectionIndex()
@@ -447,7 +438,6 @@ class SettingVhan(Screen):
                 url = self.urls[idx]
                 dest = "/tmp/settings.zip"
                 self.namel = ''
-                print("url =", url)
                 import requests
                 r = requests.get(url)
                 with open(dest, 'wb') as f:
@@ -482,7 +472,7 @@ class SettingVhan(Screen):
                 self['info'].setText(_('No Downloading ...'))
 
     def yes(self):
-        ReloadBouquet()
+        ReloadBouquets()
 
 
 class SettingVhan2(Screen):
@@ -496,7 +486,6 @@ class SettingVhan2(Screen):
         self.setTitle(_(title_plug))
         self.list = []
         self['list'] = OneSetList([])
-        self.icount = 0
         self['info'] = Label(_('Loading data... Please wait'))
         self['key_green'] = Button(_('Install'))
         self['key_red'] = Button(_('Back'))
@@ -514,7 +503,6 @@ class SettingVhan2(Screen):
         self.timer.start(500, 1)
         self['title'] = Label(_(title_plug))
         self['actions'] = ActionMap(['OkCancelActions',
-                                     'ButtonSetupActions',
                                      'ColorActions'], {'ok': self.okRun,
                                                        'green': self.okRun,
                                                        'red': self.close,
@@ -523,7 +511,6 @@ class SettingVhan2(Screen):
     def downxmlpage(self):
         url = 'http://sat.alfa-tech.net/upload/settings/vhannibal/'
         r = make_request(url)
-        print('rrrrrrrr ', r)
         if PY3:
             r = six.ensure_str(r)
         self.names = []
@@ -558,29 +545,25 @@ class SettingVhan2(Screen):
                     idx = self["list"].getSelectionIndex()
                     self.name = self.names[idx]
                     url = self.urls[idx]
-                    self.dest = "/tmp/settings.zip"
-                    print("url =", url)
+                    dest = "/tmp/settings.zip"
+                    if 'dtt' not in url.lower():
+                        # if not os.path.exists('/var/lib/dpkg/status'):
+                        set = 1
+                        terrestrial()
                     if PY3:
                         url = six.ensure_binary(url)
                     if url.startswith(b"https") and sslverify:
                         parsed_uri = urlparse(url)
                         domain = parsed_uri.hostname
                         sniFactory = SNIFactory(domain)
-                        # if PY3:
-                            # url = url.encode()
-                        print('uurrll: ', url)
-                        downloadPage(url, self.dest, sniFactory, timeout=5).addCallback(self.download, self.dest).addErrback(self.downloadError)
+                        downloadPage(url, dest, sniFactory, timeout=5).addCallback(self.download, dest).addErrback(self.downloadError)
                     else:
-                        downloadPage(url, self.dest).addCallback(self.download, self.dest).addErrback(self.downloadError)
+                        downloadPage(url, dest).addCallback(self.download, dest).addErrback(self.downloadError)
                 except Exception as e:
-                    print(str(e))
-                    print("Error: can't find file or read data")
+                    print('error: ', str(e))
 
     def download(self, data, dest):
         try:
-            if 'dtt' not in self.name.lower():
-                set = 1
-                terrestrial()
             if os.path.exists(dest):
                 self.namel = ''
                 fdest1 = "/tmp/unzipped"
@@ -606,22 +589,21 @@ class SettingVhan2(Screen):
                 self['info'].setText(_('Settings Not Installed ...'))
 
         except Exception as e:
-            print("* error ** %s" % str(e))
+            print('error: ', str(e))
             self['info'].setText(_('Not Installed ...'))
 
     def downloadError(self, png):
         try:
-            if fileExists(png):
-                self.poster_resize(png)
+            if not fileExists(png):
+                self.poster_resize(no_cover)
         except Exception as e:
-            print(str(e))
-            print('downloadError')
+            print('error: ', str(e))
 
     def yes(self):
-        ReloadBouquet()
+        ReloadBouquets()
 
 
-class SettingMilenka6121(Screen):
+class SettingMilenka61(Screen):
     def __init__(self, session):
         self.session = session
         skin = os.path.join(skin_path, 'settings.xml')
@@ -632,7 +614,6 @@ class SettingMilenka6121(Screen):
         self.setTitle(_(title_plug))
         self.list = []
         self['list'] = OneSetList([])
-        self.icount = 0
         self['info'] = Label(_('Loading data... Please wait'))
         self['key_green'] = Button(_('Install'))
         self['key_red'] = Button(_('Back'))
@@ -650,7 +631,6 @@ class SettingMilenka6121(Screen):
         self.timer.start(500, 1)
         self['title'] = Label(_(title_plug))
         self['actions'] = ActionMap(['OkCancelActions',
-                                     'ButtonSetupActions',
                                      'ColorActions'], {'ok': self.okRun,
                                                        'green': self.okRun,
                                                        'red': self.close,
@@ -660,7 +640,6 @@ class SettingMilenka6121(Screen):
         url = 'http://178.63.156.75/tarGz/'
         data = make_request(url)
         r = data
-        print('rrrrrrrr ', r)
         self.names = []
         self.urls = []
         try:
@@ -694,9 +673,7 @@ class SettingMilenka6121(Screen):
                 idx = self["list"].getSelectionIndex()
                 url = self.urls[idx]
                 dest = "/tmp/settings.tar.gz"
-                print("url =", url)
                 if 'dtt' not in url.lower():
-                    # if not os.path.exists('/var/lib/dpkg/status'):
                     set = 1
                     terrestrial()
                 import requests
@@ -715,7 +692,7 @@ class SettingMilenka6121(Screen):
                 self['info'].setText(_('Settings Not Installed ...'))
 
     def yes(self):
-        ReloadBouquet()
+        ReloadBouquets()
 
 
 class SettingManutek(Screen):
@@ -729,7 +706,6 @@ class SettingManutek(Screen):
         self.setTitle(_(title_plug))
         self.list = []
         self['list'] = OneSetList([])
-        self.icount = 0
         self['info'] = Label(_('Loading data... Please wait'))
         self['key_green'] = Button(_('Install'))
         self['key_red'] = Button(_('Back'))
@@ -747,7 +723,6 @@ class SettingManutek(Screen):
         self.timer.start(500, 1)
         self['title'] = Label(_(title_plug))
         self['actions'] = ActionMap(['OkCancelActions',
-                                     'ButtonSetupActions',
                                      'ColorActions'], {'ok': self.okRun,
                                                        'green': self.okRun,
                                                        'red': self.close,
@@ -757,7 +732,6 @@ class SettingManutek(Screen):
         url = 'http://www.manutek.it/isetting/index.php'
         data = make_request(url)
         r = data
-        print('rrrrrrrr ', r)
         self.names = []
         self.urls = []
         try:
@@ -788,9 +762,7 @@ class SettingManutek(Screen):
                 url = self.urls[idx]
                 dest = "/tmp/settings.zip"
                 self.namel = ''
-                print("url =", url)
                 if 'dtt' not in url.lower():
-                    # if not os.path.exists('/var/lib/dpkg/status'):
                     set = 1
                     terrestrial()
                 import requests
@@ -821,10 +793,10 @@ class SettingManutek(Screen):
                 self['info'].setText(_('Settings Not Installed ...'))
 
     def yes(self):
-        ReloadBouquet()
+        ReloadBouquets()
 
 
-class SettingMorpheus2(Screen):
+class SettingMorpheus(Screen):
     def __init__(self, session):
         self.session = session
         skin = os.path.join(skin_path, 'settings.xml')
@@ -835,7 +807,6 @@ class SettingMorpheus2(Screen):
         self.setTitle(_(title_plug))
         self.list = []
         self['list'] = OneSetList([])
-        self.icount = 0
         self['info'] = Label(_('Loading data... Please wait'))
         self['key_green'] = Button(_('Install'))
         self['key_red'] = Button(_('Back'))
@@ -853,7 +824,6 @@ class SettingMorpheus2(Screen):
         self.timer.start(500, 1)
         self['title'] = Label(_(title_plug))
         self['actions'] = ActionMap(['OkCancelActions',
-                                     'ButtonSetupActions',
                                      'ColorActions'], {'ok': self.okRun,
                                                        'green': self.okRun,
                                                        'red': self.close,
@@ -863,27 +833,16 @@ class SettingMorpheus2(Screen):
         url = 'https://github.com/morpheus883/enigma2-zipped'
         data = make_request(url)
         r = data
-        print('rrrrrrrr ', r)
         self.names = []
         self.urls = []
         try:
-            # n1 = r.find('title="README.txt', 0)
-            # n2 = r.find('href="#readme">', n1)
-            # r = r[n1:n2]
             regex = 'title="E2_Morph883_(.*?).zip".*?href="(.*?)"'
             match = re.compile(regex).findall(r)
             for name, url in match:
                 if url.find('.zip') != -1:
-                    # if 'ddt' in name.lower():
-                        # continue
-                    # if 'sat' in name.lower():
-                        # continue
                     url = url.replace('blob', 'raw')
-                    # https://github.com/ciefp/ciefpsettings-enigma2-zipped/blob/master/
                     url = 'https://github.com' + url
                     name = 'Morph883 ' + name
-                    print('name ', name)
-                    print('url ', url)
                     self.urls.append(Utils.checkStr(url.strip()))
                     self.names.append(Utils.checkStr(name.strip()))
                     self.downloading = True
@@ -905,7 +864,6 @@ class SettingMorpheus2(Screen):
                 url = self.urls[idx]
                 dest = "/tmp/settings.zip"
                 self.namel = ''
-                print("url =", url)
                 if 'dtt' not in url.lower():
                     # if not os.path.exists('/var/lib/dpkg/status'):
                     set = 1
@@ -938,7 +896,7 @@ class SettingMorpheus2(Screen):
                 self['info'].setText(_('Settings Not Installed ...'))
 
     def yes(self):
-        ReloadBouquet()
+        ReloadBouquets()
 
 
 class SettingCiefp(Screen):
@@ -952,7 +910,6 @@ class SettingCiefp(Screen):
         self.setTitle(_(title_plug))
         self.list = []
         self['list'] = OneSetList([])
-        self.icount = 0
         self['info'] = Label(_('Getting the list, please wait ...'))
         self['pth'] = Label('')
         self['pform'] = Label('')
@@ -975,7 +932,6 @@ class SettingCiefp(Screen):
         self.timer.start(500, 1)
         self['title'] = Label(_(title_plug))
         self['actions'] = ActionMap(['OkCancelActions',
-                                     'ButtonSetupActions',
                                      'ColorActions'], {'ok': self.okRun,
                                                        'green': self.okRun,
                                                        'red': self.close,
@@ -985,7 +941,6 @@ class SettingCiefp(Screen):
         url = 'https://github.com/ciefp/ciefpsettings-enigma2-zipped'
         data = make_request(url)
         r = data
-        print('rrrrrrrr ', r)
         self.names = []
         self.urls = []
         try:
@@ -996,14 +951,8 @@ class SettingCiefp(Screen):
             match = re.compile(regex).findall(r)
             for name, url in match:
                 if url.find('.zip') != -1:
-                    # if 'ddt' in name.lower():
-                        # continue
-                    # if 'Sat' in name.lower():
-                        # continue
                     url = url.replace('blob', 'raw')
                     url = 'https://github.com' + url
-                    print('name ', name)
-                    print('url ', url)
                     self.urls.append(Utils.checkStr(url.strip()))
                     self.names.append(Utils.checkStr(name.strip()))
                     self.downloading = True
@@ -1026,10 +975,8 @@ class SettingCiefp(Screen):
                 dest = "/tmp/settings.zip"
                 self.namel = ''
                 if 'dtt' not in url.lower():
-                    # if not os.path.exists('/var/lib/dpkg/status'):
                     set = 1
                     terrestrial()
-
                 import requests
                 r = requests.get(url)
                 with open(dest, 'wb') as f:
@@ -1056,10 +1003,10 @@ class SettingCiefp(Screen):
                 self['info'].setText(_('Settings Not Installed ...'))
 
     def yes(self):
-        ReloadBouquet()
+        ReloadBouquets()
 
 
-class tvSettingBi58(Screen):
+class SettingBi58(Screen):
     def __init__(self, session):
         self.session = session
         skin = os.path.join(skin_path, 'settings.xml')
@@ -1070,7 +1017,6 @@ class tvSettingBi58(Screen):
         self.setTitle(_(title_plug))
         self.list = []
         self['list'] = OneSetList([])
-        self.icount = 0
         self['info'] = Label(_('Loading data... Please wait'))
         self['key_green'] = Button(_('Install'))
         self['key_red'] = Button(_('Back'))
@@ -1088,7 +1034,6 @@ class tvSettingBi58(Screen):
         self.timer.start(500, 1)
         self['title'] = Label(_(title_plug))
         self['actions'] = ActionMap(['OkCancelActions',
-                                     'ButtonSetupActions',
                                      'ColorActions'], {'ok': self.okRun,
                                                        'green': self.okRun,
                                                        'red': self.close,
@@ -1098,7 +1043,6 @@ class tvSettingBi58(Screen):
         url = 'http://178.63.156.75/paneladdons/Bi58/'
         data = make_request(url)
         r = data
-        print('rrrrrrrr ', r)
         self.names = []
         self.urls = []
         try:
@@ -1131,9 +1075,7 @@ class tvSettingBi58(Screen):
                 idx = self["list"].getSelectionIndex()
                 url = self.urls[idx]
                 dest = "/tmp/settings.tar.gz"
-                print("url =", url)
                 if 'dtt' not in url.lower():
-                    # if not os.path.exists('/var/lib/dpkg/status'):
                     set = 1
                     terrestrial()
                 import requests
@@ -1152,7 +1094,7 @@ class tvSettingBi58(Screen):
                 self['info'].setText(_('Settings Not Installed ...'))
 
     def yes(self):
-        ReloadBouquet()
+        ReloadBouquets()
 
 
 class SettingPredrag(Screen):
@@ -1166,7 +1108,6 @@ class SettingPredrag(Screen):
         self.setTitle(_(title_plug))
         self.list = []
         self['list'] = OneSetList([])
-        self.icount = 0
         self['info'] = Label(_('Loading data... Please wait'))
         self['key_green'] = Button(_('Install'))
         self['key_red'] = Button(_('Back'))
@@ -1184,7 +1125,6 @@ class SettingPredrag(Screen):
         self.timer.start(500, 1)
         self['title'] = Label(_(title_plug))
         self['actions'] = ActionMap(['OkCancelActions',
-                                     'ButtonSetupActions',
                                      'ColorActions'], {'ok': self.okRun,
                                                        'green': self.okRun,
                                                        'red': self.close,
@@ -1194,7 +1134,6 @@ class SettingPredrag(Screen):
         url = 'http://178.63.156.75/paneladdons/Predr@g/'
         data = make_request(url)
         r = data
-        print('rrrrrrrr ', r)
         self.names = []
         self.urls = []
         try:
@@ -1227,9 +1166,7 @@ class SettingPredrag(Screen):
                 idx = self["list"].getSelectionIndex()
                 url = self.urls[idx]
                 dest = "/tmp/settings.tar.gz"
-                print("url =", url)
                 if 'dtt' not in url.lower():
-                    # if not os.path.exists('/var/lib/dpkg/status'):
                     set = 1
                     terrestrial()
                 import requests
@@ -1248,10 +1185,10 @@ class SettingPredrag(Screen):
                 self['info'].setText(_('Settings Not Installed ...'))
 
     def yes(self):
-        ReloadBouquet()
+        ReloadBouquets()
 
 
-class CirusSetting(Screen):
+class SettingCyrus(Screen):
     def __init__(self, session):
         self.session = session
         skin = os.path.join(skin_path, 'settings.xml')
@@ -1262,7 +1199,6 @@ class CirusSetting(Screen):
         self.setTitle(_(title_plug))
         self.list = []
         self['list'] = OneSetList([])
-        self.icount = 0
         self['info'] = Label(_('Loading data... Please wait'))
         self['key_green'] = Button(_('Install'))
         self['key_red'] = Button(_('Back'))
@@ -1279,7 +1215,6 @@ class CirusSetting(Screen):
         self.timer.start(500, 1)
         self['title'] = Label(_(title_plug))
         self['actions'] = ActionMap(['OkCancelActions',
-                                     'ButtonSetupActions',
                                      'ColorActions'], {'ok': self.okRun,
                                                        'green': self.okRun,
                                                        'red': self.close,
@@ -1289,7 +1224,6 @@ class CirusSetting(Screen):
         url = 'http://www.cyrussettings.com/Set_29_11_2011/Dreambox-IpBox/Config.xml'
         data = make_request(url)
         r = data
-        print('rrrrrrrr ', r)
         self.names = []
         self.urls = []
         try:
@@ -1327,7 +1261,6 @@ class CirusSetting(Screen):
                 dest = "/tmp/settings.zip"
                 self.namel = ''
                 if 'dtt' not in url.lower():
-                    # if not os.path.exists('/var/lib/dpkg/status'):
                     set = 1
                     terrestrial()
                 import requests
@@ -1356,7 +1289,7 @@ class CirusSetting(Screen):
                 self['info'].setText(_('Settings Not Installed ...'))
 
     def yes(self):
-        ReloadBouquet()
+        ReloadBouquets()
 
 
 class tvConsole(Screen):
@@ -1374,8 +1307,7 @@ class tvConsole(Screen):
         self.errorOcurred = False
         self['title'] = Label(_(title_plug))
         self['list'] = ScrollLabel('')
-        self['actions'] = ActionMap(['WizardActions',
-                                     'DirectionActions',
+        self['actions'] = ActionMap(['DirectionActions',
                                      'ColorActions'], {'ok': self.cancel,
                                                        'back': self.cancel,
                                                        'red': self.cancel,
@@ -1419,7 +1351,7 @@ class tvConsole(Screen):
                 str += _("Execution finished!!\n")
             self["list"].setText(str)
             self["list"].lastPage()
-            # if self.finishedCallback != None:
+            # if self.finishedCallback is not None:
                 # self.finishedCallback(retval)
             # if not retval and self.closeOnSuccess:
             self.cancel()
@@ -1547,7 +1479,7 @@ def terrestrial():
     tt = str('{0:02d}'.format(ttime[2])) + str('{0:02d}'.format(ttime[1])) + str(ttime[0])[2:] + '_' + str('{0:02d}'.format(ttime[3])) + str('{0:02d}'.format(ttime[4])) + str('{0:02d}'.format(ttime[5]))
     os.system('tar -czvf /tmp/' + tt + '_enigma2settingsbackup.tar.gz' + ' -C / /etc/enigma2/*.tv /etc/enigma2/*.radio /etc/enigma2/lamedb')
     if SavingProcessTerrestrialChannels:
-        print('ok')
+        print('SavingProcessTerrestrialChannels')
     return
 
 
@@ -1602,7 +1534,6 @@ def StartSavingTerrestrialChannels():
                 if x.find('82000') == -1 and x.find('c0000') == -1:
                     return file
                     break
-        # return
 
     def ResearchBouquetTerrestrial(search):
         for file in sorted(glob.glob("/etc/enigma2/*.tv")):
@@ -1619,7 +1550,6 @@ def StartSavingTerrestrialChannels():
                     if x.find('eeee0000') != -1:
                         return file
                         break
-        # return
 
     def SaveTrasponderService():
         TrasponderListOldLamedb = open(plugin_path + '/temp/TrasponderListOldLamedb', 'w')
@@ -1664,7 +1594,6 @@ def StartSavingTerrestrialChannels():
                 os.system('rm -fr ' + plugin_path + '/temp/ServiceListOldLamedb')
         except Exception as e:
             print('error: ', str(e))
-            pass
         return Trasponder
 
     def CreateBouquetForce():
@@ -1686,7 +1615,6 @@ def StartSavingTerrestrialChannels():
             return True
         except Exception as e:
             print('error: ', str(e))
-            pass
         return
 
     Service = SaveTrasponderService()
