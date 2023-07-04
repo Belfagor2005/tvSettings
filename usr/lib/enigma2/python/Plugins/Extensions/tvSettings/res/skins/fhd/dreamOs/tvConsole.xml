@@ -1,0 +1,5 @@
+<!-- Skin tvIPK 11/5/2021 -->
+<screen name="tvConsole" position="center,center" size="800,800" title="..::TiVuStream Setting Manager::.." backgroundColor="#20000000">
+	<widget name="title" position="27,16" size="772,61" font="Console;24" backgroundColor="#000000" foregroundColor="#ffffff" transparent="1"/>
+	<widget name="list" position="20,90" size="777,703" font="Console;24" backgroundColor="#000000" foregroundColor="#ffffff" transparent="1"/>
+</screen>
