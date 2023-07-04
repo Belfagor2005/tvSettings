@@ -4,7 +4,7 @@
 # --------------------#
 #  coded by Lululla  #
 #   skin by MMark    #
-#     11/03/2023     #
+#     04/07/2023     #
 # --------------------#
 # Info http://t.me/tivustream
 
@@ -30,6 +30,8 @@ from enigma import RT_HALIGN_LEFT, RT_VALIGN_CENTER, loadPNG
 from enigma import eTimer, eListboxPythonMultiContent
 from enigma import eConsoleAppContainer, gFont
 from twisted.web.client import downloadPage
+from enigma import getDesktop
+
 import os
 import re
 import sys
@@ -150,11 +152,16 @@ plugin_path = '/usr/lib/enigma2/python/Plugins/Extensions/tvSettings'
 ico_path = os.path.join(plugin_path, 'logo.png')
 no_cover = os.path.join(plugin_path, 'no_coverArt.png')
 res_plugin_path = os.path.join(plugin_path, 'res/')
-skin_path = os.path.join(plugin_path, 'res/skins/hd/')
 _firstStarttvsset = True
 
-if Utils.isFHD():
-    skin_path = os.path.join(plugin_path, 'res/skins/fhd/')
+screenwidth = getDesktop(0).size()
+if screenwidth.width() == 2560:
+    skin_path = plugin_path + '/res/skins/uhd/'
+elif screenwidth.width() == 1920:
+    skin_path = plugin_path + '/res/skins/fhd/'
+else:
+    skin_path = plugin_path + '/res/skins/hd/'
+
 if Utils.DreamOS():
     skin_path = skin_path + 'dreamOs/'
 
@@ -178,7 +185,11 @@ Panel_Dlist = [
 class OneSetList(MenuList):
     def __init__(self, list):
         MenuList.__init__(self, list, True, eListboxPythonMultiContent)
-        if Utils.isFHD():
+        if screenwidth.width() == 2560:
+            self.l.setItemHeight(60)
+            textfont = int(42)
+            self.l.setFont(0, gFont('Regular', textfont))
+        elif screenwidth.width() == 1920:
             self.l.setItemHeight(50)
             textfont = int(32)
             self.l.setFont(0, gFont('Regular', textfont))
@@ -191,10 +202,12 @@ class OneSetList(MenuList):
 def DListEntry(name, idx):
     res = [name]
     pngs = resolveFilename(SCOPE_PLUGINS, "Extensions/{}/res/pics/setting.png".format('tvSettings'))
-    if Utils.isFHD():
+    if screenwidth.width() == 2560:
+        res.append(MultiContentEntryPixmapAlphaTest(pos=(5, 5), size=(50, 50), png=loadPNG(pngs)))
+        res.append(MultiContentEntryText(pos=(90, 0), size=(1200, 50), font=0, text=name, color=0xa6d1fe, flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER))
+    elif screenwidth.width() == 1920:
         res.append(MultiContentEntryPixmapAlphaTest(pos=(5, 5), size=(40, 40), png=loadPNG(pngs)))
         res.append(MultiContentEntryText(pos=(70, 0), size=(1000, 50), font=0, text=name, color=0xa6d1fe, flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER))
-
     else:
         res.append(MultiContentEntryPixmapAlphaTest(pos=(3, 10), size=(40, 40), png=loadPNG(pngs)))
         res.append(MultiContentEntryText(pos=(50, 0), size=(500, 50), font=0, text=name, color=0xa6d1fe, flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER))
@@ -204,7 +217,10 @@ def DListEntry(name, idx):
 def OneSetListEntry(name):
     res = [name]
     pngx = resolveFilename(SCOPE_PLUGINS, "Extensions/{}/res/pics/plugins.png".format('tvSettings'))
-    if Utils.isFHD():
+    if screenwidth.width() == 2560:
+        res.append(MultiContentEntryPixmapAlphaTest(pos=(5, 5), size=(50, 50), png=loadPNG(pngx)))
+        res.append(MultiContentEntryText(pos=(90, 0), size=(1200, 50), font=0, text=name, color=0xa6d1fe, flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER))
+    elif screenwidth.width() == 1920:
         res.append(MultiContentEntryPixmapAlphaTest(pos=(5, 5), size=(40, 40), png=loadPNG(pngx)))
         res.append(MultiContentEntryText(pos=(70, 0), size=(1000, 50), font=0, text=name, color=0xa6d1fe, flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER))
 
@@ -318,22 +334,25 @@ class MainSetting(Screen):
         elif sel == _('UPDATE TERRESTRIAL.XML'):
             self.okTERRESTRIAL()
 
-    def terrestrial_restore(self, answer=None):
-        if answer is None:
-            self.session.openWithCallback(self.terrestrial_restore, MessageBox, _("This operation restore your Favorite channel Dtt\nfrom =>>THISPLUGIN/temp/TerrestrialChannelListArchive\nDo you really want to continue?"))
-        else:
+    def terrestrial_restore(self):
+        self.session.openWithCallback(self.terrestrial_restore2, MessageBox, _("This operation restore your Favorite channel Dtt\nfrom =>>THISPLUGIN/temp/TerrestrialChannelListArchive\nDo you really want to continue?"), MessageBox.TYPE_YESNO)
+
+    def terrestrial_restore2(self, answer):
+        if answer:
             terrestrial_rest()
 
-    def terrestrialsave(self, answer=None):
-        if answer is None:
-            self.session.openWithCallback(self.terrestrialsave, MessageBox, _("This operation save your Favorite channel Dtt\nto =>>/tmp/*_enigma2settingsbackup.tar.gz\nDo you really want to continue?"))
-        else:
+    def terrestrialsave(self):
+        self.session.openWithCallback(self.terrestrialsave2, MessageBox, _("This operation save your Favorite channel Dtt\nto =>>/tmp/*_enigma2settingsbackup.tar.gz\nDo you really want to continue?"), MessageBox.TYPE_YESNO)
+
+    def terrestrialsave2(self, answer):
+        if answer:
             terrestrial()
 
-    def okSATELLITE(self, answer=None):
-        if answer is None:
-            self.session.openWithCallback(self.okSATELLITE, MessageBox, _("Do you want to install?"))
-        else:
+    def okSATELLITE(self):
+        self.session.openWithCallback(self.okSATELLITE2, MessageBox, _("Do you want to install?"), MessageBox.TYPE_YESNO)
+
+    def okSATELLITE2(self, answer):
+        if answer:
             if Utils.checkInternet():
                 try:
                     url_sat_oealliance = 'http://raw.githubusercontent.com/oe-alliance/oe-alliance-tuxbox-common/master/src/satellites.xml'
@@ -350,10 +369,11 @@ class MainSetting(Screen):
             else:
                 self.session.open(MessageBox, "No Internet", MessageBox.TYPE_INFO)
 
-    def okTERRESTRIAL(self, answer=None):
-        if answer is None:
-            self.session.openWithCallback(self.okTERRESTRIAL, MessageBox, _("Do you want to install?"))
-        else:
+    def okTERRESTRIAL(self):
+        self.session.openWithCallback(self.okTERRESTRIAL2, MessageBox, _("Do you want to install?"), MessageBox.TYPE_YESNO)
+
+    def okTERRESTRIAL2(self, answer):
+        if answer:
             if Utils.checkInternet():
                 try:
                     url_sat_oealliance = 'https://raw.githubusercontent.com/oe-alliance/oe-alliance-tuxbox-common/master/src/terrestrial.xml'
@@ -426,10 +446,11 @@ class SettingVhan(Screen):
             print('downxmlpage get failed: ', str(e))
             self['info'].setText(_('Download page get failed ...'))
 
-    def okRun(self, answer=None):
-        if answer is None:
-            self.session.openWithCallback(self.okRun, MessageBox, _("Do you want to install?"))
-        else:
+    def okRun(self):
+        self.session.openWithCallback(self.okRun2, MessageBox, _("Do you want to install?"), MessageBox.TYPE_YESNO)
+
+    def okRun2(self, answer):
+        if answer:
             global set
             set = 0
             if self.downloading is True:
@@ -534,10 +555,11 @@ class SettingVhan2(Screen):
             print('downxmlpage get failed: ', str(e))
             self['info'].setText(_('Download page get failed ...'))
 
-    def okRun(self, answer=None):
-        if answer is None:
-            self.session.openWithCallback(self.okRun, MessageBox, _("Do you want to install?"))
-        else:
+    def okRun(self):
+        self.session.openWithCallback(self.okRun2, MessageBox, _("Do you want to install?"), MessageBox.TYPE_YESNO)
+
+    def okRun2(self, answer):
+        if answer:
             global set
             set = 0
             if self.downloading is True:
@@ -655,7 +677,7 @@ class SettingMilenka61(Screen):
                     url = "http://178.63.156.75/tarGz/Satvenus" + url
                     self.urls.append(Utils.checkStr(url.strip()))
                     self.names.append(Utils.checkStr(name.strip()))
-                    self.downloading = True
+                self.downloading = True
             self['info'].setText(_('Please select ...'))
             self['key_green'].show()
             showlist(self.names, self['list'])
@@ -663,10 +685,11 @@ class SettingMilenka61(Screen):
             print('downxmlpage get failed: ', str(e))
             self['info'].setText(_('Download page get failed ...'))
 
-    def okRun(self, answer=None):
-        if answer is None:
-            self.session.openWithCallback(self.okRun, MessageBox, _("Do you want to install?"))
-        else:
+    def okRun(self):
+        self.session.openWithCallback(self.okRun2, MessageBox, _("Do you want to install?"), MessageBox.TYPE_YESNO)
+
+    def okRun2(self, answer):
+        if answer:
             global set
             set = 0
             if self.downloading is True:
@@ -751,10 +774,11 @@ class SettingManutek(Screen):
             print('downxmlpage get failed: ', str(e))
             self['info'].setText(_('Download page get failed ...'))
 
-    def okRun(self, answer=None):
-        if answer is None:
-            self.session.openWithCallback(self.okRun, MessageBox, _("Do you want to install?"))
-        else:
+    def okRun(self):
+        self.session.openWithCallback(self.okRun2, MessageBox, _("Do you want to install?"), MessageBox.TYPE_YESNO)
+
+    def okRun2(self, answer):
+        if answer:
             global set
             set = 0
             if self.downloading is True:
@@ -853,10 +877,11 @@ class SettingMorpheus(Screen):
             print('downxmlpage get failed: ', str(e))
             self['info'].setText(_('Download page get failed ...'))
 
-    def okRun(self, answer=None):
-        if answer is None:
-            self.session.openWithCallback(self.okRun, MessageBox, _("Do you want to install?"))
-        else:
+    def okRun(self):
+        self.session.openWithCallback(self.okRun2, MessageBox, _("Do you want to install?"), MessageBox.TYPE_YESNO)
+
+    def okRun2(self, answer):
+        if answer:
             global set
             set = 0
             if self.downloading is True:
@@ -963,10 +988,11 @@ class SettingCiefp(Screen):
             print('downxmlpage get failed: ', str(e))
             self['info'].setText(_('Download page get failed ...'))
 
-    def okRun(self, answer=None):
-        if answer is None:
-            self.session.openWithCallback(self.okRun, MessageBox, _("Do you want to install?"))
-        else:
+    def okRun(self):
+        self.session.openWithCallback(self.okRun2, MessageBox, _("Do you want to install?"), MessageBox.TYPE_YESNO)
+
+    def okRun2(self, answer):
+        if answer:
             global set
             set = 0
             if self.downloading is True:
@@ -1065,10 +1091,11 @@ class SettingBi58(Screen):
             print('downxmlpage get failed: ', str(e))
             self['info'].setText(_('Download page get failed ...'))
 
-    def okRun(self, answer=None):
-        if answer is None:
-            self.session.openWithCallback(self.okRun, MessageBox, _("Do you want to install?"))
-        else:
+    def okRun(self):
+        self.session.openWithCallback(self.okRun2, MessageBox, _("Do you want to install?"), MessageBox.TYPE_YESNO)
+
+    def okRun2(self, answer):
+        if answer:
             global set
             set = 0
             if self.downloading is True:
@@ -1156,10 +1183,11 @@ class SettingPredrag(Screen):
             print('downxmlpage get failed: ', str(e))
             self['info'].setText(_('Download page get failed ...'))
 
-    def okRun(self, answer=None):
-        if answer is None:
-            self.session.openWithCallback(self.okRun, MessageBox, _("Do you want to install?"))
-        else:
+    def okRun(self):
+        self.session.openWithCallback(self.okRun2, MessageBox, _("Do you want to install?"), MessageBox.TYPE_YESNO)
+
+    def okRun2(self, answer):
+        if answer:
             global set
             set = 0
             if self.downloading is True:
@@ -1249,10 +1277,11 @@ class SettingCyrus(Screen):
             print('downxmlpage get failed: ', str(e))
             self['info'].setText(_('Download page get failed ...'))
 
-    def okRun(self, answer=None):
-        if answer is None:
-            self.session.openWithCallback(self.okRun, MessageBox, _("Do you want to install?"))
-        else:
+    def okRun(self):
+        self.session.openWithCallback(self.okRun2, MessageBox, _("Do you want to install?"), MessageBox.TYPE_YESNO)
+
+    def okRun2(self, answer):
+        if answer:
             global set
             set = 0
             if self.downloading is True:
