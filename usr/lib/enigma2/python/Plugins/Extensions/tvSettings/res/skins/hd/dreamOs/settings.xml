@@ -1,4 +1,4 @@
-<screen name="settings" position="0,0" size="1280,720" title="..::TiVuStream Panel Settings Manager::.." backgroundColor="transparent" flags="wfNoBorder">
+<screen name="settings" position="0,0" size="1280,720" title="..::TiVuStream Panel Settings Manager::.." backgroundColor="#ff000000" flags="wfNoBorder">
 	<widget name="title" position="440,8" size="384,66" font="Regular;24" halign="left" valign="center" foregroundColor="#002a79b8" backgroundColor="black" transparent="1" zPosition="5" />
 	<widget name="info" position="146,103" size="686,36" font="Regular;20" halign="center" foregroundColor="yellow" backgroundColor="#20000000" transparent="1" zPosition="5" />
 	<eLabel position="76,0" size="826,720" backgroundColor="#60000000" zPosition="1" />
