@@ -20,7 +20,6 @@ from Components.MultiContent import MultiContentEntryText
 from Components.MultiContent import MultiContentEntryPixmapAlphaTest
 from Components.Pixmap import Pixmap
 from Components.ScrollLabel import ScrollLabel
-# from Components.Sources.StaticText import StaticText
 from Screens.Standby import TryQuitMainloop
 from Plugins.Plugin import PluginDescriptor
 from Screens.MessageBox import MessageBox
@@ -71,16 +70,6 @@ def ssl_urlopen(url):
         return urlopen(url, context=sslContext)
     else:
         return urlopen(url)
-
-
-def trace_error():
-    import sys
-    import traceback
-    try:
-        traceback.print_exc(file=sys.stdout)
-        traceback.print_exc(file=open('/tmp/traceback.log', 'a'))
-    except:
-        pass
 
 
 try:
@@ -212,22 +201,6 @@ def DListEntry(name, idx):
         res.append(MultiContentEntryPixmapAlphaTest(pos=(3, 10), size=(40, 40), png=loadPNG(pngs)))
         res.append(MultiContentEntryText(pos=(50, 0), size=(500, 50), font=0, text=name, color=0xa6d1fe, flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER))
     return res
-
-
-# def OneSetListEntry(name):
-    # res = [name]
-    # pngx = resolveFilename(SCOPE_PLUGINS, "Extensions/{}/res/pics/plugins.png".format('tvSettings'))
-    # if screenwidth.width() == 2560:
-        # res.append(MultiContentEntryPixmapAlphaTest(pos=(5, 5), size=(50, 50), png=loadPNG(pngx)))
-        # res.append(MultiContentEntryText(pos=(90, 0), size=(1200, 50), font=0, text=name, color=0xa6d1fe, flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER))
-    # elif screenwidth.width() == 1920:
-        # res.append(MultiContentEntryPixmapAlphaTest(pos=(5, 5), size=(40, 40), png=loadPNG(pngx)))
-        # res.append(MultiContentEntryText(pos=(70, 0), size=(1000, 50), font=0, text=name, color=0xa6d1fe, flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER))
-
-    # else:
-        # res.append(MultiContentEntryPixmapAlphaTest(pos=(3, 10), size=(40, 40), png=loadPNG(pngx)))
-        # res.append(MultiContentEntryText(pos=(50, 0), size=(500, 50), font=0, text=name, color=0xa6d1fe, flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER))
-    # return res
 
 
 def showlist(data, list):
