@@ -30,7 +30,7 @@ from enigma import eTimer, eListboxPythonMultiContent
 from enigma import eConsoleAppContainer, gFont
 from twisted.web.client import downloadPage
 from enigma import getDesktop
-
+import codecs
 import os
 import re
 import sys
@@ -217,7 +217,7 @@ class MainSetting(Screen):
     def __init__(self, session):
         self.session = session
         skin = os.path.join(skin_path, 'settings.xml')
-        with open(skin, 'r') as f:
+        with codecs.open(skin, "r", encoding="utf-8") as f:
             self.skin = f.read()
         self.setup_title = ('MainSetting')
         Screen.__init__(self, session)
@@ -366,7 +366,7 @@ class SettingVhan(Screen):
     def __init__(self, session):
         self.session = session
         skin = os.path.join(skin_path, 'settings.xml')
-        with open(skin, 'r') as f:
+        with codecs.open(skin, "r", encoding="utf-8") as f:
             self.skin = f.read()
         self.setup_title = ('Setting Vhannibal')
         Screen.__init__(self, session)
@@ -471,7 +471,7 @@ class SettingVhan2(Screen):
     def __init__(self, session):
         self.session = session
         skin = os.path.join(skin_path, 'settings.xml')
-        with open(skin, 'r') as f:
+        with codecs.open(skin, "r", encoding="utf-8") as f:
             self.skin = f.read()
         self.setup_title = ('Setting Vhannibal')
         Screen.__init__(self, session)
@@ -600,7 +600,7 @@ class SettingMilenka61(Screen):
     def __init__(self, session):
         self.session = session
         skin = os.path.join(skin_path, 'settings.xml')
-        with open(skin, 'r') as f:
+        with codecs.open(skin, "r", encoding="utf-8") as f:
             self.skin = f.read()
         self.setup_title = ('Setting Milenka61')
         Screen.__init__(self, session)
@@ -693,7 +693,7 @@ class SettingManutek(Screen):
     def __init__(self, session):
         self.session = session
         skin = os.path.join(skin_path, 'settings.xml')
-        with open(skin, 'r') as f:
+        with codecs.open(skin, "r", encoding="utf-8") as f:
             self.skin = f.read()
         self.setup_title = ('Setting Manutek')
         Screen.__init__(self, session)
@@ -795,7 +795,7 @@ class SettingMorpheus(Screen):
     def __init__(self, session):
         self.session = session
         skin = os.path.join(skin_path, 'settings.xml')
-        with open(skin, 'r') as f:
+        with codecs.open(skin, "r", encoding="utf-8") as f:
             self.skin = f.read()
         self.setup_title = ('Setting Morpheus')
         Screen.__init__(self, session)
@@ -899,7 +899,7 @@ class SettingCiefp(Screen):
     def __init__(self, session):
         self.session = session
         skin = os.path.join(skin_path, 'settings.xml')
-        with open(skin, 'r') as f:
+        with codecs.open(skin, "r", encoding="utf-8") as f:
             self.skin = f.read()
         self.setup_title = ('Setting Ciefp')
         Screen.__init__(self, session)
@@ -1007,7 +1007,7 @@ class SettingBi58(Screen):
     def __init__(self, session):
         self.session = session
         skin = os.path.join(skin_path, 'settings.xml')
-        with open(skin, 'r') as f:
+        with codecs.open(skin, "r", encoding="utf-8") as f:
             self.skin = f.read()
         self.setup_title = ('Setting Bi58')
         Screen.__init__(self, session)
@@ -1099,7 +1099,7 @@ class SettingPredrag(Screen):
     def __init__(self, session):
         self.session = session
         skin = os.path.join(skin_path, 'settings.xml')
-        with open(skin, 'r') as f:
+        with codecs.open(skin, "r", encoding="utf-8") as f:
             self.skin = f.read()
         self.setup_title = ('Setting Predrag')
         Screen.__init__(self, session)
@@ -1191,7 +1191,7 @@ class SettingCyrus(Screen):
     def __init__(self, session):
         self.session = session
         skin = os.path.join(skin_path, 'settings.xml')
-        with open(skin, 'r') as f:
+        with codecs.open(skin, "r", encoding="utf-8") as f:
             self.skin = f.read()
         self.setup_title = ('Setting Cyrus')
         Screen.__init__(self, session)
@@ -1296,7 +1296,7 @@ class tvConsole(Screen):
     def __init__(self, session, title="Console", cmdlist=None, finishedCallback=None, closeOnSuccess=False, endstr=''):
         self.session = session
         skin = os.path.join(skin_path, 'tvConsole.xml')
-        with open(skin, 'r') as f:
+        with codecs.open(skin, "r", encoding="utf-8") as f:
             self.skin = f.read()
         self.setup_title = ('Console')
         Screen.__init__(self, session)
