@@ -9,7 +9,7 @@
 # Info http://t.me/tivustream
 
 from __future__ import print_function
-from .__init__ import _
+from . import _
 from . import Utils
 from .Lcn import LCN
 from Components.ActionMap import ActionMap
@@ -151,7 +151,7 @@ elif screenwidth.width() == 1920:
 else:
     skin_path = plugin_path + '/res/skins/hd/'
 
-if Utils.DreamOS():
+if os.path.exists('/var/lib/dpkg/info'):
     skin_path = skin_path + 'dreamOs/'
 
 Panel_Dlist = [
@@ -383,7 +383,7 @@ class SettingVhan(Screen):
         self['key_green'].hide()
         self.downloading = False
         self.timer = eTimer()
-        if Utils.DreamOS():
+        if os.path.exists('/var/lib/dpkg/info'):
             self.timer_conn = self.timer.timeout.connect(self.downxmlpage)
         else:
             self.timer.callback.append(self.downxmlpage)
@@ -488,7 +488,7 @@ class SettingVhan2(Screen):
         self['key_green'].hide()
         self.downloading = False
         self.timer = eTimer()
-        if Utils.DreamOS():
+        if os.path.exists('/var/lib/dpkg/info'):
             self.timer_conn = self.timer.timeout.connect(self.downxmlpage)
         else:
             self.timer.callback.append(self.downxmlpage)
@@ -617,7 +617,7 @@ class SettingMilenka61(Screen):
         self['key_green'].hide()
         self.downloading = False
         self.timer = eTimer()
-        if Utils.DreamOS():
+        if os.path.exists('/var/lib/dpkg/info'):
             self.timer_conn = self.timer.timeout.connect(self.downxmlpage)
         else:
             self.timer.callback.append(self.downxmlpage)
@@ -632,6 +632,8 @@ class SettingMilenka61(Screen):
     def downxmlpage(self):
         url = 'http://178.63.156.75/tarGz/'
         data = make_request(url)
+        if PY3:
+            data = six.ensure_str(data)
         r = data
         self.names = []
         self.urls = []
@@ -710,7 +712,7 @@ class SettingManutek(Screen):
         self['key_green'].hide()
         self.downloading = False
         self.timer = eTimer()
-        if Utils.DreamOS():
+        if os.path.exists('/var/lib/dpkg/info'):
             self.timer_conn = self.timer.timeout.connect(self.downxmlpage)
         else:
             self.timer.callback.append(self.downxmlpage)
@@ -725,6 +727,8 @@ class SettingManutek(Screen):
     def downxmlpage(self):
         url = 'http://www.manutek.it/isetting/index.php'
         data = make_request(url)
+        if PY3:
+            data = six.ensure_str(data)
         r = data
         self.names = []
         self.urls = []
@@ -812,7 +816,7 @@ class SettingMorpheus(Screen):
         self['key_green'].hide()
         self.downloading = False
         self.timer = eTimer()
-        if Utils.DreamOS():
+        if os.path.exists('/var/lib/dpkg/info'):
             self.timer_conn = self.timer.timeout.connect(self.downxmlpage)
         else:
             self.timer.callback.append(self.downxmlpage)
@@ -827,6 +831,8 @@ class SettingMorpheus(Screen):
     def downxmlpage(self):
         url = 'https://github.com/morpheus883/enigma2-zipped'
         data = make_request(url)
+        if PY3:
+            data = six.ensure_str(data)
         r = data
         self.names = []
         self.urls = []
@@ -921,7 +927,7 @@ class SettingCiefp(Screen):
         self['key_green'].hide()
         self.downloading = False
         self.timer = eTimer()
-        if Utils.DreamOS():
+        if os.path.exists('/var/lib/dpkg/info'):
             self.timer_conn = self.timer.timeout.connect(self.downxmlpage)
         else:
             self.timer.callback.append(self.downxmlpage)
@@ -936,6 +942,8 @@ class SettingCiefp(Screen):
     def downxmlpage(self):
         url = 'https://github.com/ciefp/ciefpsettings-enigma2-zipped'
         data = make_request(url)
+        if PY3:
+            data = six.ensure_str(data)
         r = data
         self.names = []
         self.urls = []
@@ -1024,7 +1032,7 @@ class SettingBi58(Screen):
         self['key_green'].hide()
         self.downloading = False
         self.timer = eTimer()
-        if Utils.DreamOS():
+        if os.path.exists('/var/lib/dpkg/info'):
             self.timer_conn = self.timer.timeout.connect(self.downxmlpage)
         else:
             self.timer.callback.append(self.downxmlpage)
@@ -1039,6 +1047,8 @@ class SettingBi58(Screen):
     def downxmlpage(self):
         url = 'http://178.63.156.75/paneladdons/Bi58/'
         data = make_request(url)
+        if PY3:
+            data = six.ensure_str(data)
         r = data
         self.names = []
         self.urls = []
@@ -1116,7 +1126,7 @@ class SettingPredrag(Screen):
         self['key_green'].hide()
         self.downloading = False
         self.timer = eTimer()
-        if Utils.DreamOS():
+        if os.path.exists('/var/lib/dpkg/info'):
             self.timer_conn = self.timer.timeout.connect(self.downxmlpage)
         else:
             self.timer.callback.append(self.downxmlpage)
@@ -1131,6 +1141,8 @@ class SettingPredrag(Screen):
     def downxmlpage(self):
         url = 'http://178.63.156.75/paneladdons/Predr@g/'
         data = make_request(url)
+        if PY3:
+            data = six.ensure_str(data)
         r = data
         self.names = []
         self.urls = []
@@ -1207,7 +1219,7 @@ class SettingCyrus(Screen):
         self['key_blue'].hide()
         self.downloading = False
         self.timer = eTimer()
-        if Utils.DreamOS():
+        if os.path.exists('/var/lib/dpkg/info'):
             self.timer_conn = self.timer.timeout.connect(self.downxmlpage)
         else:
             self.timer.callback.append(self.downxmlpage)
@@ -1222,6 +1234,8 @@ class SettingCyrus(Screen):
     def downxmlpage(self):
         url = 'http://www.cyrussettings.com/Set_29_11_2011/Dreambox-IpBox/Config.xml'
         data = make_request(url)
+        if PY3:
+            data = six.ensure_str(data)
         r = data
         self.names = []
         self.urls = []
