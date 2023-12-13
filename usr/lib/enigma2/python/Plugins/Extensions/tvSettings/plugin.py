@@ -94,22 +94,17 @@ if sslverify:
 def make_request(url):
     try:
         import requests
-        link = requests.get(url, headers={'User-Agent': 'Mozilla/5.0'}).text
+        response = requests.get(url, verify=False)
+        if response.status_code == 200:
+            link = requests.get(url, headers={'User-Agent': RequestAgent()}, timeout=15, verify=False, stream=True ).text
         return link
     except ImportError:
         req = Request(url)
-        req.add_header('User-Agent', 'TVS')
-        response = urlopen(req, None, 7)
+        req.add_header('User-Agent', 'E2 Plugin TVaddon Panel')
+        response = urlopen(req, None, 10)
         link = response.read().decode('utf-8')
         response.close()
         return link
-    except:
-        e = URLError
-        if hasattr(e, 'code'):
-            print('We failed with error code - %s.' % e.code)
-        if hasattr(e, 'reason'):
-            print('Reason: ', e.reason)
-        return
     return
 
 
