@@ -143,7 +143,7 @@ TransOldLamedb = plugin_path + '/temp/TrasponderListOldLamedb'
 TerChArch = plugin_path + '/temp/TerrestrialChannelListArchive'
 # SelBack = plugin_path + '/SelectBack'
 # SSelect = plugin_path + '/Select'
-DIGTV = 'eeee0000'
+# DIGTV = 'eeee0000'
 
 screenwidth = getDesktop(0).size()
 if screenwidth.width() == 2560:
@@ -178,7 +178,7 @@ class OneSetList(MenuList):
         MenuList.__init__(self, list, True, eListboxPythonMultiContent)
         if screenwidth.width() == 2560:
             self.l.setItemHeight(60)
-            textfont = int(42)
+            textfont = int(44)
             self.l.setFont(0, gFont('Regular', textfont))
         elif screenwidth.width() == 1920:
             self.l.setItemHeight(50)
@@ -306,6 +306,8 @@ class MainSetting(Screen):
             self.okSATELLITE()
         elif sel == _('UPDATE TERRESTRIAL.XML'):
             self.okTERRESTRIAL()
+        else:
+            return
 
     def terrestrial_restore(self):
         self.session.openWithCallback(self.terrestrial_restore2, MessageBox, _("This operation restore your Favorite channel Dtt\nfrom =>>THISPLUGIN/temp/TerrestrialChannelListArchive\nDo you really want to continue?"), MessageBox.TYPE_YESNO)
@@ -407,7 +409,7 @@ class SettingVhan(Screen):
                 r = six.ensure_str(r)
             match = re.compile('<td><a href="(.+?)">(.+?)</a></td>.*?<td>(.+?)</td>', re.DOTALL).findall(r)
             for url, name, date in match:
-                name = name + ' ' + date
+                name = name.replace('&#127381;', '') + ' ' + date
                 url = "https://www.vhannibal.net/" + url
                 self.urls.append(Utils.checkStr(url.strip()))
                 self.names.append(Utils.checkStr(name.strip()))
@@ -516,7 +518,7 @@ class SettingVhan2(Screen):
                 if '.php' in url.lower():
                     continue
                 name = "Vhannibal" + url
-                name = name.replace(".zip", "").replace("%20", " ")
+                name = name.replace('&#127381;', '').replace("%20", " ")
                 url = "http://sat.alfa-tech.net/upload/settings/vhannibal/Vhannibal" + url + '.zip'
                 self.urls.append(Utils.checkStr(url.strip()))
                 self.names.append(Utils.checkStr(name.strip()))
@@ -1544,7 +1546,7 @@ def StartSavingTerrestrialChannels():
         for file in sorted(glob.glob("/etc/enigma2/*.tv")):
             f = open(file, "r").read()
             x = f.strip().lower()
-            if x.find(DIGTV[:4]) != -1:
+            if x.find('eeee') != -1:
                 return file
                 break
             # if x.find('eeee0000') != -1:
@@ -1560,7 +1562,7 @@ def StartSavingTerrestrialChannels():
             x1 = f.strip()
             if x1.find("#NAME") != -1:
                 if x.lower().find(search.lower()) != -1:
-                    if x.find(DIGTV[:4]) != -1:
+                    if x.find('eeee') != -1:
                         return file
                         break
         return
@@ -1586,7 +1588,7 @@ def StartSavingTerrestrialChannels():
                     inTransponder = False
                     inService = False
                 line = line.lower()
-                if line.find(DIGTV[:4]) != -1:
+                if line.find('eeee') != -1:
                     Trasponder = True
                     if inTransponder:
                         TrasponderListOldLamedb.write(line)
@@ -1615,7 +1617,7 @@ def StartSavingTerrestrialChannels():
         WritingBouquetTemporary.write('#NAME terrestre\n')
         ReadingTempServicelist = open(ServOldLamedb, 'r').readlines()
         for jx in ReadingTempServicelist:
-            if jx.find(DIGTV[:4]) != -1:
+            if jx.find('eeee') != -1:
                 String = jx.split(':')
                 WritingBouquetTemporary.write('#SERVICE 1:0:%s:%s:%s:%s:%s:0:0:0:\n' % (hex(int(String[4]))[2:], String[0], String[2], String[3], String[1]))
         WritingBouquetTemporary.close()
@@ -1717,3 +1719,4 @@ def TransferBouquetTerrestrialFinal():
     except:
         return False
     return
+# ===== by lululla
