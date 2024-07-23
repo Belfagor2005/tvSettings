@@ -9,28 +9,43 @@
 # Info http://t.me/tivustream
 
 from __future__ import print_function
-from . import _
+from . import _, wgetsts
 from . import Utils
-from .Lcn import LCN
+from . import html_conv
+from .Console import Console as xConsole
 from Components.ActionMap import ActionMap
 from Components.Button import Button
 from Components.Label import Label
 from Components.MenuList import MenuList
-from Components.MultiContent import MultiContentEntryText
-from Components.MultiContent import MultiContentEntryPixmapAlphaTest
-from Components.Pixmap import Pixmap
-from Components.ScrollLabel import ScrollLabel
-from Screens.Standby import TryQuitMainloop
+from Components.MultiContent import (MultiContentEntryPixmapAlphaTest, MultiContentEntryText)
+
+# from Components.Pixmap import Pixmap
+# from Components.ScrollLabel import ScrollLabel
+# from Screens.Standby import TryQuitMainloop
 from Plugins.Plugin import PluginDescriptor
 from Screens.MessageBox import MessageBox
 from Screens.Screen import Screen
-from Tools.Directories import SCOPE_PLUGINS, fileExists, resolveFilename
-from enigma import RT_HALIGN_LEFT, RT_VALIGN_CENTER, loadPNG
-from enigma import eTimer, eListboxPythonMultiContent
-from enigma import eConsoleAppContainer, gFont
+from Tools.Directories import fileExists, SCOPE_PLUGINS, resolveFilename
+
+from enigma import (
+    RT_HALIGN_LEFT,
+    RT_VALIGN_CENTER,
+    eListboxPythonMultiContent,
+    # ePicLoad,
+    # eServiceReference,
+    eTimer,
+    gFont,
+    # gPixmapPtr,
+    getDesktop,
+    # iPlayableService,
+    # iServiceInformation,
+    loadPNG,
+    # eConsoleAppContainer,
+)
 from twisted.web.client import downloadPage
-from enigma import getDesktop
+from datetime import datetime
 import codecs
+import json
 import os
 import re
 import sys
@@ -45,7 +60,6 @@ set = 0
 
 PY3 = sys.version_info.major >= 3
 if PY3:
-    from urllib.error import URLError
     from urllib.request import urlopen, Request
     from urllib.parse import urlparse
     unicode = str
@@ -53,13 +67,13 @@ if PY3:
     long = int
     PY3 = True
 else:
-    from urllib2 import urlopen, Request, URLError
+    from urllib2 import urlopen, Request
     from urlparse import urlparse
 
 
 if sys.version_info >= (2, 7, 9):
     try:
-        import ssl
+        # import ssl
         sslContext = ssl._create_unverified_context()
     except:
         sslContext = None
@@ -89,6 +103,11 @@ if sslverify:
             if self.hostname:
                 ClientTLSOptions(self.hostname, ctx)
             return ctx
+
+try:
+    wgetsts()
+except:
+    pass
 
 
 def make_request(url):
@@ -127,7 +146,7 @@ def ReloadBouquets():
 
 
 os.system('rm -fr /usr/lib/enigma2/python/Plugins/Extensions/tvSettings/temp/*')  # clean /temp
-currversion = '1.7'
+currversion = '1.8'
 title_plug = '..:: TiVuStream Settings V. %s ::..' % currversion
 name_plug = 'TiVuStream Settings'
 category = 'lululla.xml'
@@ -141,6 +160,8 @@ ee2ldb = '/etc/enigma2/lamedb'
 ServOldLamedb = plugin_path + '/temp/ServiceListOldLamedb'
 TransOldLamedb = plugin_path + '/temp/TrasponderListOldLamedb'
 TerChArch = plugin_path + '/temp/TerrestrialChannelListArchive'
+installer_url = 'aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL0JlbGZhZ29yMjAwNS90dlNldHRpbmdzL21haW4vaW5zdGFsbGVyLnNo'
+developer_url = 'aHR0cHM6Ly9hcGkuZ2l0aHViLmNvbS9yZXBvcy9CZWxmYWdvcjIwMDUvdHZTZXR0aW5ncw=='
 # SelBack = plugin_path + '/SelectBack'
 # SSelect = plugin_path + '/Select'
 # DIGTV = 'eeee0000'
@@ -156,21 +177,21 @@ else:
 if os.path.exists('/var/lib/dpkg/info'):
     skin_path = skin_path + 'dreamOs/'
 
+
 Panel_Dlist = [
-               ('SAVE DTT BOUQUET'),
-               ('RESTORE DTT BOUQUET'),
-               ('SETTINGS BI58'),
-               ('SETTINGS CIEFP'),
-               ('SETTINGS CYRUS'),
-               ('SETTINGS MANUTEK'),
-               ('SETTINGS MILENKA61'),
-               ('SETTINGS MORPHEUS'),
-               ('SETTINGS PREDRAG'),
-               ('SETTINGS VHANNIBAL'),
-               ('SETTINGS VHANNIBAL 2'),
-               ('UPDATE SATELLITES.XML'),
-               ('UPDATE TERRESTRIAL.XML'),
-               ]
+    ('SAVE DTT BOUQUET'),
+    ('RESTORE DTT BOUQUET'),
+    ('SETTINGS BI58'),
+    ('SETTINGS CIEFP'),
+    ('SETTINGS CYRUS'),
+    ('SETTINGS MANUTEK'),
+    ('SETTINGS MILENKA61'),
+    ('SETTINGS MORPHEUS'),
+    ('SETTINGS PREDRAG'),
+    ('SETTINGS VHANNIBAL'),
+    ('SETTINGS VHANNIBAL 2'),
+    ('UPDATE SATELLITES.XML'),
+    ('UPDATE TERRESTRIAL.XML')]
 
 
 class OneSetList(MenuList):
@@ -185,7 +206,7 @@ class OneSetList(MenuList):
             textfont = int(32)
             self.l.setFont(0, gFont('Regular', textfont))
         else:
-            self.l.setItemHeight(50)
+            self.l.setItemHeight(45)
             textfont = int(24)
             self.l.setFont(0, gFont('Regular', textfont))
 
@@ -240,14 +261,90 @@ class MainSetting(Screen):
             self.LcnOn = True
         self["key_blue"] = Button('')
         self['key_blue'].hide()
+        self.Update = False
         self['actions'] = ActionMap(['OkCancelActions',
-                                     'ColorActions'], {'ok': self.okRun,
-                                                       'green': self.okRun,
-                                                       'back': self.cancel,
-                                                       'red': self.cancel,
-                                                       'yellow': self.Lcn,
-                                                       'cancel': self.cancel}, -1)
+                                     'ColorActions',
+                                     'HotkeyActions',
+                                     'InfobarEPGActions',
+                                     'MenuActions',
+                                     'ChannelSelectBaseActions',
+                                     'DirectionActions'], {'ok': self.okRun,
+                                                           # 'yellow': self.update_me,  # update_me,
+                                                           'yellow_long': self.update_dev,
+                                                           'info_long': self.update_dev,
+                                                           'infolong': self.update_dev,
+                                                           'showEventInfoPlugin': self.update_dev,
+                                                           'green': self.okRun,
+                                                           'back': self.cancel,
+                                                           'cancel': self.cancel,
+                                                           'red': self.cancel}, -1)
+        self.timer = eTimer()
+        if os.path.exists('/var/lib/dpkg/status'):
+            self.timer_conn = self.timer.timeout.connect(self.check_vers)
+        else:
+            self.timer.callback.append(self.check_vers)
+        self.timer.start(500, 1)
         self.onLayoutFinish.append(self.updateMenuList)
+
+    def check_vers(self):
+        try:
+            remote_version = '0.0'
+            remote_changelog = ''
+            req = Utils.Request(Utils.b64decoder(installer_url), headers={'User-Agent': 'Mozilla/5.0'})
+            page = Utils.urlopen(req).read()
+            if PY3:
+                data = page.decode("utf-8")
+            else:
+                data = page.encode("utf-8")
+            if data:
+                lines = data.split("\n")
+                for line in lines:
+                    if line.startswith("version"):
+                        remote_version = line.split("=")
+                        remote_version = line.split("'")[1]
+                    if line.startswith("changelog"):
+                        remote_changelog = line.split("=")
+                        remote_changelog = line.split("'")[1]
+                        break
+            self.new_version = remote_version
+            self.new_changelog = remote_changelog
+            if currversion < remote_version:
+                self.Update = True
+                # self['key_yellow'].show()
+                # self['key_green'].show()
+                self.session.open(MessageBox, _('New version %s is available\n\nChangelog: %s\n\nPress info_long or yellow_long button to start force updating.') % (self.new_version, self.new_changelog), MessageBox.TYPE_INFO, timeout=5)
+            # self.update_me()
+        except Exception as e:
+            print('error check_vers:', e)
+
+    def update_me(self):
+        if self.Update is True:
+            self.session.openWithCallback(self.install_update, MessageBox, _("New version %s is available.\n\nChangelog: %s \n\nDo you want to install it now?") % (self.new_version, self.new_changelog), MessageBox.TYPE_YESNO)
+        else:
+            self.session.open(MessageBox, _("Congrats! You already have the latest version..."),  MessageBox.TYPE_INFO, timeout=4)
+
+    def update_dev(self):
+        try:
+            req = Utils.Request(Utils.b64decoder(developer_url), headers={'User-Agent': 'Mozilla/5.0'})
+            page = Utils.urlopen(req).read()
+            data = json.loads(page)
+            remote_date = data['pushed_at']
+            strp_remote_date = datetime.strptime(remote_date, '%Y-%m-%dT%H:%M:%SZ')
+            remote_date = strp_remote_date.strftime('%Y-%m-%d')
+            self.session.openWithCallback(self.install_update, MessageBox, _("Do you want to install update ( %s ) now?") % (remote_date), MessageBox.TYPE_YESNO)
+        except Exception as e:
+            print('error xcons:', e)
+
+    def install_update(self, answer=False):
+        if answer:
+            cmd1 = 'wget -q "--no-check-certificate" ' + Utils.b64decoder(installer_url) + ' -O - | /bin/sh'
+            self.session.open(xConsole, 'Upgrading...', cmdlist=[cmd1], finishedCallback=self.myCallback, closeOnSuccess=False)
+        else:
+            self.session.open(MessageBox, _("Update Aborted!"),  MessageBox.TYPE_INFO, timeout=3)
+
+    def myCallback(self, result=None):
+        print('result:', result)
+        return
 
     def Lcn(self):
         if self.LcnOn:
@@ -460,7 +557,7 @@ class SettingVhan(Screen):
                     os.system('rm -rf /etc/enigma2/*.del')
                     os.system("cp -rf  '/tmp/unzipped/" + str(self.namel) + "/'* " + fdest2)
                     title = _("Installation Settings")
-                    self.session.openWithCallback(self.yes, tvConsole, title=_(title), cmdlist=["wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &; sleep 3"], closeOnSuccess=False)
+                    self.session.openWithCallback(self.yes, xConsole, title=_(title), cmdlist=["wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &; sleep 3"], closeOnSuccess=False)
                     self['info'].setText(_('Settings Installed ...'))
                 else:
                     self['info'].setText(_('Settings Not Installed ...'))
@@ -580,7 +677,7 @@ class SettingVhan2(Screen):
                 os.system('rm -rf /etc/enigma2/*.del')
                 os.system("cp -rf  '/tmp/unzipped/" + str(self.namel) + "/'* " + fdest2)
                 title = _("Installation Settings")
-                self.session.openWithCallback(self.yes, tvConsole, title=_(title), cmdlist=["wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &; sleep 3"], closeOnSuccess=False)
+                self.session.openWithCallback(self.yes, xConsole, title=_(title), cmdlist=["wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &; sleep 3"], closeOnSuccess=False)
                 self['info'].setText(_('Settings Installed ...'))
             else:
                 self['info'].setText(_('Settings Not Installed ...'))
@@ -686,7 +783,7 @@ class SettingMilenka61(Screen):
                     os.system('rm -rf /etc/enigma2/*.tv')
                     os.system('rm -rf /etc/enigma2/*.del')
                     title = _("Installation Settings")
-                    self.session.openWithCallback(self.yes, tvConsole, title=_(title), cmdlist=["tar -xvf /tmp/settings.tar.gz -C /; wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"], closeOnSuccess=False)
+                    self.session.openWithCallback(self.yes, xConsole, title=_(title), cmdlist=["tar -xvf /tmp/settings.tar.gz -C /; wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"], closeOnSuccess=False)
                 self['info'].setText(_('Settings Installed ...'))
             else:
                 self['info'].setText(_('Settings Not Installed ...'))
@@ -790,7 +887,7 @@ class SettingManutek(Screen):
                     os.system('rm -rf /etc/enigma2/*.del')
                     os.system("cp -rf  '/tmp/unzipped/" + str(self.namel) + "/'* " + fdest2)
                     title = _("Installation Settings")
-                    self.session.openWithCallback(self.yes, tvConsole, title=_(title), cmdlist=["wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &; sleep 3"], closeOnSuccess=False)
+                    self.session.openWithCallback(self.yes, xConsole, title=_(title), cmdlist=["wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &; sleep 3"], closeOnSuccess=False)
                     self['info'].setText(_('Settings Installed ...'))
             else:
                 self['info'].setText(_('Settings Not Installed ...'))
@@ -896,7 +993,7 @@ class SettingMorpheus(Screen):
                     os.system('rm -rf /etc/enigma2/*.del')
                     os.system("cp -rf  '/tmp/unzipped/" + str(self.namel) + "/'* " + fdest2)
                     title = _("Installation Settings")
-                    self.session.openWithCallback(self.yes, tvConsole, title=_(title), cmdlist=["wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"], closeOnSuccess=False)
+                    self.session.openWithCallback(self.yes, xConsole, title=_(title), cmdlist=["wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"], closeOnSuccess=False)
                     self['info'].setText(_('Settings Installed ...'))
             else:
                 self['info'].setText(_('Settings Not Installed ...'))
@@ -1006,7 +1103,7 @@ class SettingCiefp(Screen):
                     os.system('rm -rf /etc/enigma2/*.del')
                     os.system("cp -rf  '/tmp/unzipped/" + str(self.namel) + "/'* " + fdest2)
                     title = _("Installation Settings")
-                    self.session.openWithCallback(self.yes, tvConsole, title=_(title), cmdlist=["wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"], closeOnSuccess=False)
+                    self.session.openWithCallback(self.yes, xConsole, title=_(title), cmdlist=["wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"], closeOnSuccess=False)
                     self['info'].setText(_('Settings Installed ...'))
             else:
                 self['info'].setText(_('Settings Not Installed ...'))
@@ -1100,7 +1197,7 @@ class SettingBi58(Screen):
                     os.system('rm -rf /etc/enigma2/*.tv')
                     os.system('rm -rf /etc/enigma2/*.del')
                     title = _("Installation Settings")
-                    self.session.openWithCallback(self.yes, tvConsole, title=_(title), cmdlist=["tar -xvf /tmp/settings.tar.gz -C /; wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"], closeOnSuccess=False)
+                    self.session.openWithCallback(self.yes, xConsole, title=_(title), cmdlist=["tar -xvf /tmp/settings.tar.gz -C /; wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"], closeOnSuccess=False)
                     self['info'].setText(_('Settings Installed ...'))
             else:
                 self['info'].setText(_('Settings Not Installed ...'))
@@ -1194,7 +1291,7 @@ class SettingPredrag(Screen):
                     os.system('rm -rf /etc/enigma2/*.tv')
                     os.system('rm -rf /etc/enigma2/*.del')
                     title = _("Installation Settings")
-                    self.session.openWithCallback(self.yes, tvConsole, title=_(title), cmdlist=["tar -xvf /tmp/settings.tar.gz -C /; wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"], closeOnSuccess=False)
+                    self.session.openWithCallback(self.yes, xConsole, title=_(title), cmdlist=["tar -xvf /tmp/settings.tar.gz -C /; wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"], closeOnSuccess=False)
                     self['info'].setText(_('Settings Installed ...'))
             else:
                 self['info'].setText(_('Settings Not Installed ...'))
@@ -1301,7 +1398,7 @@ class SettingCyrus(Screen):
                     os.system('rm -rf /etc/enigma2/*.del')
                     os.system("cp -rf  '/tmp/unzipped/" + str(self.namel) + "/'* " + fdest2)
                     title = _("Installation Settings")
-                    self.session.openWithCallback(self.yes, tvConsole, title=_(title), cmdlist=["wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"], closeOnSuccess=False)
+                    self.session.openWithCallback(self.yes, xConsole, title=_(title), cmdlist=["wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"], closeOnSuccess=False)
                     self['info'].setText(_('Settings Installed ...'))
             else:
                 self['info'].setText(_('Settings Not Installed ...'))
@@ -1310,156 +1407,158 @@ class SettingCyrus(Screen):
         ReloadBouquets()
 
 
-class tvConsole(Screen):
-    def __init__(self, session, title="Console", cmdlist=None, finishedCallback=None, closeOnSuccess=False, endstr=''):
-        self.session = session
-        skin = os.path.join(skin_path, 'tvConsole.xml')
-        with codecs.open(skin, "r", encoding="utf-8") as f:
-            self.skin = f.read()
-        self.setup_title = ('Console')
-        Screen.__init__(self, session)
-        self.setTitle(_(title_plug))
-        self.finishedCallback = finishedCallback
-        self.closeOnSuccess = closeOnSuccess
-        self.endstr = endstr
-        self.errorOcurred = False
-        self['title'] = Label(_(title_plug))
-        self['list'] = ScrollLabel('')
-        self['actions'] = ActionMap(['DirectionActions',
-                                     'ColorActions'], {'ok': self.cancel,
-                                                       'back': self.cancel,
-                                                       'red': self.cancel,
-                                                       'blue': self.restartenigma,
-                                                       'up': self['list'].pageUp,
-                                                       'down': self['list'].pageDown}, -1)
-        self.cmdlist = cmdlist
-        self.newtitle = _(title_plug)
-        self.onShown.append(self.updateTitle)
-        self.container = eConsoleAppContainer()
-        self.run = 0
-        try:
-            self.container.appClosed.append(self.runFinished)
-            self.container.dataAvail.append(self.dataAvail)
-        except:
-            self.appClosed_conn = self.container.appClosed.connect(self.runFinished)
-            self.dataAvail_conn = self.container.dataAvail.connect(self.dataAvail)
-        self.onLayoutFinish.append(self.startRun)
+'''
+# class tvConsole(Screen):
+    # def __init__(self, session, title="Console", cmdlist=None, finishedCallback=None, closeOnSuccess=False, endstr=''):
+        # self.session = session
+        # skin = os.path.join(skin_path, 'tvConsole.xml')
+        # with codecs.open(skin, "r", encoding="utf-8") as f:
+            # self.skin = f.read()
+        # self.setup_title = ('Console')
+        # Screen.__init__(self, session)
+        # self.setTitle(_(title_plug))
+        # self.finishedCallback = finishedCallback
+        # self.closeOnSuccess = closeOnSuccess
+        # self.endstr = endstr
+        # self.errorOcurred = False
+        # self['title'] = Label(_(title_plug))
+        # self['list'] = ScrollLabel('')
+        # self['actions'] = ActionMap(['DirectionActions',
+                                     # 'ColorActions'], {'ok': self.cancel,
+                                                       # 'back': self.cancel,
+                                                       # 'red': self.cancel,
+                                                       # 'blue': self.restartenigma,
+                                                       # 'up': self['list'].pageUp,
+                                                       # 'down': self['list'].pageDown}, -1)
+        # self.cmdlist = cmdlist
+        # self.newtitle = _(title_plug)
+        # self.onShown.append(self.updateTitle)
+        # self.container = eConsoleAppContainer()
+        # self.run = 0
+        # try:
+            # self.container.appClosed.append(self.runFinished)
+            # self.container.dataAvail.append(self.dataAvail)
+        # except:
+            # self.appClosed_conn = self.container.appClosed.connect(self.runFinished)
+            # self.dataAvail_conn = self.container.dataAvail.connect(self.dataAvail)
+        # self.onLayoutFinish.append(self.startRun)
 
-    def updateTitle(self):
-        self.setTitle(self.newtitle)
+    # def updateTitle(self):
+        # self.setTitle(self.newtitle)
 
-    def startRun(self):
-        self['list'].setText(_('Execution Progress:') + '\n\n')
-        print('Console: executing in run', self.run, ' the command:', self.cmdlist[self.run])
-        if self.container.execute(self.cmdlist[self.run]):
-            self.runFinished(-1)
+    # def startRun(self):
+        # self['list'].setText(_('Execution Progress:') + '\n\n')
+        # print('Console: executing in run', self.run, ' the command:', self.cmdlist[self.run])
+        # if self.container.execute(self.cmdlist[self.run]):
+            # self.runFinished(-1)
 
-    def runFinished(self, retval):
-        self.run += 1
-        if self.run != len(self.cmdlist):
-            if self.container.execute(self.cmdlist[self.run]):
-                self.runFinished(-1)
-        else:
-            self.show()
-            self.finished = True
-            str = self["list"].getText()
-            if not retval and self.endstr.startswith("Swapping"):
-                str += _("\n\n" + self.endstr)
-            else:
-                str += _("Execution finished!!\n")
-            self["list"].setText(str)
-            self["list"].lastPage()
-            # if self.finishedCallback is not None:
-                # self.finishedCallback(retval)
-            # if not retval and self.closeOnSuccess:
-            self.cancel()
+    # def runFinished(self, retval):
+        # self.run += 1
+        # if self.run != len(self.cmdlist):
+            # if self.container.execute(self.cmdlist[self.run]):
+                # self.runFinished(-1)
+        # else:
+            # self.show()
+            # self.finished = True
+            # str = self["list"].getText()
+            # if not retval and self.endstr.startswith("Swapping"):
+                # str += _("\n\n" + self.endstr)
+            # else:
+                # str += _("Execution finished!!\n")
+            # self["list"].setText(str)
+            # self["list"].lastPage()
+            # # if self.finishedCallback is not None:
+                # # self.finishedCallback(retval)
+            # # if not retval and self.closeOnSuccess:
+            # self.cancel()
 
-    def cancel(self):
-        if self.run == len(self.cmdlist):
-            self.close()
-            try:
-                self.appClosed_conn = None
-                self.dataAvail_conn = None
-            except:
-                self.container.appClosed.remove(self.runFinished)
-                self.container.dataAvail.remove(self.dataAvail)
+    # def cancel(self):
+        # if self.run == len(self.cmdlist):
+            # self.close()
+            # try:
+                # self.appClosed_conn = None
+                # self.dataAvail_conn = None
+            # except:
+                # self.container.appClosed.remove(self.runFinished)
+                # self.container.dataAvail.remove(self.dataAvail)
 
-    def cancelCallback(self, ret=None):
-        self.cancel_msg = None
-        if ret:
-            self.container.appClosed.remove(self.runFinished)
-            self.container.dataAvail.remove(self.dataAvail)
-            self.container.kill()
-            self.close()
-        return
+    # def cancelCallback(self, ret=None):
+        # self.cancel_msg = None
+        # if ret:
+            # self.container.appClosed.remove(self.runFinished)
+            # self.container.dataAvail.remove(self.dataAvail)
+            # self.container.kill()
+            # self.close()
+        # return
 
-    def dataAvail(self, data):
-        if PY3:
-            data = data.decode("utf-8")
-        try:
-            self["list"].setText(self["list"].getText() + data)
-        except Exception as e:
-            # trace_error()
-            print(e)
-            
-        return
-        if self["list"].getText().endswith("Do you want to continue? [Y/n] "):
-            self.session.openWithCallback(self.processAnswer, MessageBox, _("Additional packages must be installed. Do you want to continue?"), MessageBox.TYPE_YESNO)
+    # def dataAvail(self, data):
+        # if PY3:
+            # data = data.decode("utf-8")
+        # try:
+            # self["list"].setText(self["list"].getText() + data)
+        # except Exception as e:
+            # # trace_error()
+            # print(e)
 
-    def processAnswer(self, retval):
-        if retval:
-            self.container.write("Y", 1)
-        else:
-            self.container.write("n", 1)
-        self.dataSent_conn = self.container.dataSent.connect(self.processInput)
+        # return
+        # if self["list"].getText().endswith("Do you want to continue? [Y/n] "):
+            # self.session.openWithCallback(self.processAnswer, MessageBox, _("Additional packages must be installed. Do you want to continue?"), MessageBox.TYPE_YESNO)
 
-    def processInput(self, retval):
-        self.container.sendEOF()
+    # def processAnswer(self, retval):
+        # if retval:
+            # self.container.write("Y", 1)
+        # else:
+            # self.container.write("n", 1)
+        # self.dataSent_conn = self.container.dataSent.connect(self.processInput)
 
-    def restartenigma(self):
-        self.session.open(TryQuitMainloop, 3)
+    # def processInput(self, retval):
+        # self.container.sendEOF()
 
-    def closeConsole(self):
-        if self.finished:
-            try:
-                self.container.appClosed.append(self.runFinished)
-                self.container.dataAvail.append(self.dataAvail)
-            except:
-                self.appClosed_conn = self.container.appClosed.connect(self.runFinished)
-                self.dataAvail_conn = self.container.dataAvail.connect(self.dataAvail)
-                self.close()
-            else:
-                self.show()
+    # def restartenigma(self):
+        # self.session.open(TryQuitMainloop, 3)
 
-
-class AutoStartTimertvsset:
-
-    def __init__(self, session):
-        self.session = session
-        global _firstStarttvsset
-        print("*** running AutoStartTimertvsset ***")
-        if _firstStarttvsset:
-            self.runUpdate()
-
-    def runUpdate(self):
-        print("*** running update ***")
-        try:
-            from . import Update
-            Update.upd_done()
-            _firstStarttvsset = False
-        except Exception as e:
-            print('error tvsetting', str(e))
+    # def closeConsole(self):
+        # if self.finished:
+            # try:
+                # self.container.appClosed.append(self.runFinished)
+                # self.container.dataAvail.append(self.dataAvail)
+            # except:
+                # self.appClosed_conn = self.container.appClosed.connect(self.runFinished)
+                # self.dataAvail_conn = self.container.dataAvail.connect(self.dataAvail)
+                # self.close()
+            # else:
+                # self.show()
 
 
-def autostart(reason, session=None, **kwargs):
-    print("*** running autostart ***")
-    global autoStartTimertvsset
-    global _firstStarttvsset
-    if reason == 0:
-        if session is not None:
-            _firstStarttvsset = True
-            autoStartTimertvsset = AutoStartTimertvsset(session)
-    return
+# class AutoStartTimertvsset:
+
+    # def __init__(self, session):
+        # self.session = session
+        # global _firstStarttvsset
+        # print("*** running AutoStartTimertvsset ***")
+        # if _firstStarttvsset:
+            # self.runUpdate()
+
+    # def runUpdate(self):
+        # print("*** running update ***")
+        # try:
+            # from . import Update
+            # Update.upd_done()
+            # _firstStarttvsset = False
+        # except Exception as e:
+            # print('error tvsetting', str(e))
+
+
+# def autostart(reason, session=None, **kwargs):
+    # print("*** running autostart ***")
+    # global autoStartTimertvsset
+    # global _firstStarttvsset
+    # if reason == 0:
+        # if session is not None:
+            # _firstStarttvsset = True
+            # autoStartTimertvsset = AutoStartTimertvsset(session)
+    # return
+'''
 
 
 def main(session, **kwargs):
@@ -1486,7 +1585,7 @@ def Plugins(**kwargs):
     if not os.path.exists('/var/lib/dpkg/status'):
         ico_path = os.path.join(plugin_path, 'res/pics/logo.png')
     return [PluginDescriptor(name=name_plug, description=title_plug, where=[PluginDescriptor.WHERE_PLUGINMENU], icon=ico_path, fnc=main),
-            PluginDescriptor(name=name_plug, description=title_plug, where=[PluginDescriptor.WHERE_SESSIONSTART], fnc=autostart),
+            # PluginDescriptor(name=name_plug, description=title_plug, where=[PluginDescriptor.WHERE_SESSIONSTART], fnc=autostart),
             PluginDescriptor(name=name_plug, description=title_plug, where=PluginDescriptor.WHERE_MENU, fnc=StartSetup),
             PluginDescriptor(name=name_plug, description=title_plug, where=PluginDescriptor.WHERE_EXTENSIONSMENU, fnc=main)]
 
@@ -1549,10 +1648,12 @@ def StartSavingTerrestrialChannels():
             if x.find('eeee') != -1:
                 return file
                 break
+            '''
             # if x.find('eeee0000') != -1:
                 # if x.find('82000') == -1 or x.find('c0000') == -1:
                     # return file
                     # break
+            '''
         return
 
     def ResearchBouquetTerrestrial(search):
