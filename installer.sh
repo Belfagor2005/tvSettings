@@ -2,8 +2,8 @@
 
 ## setup command=wget -q "--no-check-certificate" https://raw.githubusercontent.com/Belfagor2005/tvSettings/main/installer.sh -O - | /bin/sh
 ## Only This 2 lines to edit with new version ######
-version='1.8'
-changelog='\nAdd Live Upgrade\nFix screen'
+version='2.0'
+changelog='\nSave List Bouquet IPTV and restore'
 ##############################################################
 TMPPATH=/tmp/tvSettings-main
 FILEPATH=/tmp/main.tar.gz
