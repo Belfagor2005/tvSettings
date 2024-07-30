@@ -229,7 +229,7 @@ class OneSetList(MenuList):
 def DListEntry(name, idx):
     res = [name]
     pngs = resolveFilename(SCOPE_PLUGINS, "Extensions/{}/res/pics/settingon.png".format('tvSettings'))
-    pngs = resolveFilename(SCOPE_PLUGINS, "Extensions/{}/res/pics/settingoff.png".format('tvSettings'))
+    # pngs = resolveFilename(SCOPE_PLUGINS, "Extensions/{}/res/pics/settingoff.png".format('tvSettings'))
     if screenwidth.width() == 2560:
         res.append(MultiContentEntryPixmapAlphaTest(pos=(10, 10), size=(40, 40), png=loadPNG(pngs)))
         res.append(MultiContentEntryText(pos=(80, 0), size=(1200, 50), font=0, text=name, flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER))

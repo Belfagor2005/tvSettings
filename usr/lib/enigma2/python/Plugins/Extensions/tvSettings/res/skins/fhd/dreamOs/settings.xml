@@ -3,13 +3,12 @@
 	<widget name="title" position="220,90" size="900,40" font="Regular;30" halign="left" valign="center" foregroundColor="#002a79b8" backgroundColor="black" transparent="1" zPosition="5" />
 	<widget name="info" position="220,155" size="1030,50" font="Regular;30" halign="center" valign="center" foregroundColor="yellow" backgroundColor="#202020" transparent="0" zPosition="5" />
 	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/tvSettings/res/pics/main2.png" position="0,0" size="1920,1080" zPosition="1" />
-	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/tvSettings/res/pics/tvs.png" alphatest="blend" position="220,40" size="279,50" zPosition="5" />
+	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/tvSettings/res/pics/tvs.png" position="220,40" size="279,50" scale="stretch" alphatest="blend" zPosition="5" />
 	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/tvSettings/res/pics/sep.png" position="220,130" size="1030,8" zPosition="5" />
 	<ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/tvSettings/res/pics/sep.png" position="220,910" size="1030,8" zPosition="5" />
 	<!-- Menu List -->
-	<!-- <widget name="list" position="220,220" size="1030,600" scrollbarMode="showOnDemand" transparent="1" zPosition="5" foregroundColor="#00a0a0a0" foregroundColorSelected="#743554" backgroundColor="#20000000" backgroundColorSelected="#0b2049" /> -->
-	<widget name="list" position="220,210" size="1030,555" scrollbarMode="showOnDemand" zPosition="4" backgroundColor="#54111112" foregroundColor="white" backgroundColorSelected="#54111112" foregroundColorSelected="#fec51b"/>
-
+	<widget name="list" position="220,220" size="1030,600" scrollbarMode="showOnDemand" transparent="1" zPosition="5" foregroundColor="#00a0a0a0" foregroundColorSelected="#fec51b" backgroundColor="#20000000" backgroundColorSelected="#0b2049" />
+	<!-- <widget name="list" position="220,210" size="1030,555" scrollbarMode="showOnDemand" transparent="1" zPosition="5" backgroundColor="#54111112" foregroundColor="white" backgroundColorSelected="#54111112" foregroundColorSelected="#fec51b" itemCornerRadius="19" scrollbarForegroundColor="#0049bbff" scrollbarBorderWidth="1" scrollbarBorderColor="#0049bbff" scrollbarWidth="8"/> -->
 	<!-- Colors 1220 -->
     <eLabel backgroundColor="#00ff0000" position="269,1040" size="300,6" zPosition="4" />
     <eLabel backgroundColor="#0000ff00" position="272,979" size="300,6" zPosition="4" />
