@@ -202,7 +202,7 @@ Panel_Dlist = [
     ('UPDATE SATELLITES.XML'),
     ('UPDATE TERRESTRIAL.XML'),
     ('SETTINGS CIEFP'),
-    ('SETTINGS CYRUS'),
+    # ('SETTINGS CYRUS'),
     ('SETTINGS MANUTEK'),
     ('SETTINGS MORPHEUS'),
     ('SETTINGS VHANNIBAL'),
@@ -282,6 +282,7 @@ class MainSetting(Screen):
                                      'ColorActions',
                                      'HotkeyActions',
                                      'InfobarEPGActions',
+                                     'EPGSelectActions',
                                      'MenuActions',
                                      'ChannelSelectBaseActions',
                                      'DirectionActions'], {'ok': self.okRun,
@@ -290,6 +291,7 @@ class MainSetting(Screen):
                                                            'info_long': self.update_dev,
                                                            'infolong': self.update_dev,
                                                            'showEventInfoPlugin': self.update_dev,
+                                                           'info': self.infomsg,
                                                            'green': self.okRun,
                                                            'back': self.cancel,
                                                            'cancel': self.cancel,
@@ -301,6 +303,9 @@ class MainSetting(Screen):
             self.timer.callback.append(self.check_vers)
         self.timer.start(500, 1)
         self.onLayoutFinish.append(self.updateMenuList)
+
+    def infomsg(self):
+        self.session.open(MessageBox, _("tvSettings by Lululla\nV.%s\nInstall Channel Settings and recovery DDT and IPTV Favorite\nForum Support www.corvoboys.org\n") % currversion,  MessageBox.TYPE_INFO, timeout=4)
 
     def check_vers(self):
         try:
@@ -402,8 +407,8 @@ class MainSetting(Screen):
             self.terrestrial_restore()
         elif sel == ('SETTINGS CIEFP'):
             self.session.open(SettingCiefp)
-        elif sel == ('SETTINGS CYRUS'):
-            self.session.open(SettingCyrus)
+        # elif sel == ('SETTINGS CYRUS'):
+            # self.session.open(SettingCyrus)
         elif sel == ('SETTINGS MANUTEK'):
             self.session.open(SettingManutek)
         elif sel == ('SETTINGS MORPHEUS'):

@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: cbpanel\n"
+"Project-Id-Version: tvSettings\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-06-05 21:28+0200\n"
+"POT-Creation-Date: 2024-07-30 22:32+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: ))^^(( <>\n"
 "Language-Team: *\n"
@@ -10,96 +10,177 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Poedit-SourceCharset: UTF-8\n"
-"X-Generator: Poedit 1.8.7\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Poedit-Basepath: .\n"
-"X-Poedit-SearchPathExcluded-0: ../../../../plugin.py\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Generator: Poedit 3.4.4\n"
+"X-Poedit-Basepath: ../../../..\n"
+"X-Poedit-SearchPath-0: plugin.py\n"
 
-#: plugin.py:247 plugin.py:251 plugin.py:362 plugin.py:380 plugin.py:486
-#: plugin.py:504 plugin.py:611 plugin.py:630 plugin.py:741 plugin.py:758
-#: plugin.py:858 plugin.py:876 plugin.py:974 plugin.py:993 plugin.py:1090
-#: plugin.py:1108
-#, python-format
-msgid "..:: TiVuStream Settings V. %s  by Lululla ::.."
-msgstr ""
+#: plugin.py:267 plugin.py:620 plugin.py:743 plugin.py:857 plugin.py:975
+#: plugin.py:1088
+#, fuzzy
+#| msgid "... please wait"
+msgid "Loading data... Please wait"
+msgstr "... Warten Sie mal"
 
-#: plugin.py:256 plugin.py:413 plugin.py:539 plugin.py:667 plugin.py:795
-#: plugin.py:910 plugin.py:1028 plugin.py:1143
-msgid "Please select ..."
-msgstr "Bitte auswählen ..."
-
-#: plugin.py:258
+#: plugin.py:268
 msgid "Select"
 msgstr "Wählen"
 
-#: plugin.py:259
+#: plugin.py:269
 msgid "Exit"
 msgstr "Ausfahrt"
 
-#: plugin.py:290
+#: plugin.py:307
+#, python-format
+msgid ""
+"tvSettings by Lululla\n"
+"V.%s\n"
+"Install Channel Settings and recovery DDT and IPTV Favorite\n"
+"Forum Support www.corvoboys.org\n"
+msgstr ""
+
+#: plugin.py:335
+#, python-format
+msgid ""
+"New version %s is available\n"
+"\n"
+"Changelog: %s\n"
+"\n"
+"Press info_long or yellow_long button to start force updating."
+msgstr ""
+
+#: plugin.py:342
+#, python-format
+msgid ""
+"New version %s is available.\n"
+"\n"
+"Changelog: %s \n"
+"\n"
+"Do you want to install it now?"
+msgstr ""
+
+#: plugin.py:344
+msgid "Congrats! You already have the latest version..."
+msgstr ""
+
+#: plugin.py:354
+#, fuzzy, python-format
+#| msgid "Do you want to install?"
+msgid "Do you want to install update ( %s ) now?"
+msgstr "Möchten Sie installieren ?"
+
+#: plugin.py:363
+msgid "Update Aborted!"
+msgstr ""
+
+#: plugin.py:377
+msgid "Sorting Terrestrial channels with Lcn rules Completed"
+msgstr ""
+
+#: plugin.py:396 plugin.py:547 plugin.py:670 plugin.py:784 plugin.py:901
+#: plugin.py:1014 plugin.py:1131
+msgid "Please select ..."
+msgstr "Bitte auswählen ..."
+
+#: plugin.py:419
 msgid "UPDATE SATELLITES.XML"
 msgstr ""
 
-#: plugin.py:292
+#: plugin.py:421
 msgid "UPDATE TERRESTRIAL.XML"
 msgstr ""
 
-#: plugin.py:315 plugin.py:334 plugin.py:420 plugin.py:546 plugin.py:674
-#: plugin.py:802 plugin.py:917 plugin.py:1035 plugin.py:1150
+#: plugin.py:427
+msgid ""
+"This operation restore your Favorite channel Dtt\n"
+"from =>>THISPLUGIN/temp/TerrestrialChannelListArchive\n"
+"Do you really want to continue?"
+msgstr ""
+
+#: plugin.py:434
+msgid ""
+"This operation save your Favorite channel Dtt\n"
+"to =>>/tmp/*_enigma2settingsbackup.tar.gz\n"
+"Do you really want to continue?"
+msgstr ""
+
+#: plugin.py:441 plugin.py:462 plugin.py:554 plugin.py:677 plugin.py:792
+#: plugin.py:908 plugin.py:1022 plugin.py:1139
 msgid "Do you want to install?"
 msgstr "Möchten Sie installieren ?"
 
-#: plugin.py:324
+#: plugin.py:454
 msgid "Satellites.xml Updated!"
 msgstr ""
 
-#: plugin.py:325 plugin.py:344 plugin.py:473 plugin.py:600 plugin.py:730
-#: plugin.py:846 plugin.py:960 plugin.py:1079 plugin.py:1194
-msgid "Installation performed successfully!"
-msgstr "Installation erfolgreich durchgeführt!"
+#: plugin.py:455 plugin.py:476
+#, fuzzy
+#| msgid "Installation Picons"
+msgid "Installation done !!!"
+msgstr "Installation Picons"
 
-#: plugin.py:343
+#: plugin.py:475
 msgid "Terrestrial.xml Updated!"
 msgstr ""
 
-#: plugin.py:369 plugin.py:493 plugin.py:618 plugin.py:748 plugin.py:865
-#: plugin.py:981 plugin.py:1097
+#: plugin.py:495
 msgid "Getting the list, please wait ..."
 msgstr "die Liste bekommen , bitte warten ..."
 
-#: plugin.py:370 plugin.py:494 plugin.py:619 plugin.py:749 plugin.py:866
-#: plugin.py:982 plugin.py:1098
+#: plugin.py:501 plugin.py:621 plugin.py:744 plugin.py:858 plugin.py:976
+#: plugin.py:1089
 msgid "Install"
 msgstr "Installieren"
 
-#: plugin.py:371 plugin.py:495 plugin.py:620 plugin.py:750 plugin.py:867
-#: plugin.py:983 plugin.py:1099
+#: plugin.py:502 plugin.py:622 plugin.py:745 plugin.py:859 plugin.py:977
+#: plugin.py:1090
 msgid "Back"
 msgstr "Zurück"
 
-#: plugin.py:393 plugin.py:517 plugin.py:644 plugin.py:770 plugin.py:889
-#: plugin.py:1006 plugin.py:1121
-msgid "Try again later ..."
-msgstr "Versuchen Sie es später noch einmal ..."
+#: plugin.py:551 plugin.py:674 plugin.py:789 plugin.py:905 plugin.py:1019
+#: plugin.py:1136
+#, fuzzy
+#| msgid "Download failed!"
+msgid "Download page get failed ..."
+msgstr "Download failed!"
 
-#: plugin.py:464 plugin.py:591 plugin.py:722 plugin.py:837 plugin.py:954
-#: plugin.py:1072 plugin.py:1187
+#: plugin.py:595 plugin.py:718 plugin.py:833 plugin.py:949 plugin.py:1064
+#: plugin.py:1194
 msgid "Installation Settings"
 msgstr "Installationseinstellungen"
 
-#: plugin.py:472 plugin.py:599 plugin.py:729 plugin.py:845 plugin.py:959
-#: plugin.py:1078 plugin.py:1193
-msgid "Setting Installed!"
+#: plugin.py:597 plugin.py:720 plugin.py:835 plugin.py:951 plugin.py:1066
+#: plugin.py:1196
+#, fuzzy
+#| msgid "Setting Installed!"
+msgid "Settings Installed ..."
 msgstr "Einstellung Installiert!"
 
-#: plugin.py:1218
-msgid "TiVuStream Settings V."
-msgstr ""
+#: plugin.py:599 plugin.py:722 plugin.py:837 plugin.py:953 plugin.py:1068
+#, fuzzy
+#| msgid "Setting Installed!"
+msgid "Settings Not Installed (dest)..."
+msgstr "Einstellung Installiert!"
 
-#: plugin.py:1219 plugin.py:1220
-msgid "TiVuStream Settings"
-msgstr ""
+#: plugin.py:601 plugin.py:724 plugin.py:839 plugin.py:955 plugin.py:1070
+#: plugin.py:1198
+#, fuzzy
+#| msgid "Setting Installed!"
+msgid "Settings Not Installed ..."
+msgstr "Einstellung Installiert!"
+
+#: plugin.py:1202
+#, fuzzy
+#| msgid "Setting Installed!"
+msgid "Not Installed ..."
+msgstr "Einstellung Installiert!"
+
+#~ msgid "Installation performed successfully!"
+#~ msgstr "Installation erfolgreich durchgeführt!"
+
+#~ msgid "Try again later ..."
+#~ msgstr "Versuchen Sie es später noch einmal ..."
 
 #~ msgid "Other"
 #~ msgstr "Andere"
@@ -186,9 +267,6 @@ msgstr ""
 #~ msgid "Installing "
 #~ msgstr "Installieren "
 
-#~ msgid "... please wait"
-#~ msgstr "... Warten Sie mal"
-
 #~ msgid "Unknow Image!"
 #~ msgstr "Unknow Image!"
 
@@ -212,9 +290,6 @@ msgstr ""
 
 #~ msgid "Download file in /tmp successful!!"
 #~ msgstr "Download-Datei in /tmp erfolgreich!!"
-
-#~ msgid "Download failed!"
-#~ msgstr "Download failed!"
 
 #~ msgid "... Not supported"
 #~ msgstr "... Nicht unterstützt"
@@ -348,9 +423,6 @@ msgstr ""
 #~ msgstr ""
 #~ "Möchten Sie die Installation durchführen?\n"
 #~ "Es könnte einige Minuten warten."
-
-#~ msgid "Installation Picons"
-#~ msgstr "Installation Picons"
 
 #~ msgid "TiVuStream Addons"
 #~ msgstr "TiVuStream Addons"

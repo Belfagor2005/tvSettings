@@ -20,5 +20,5 @@
 	<widget name="key_yellow" position="905,940" size="300,40" font="Regular;30" halign="right" valign="center" backgroundColor="#20000000" zPosition="5" transparent="1" />
 	<widget name="key_blue" position="905,1000" size="300,40" font="Regular;30" halign="right" valign="center" backgroundColor="#20000000" zPosition="5" transparent="1" />
 	<!-- <widget name="info" position="220,155" size="1030,50" font="Regular;30" halign="center" valign="center" foregroundColor="yellow" backgroundColor="#202020" transparent="0" zPosition="5"/> -->
-    <eLabel name="" position="1151,89" size="75,40" backgroundColor="#914167" halign="center" valign="center" transparent="0" font="Regular; 24" zPosition="3" text="INFO" />
+    <eLabel name="" position="1151,89" size="75,40" backgroundColor="#49bbff" halign="center" valign="center" transparent="0" font="Regular; 24" zPosition="3" text="INFO" />
 </screen>

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
-"POT-Creation-Date: 2020-08-17 19:43+0200\n"
+"Project-Id-Version: tvSettings\n"
+"POT-Creation-Date: 2024-07-30 22:32+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -9,99 +9,180 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=iso-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.7\n"
+"X-Generator: Poedit 3.4.4\n"
 "X-Poedit-Basepath: ../../../..\n"
 "X-Poedit-SearchPath-0: plugin.py\n"
 
-#: plugin.py:263 plugin.py:267 plugin.py:383 plugin.py:406 plugin.py:526
-#: plugin.py:551 plugin.py:649 plugin.py:673 plugin.py:780 plugin.py:804
-#: plugin.py:911 plugin.py:935 plugin.py:1039 plugin.py:1063 plugin.py:1158
-#: plugin.py:1181 plugin.py:1277 plugin.py:1301
-#, python-format
-msgid "..:: TiVuStream Settings V. %s ::.."
-msgstr ""
+#: plugin.py:267 plugin.py:620 plugin.py:743 plugin.py:857 plugin.py:975
+#: plugin.py:1088
+msgid "Loading data... Please wait"
+msgstr "Carico i dati... Attendere prego"
 
-#: plugin.py:271 plugin.py:447 plugin.py:581 plugin.py:713 plugin.py:838
-#: plugin.py:972 plugin.py:1096 plugin.py:1215 plugin.py:1335
-msgid "Please select ..."
-msgstr "Seleziona Prego ..."
-
-#: plugin.py:272
-msgid "Lcn"
-msgstr ""
-
-#: plugin.py:273
+#: plugin.py:268
 msgid "Select"
 msgstr "Seleziona"
 
-#: plugin.py:274
+#: plugin.py:269
 msgid "Exit"
 msgstr "Uscire"
 
-#: plugin.py:287
-msgid "Reorder Terrestrial channels with Lcn rules"
-msgstr "Riordina i canali terrestri con le regole Lcn"
+#: plugin.py:307
+#, python-format
+msgid ""
+"tvSettings by Lululla\n"
+"V.%s\n"
+"Install Channel Settings and recovery DDT and IPTV Favorite\n"
+"Forum Support www.corvoboys.org\n"
+msgstr ""
+"tvSettings di Lululla\n"
+"V.%s\n"
+"Installa le impostazioni del canale e ripristina DDT e IPTV Preferiti\n"
+"Forum di supporto www.corvoboys.org\n"
 
-#: plugin.py:312
+#: plugin.py:335
+#, python-format
+msgid ""
+"New version %s is available\n"
+"\n"
+"Changelog: %s\n"
+"\n"
+"Press info_long or yellow_long button to start force updating."
+msgstr ""
+"È disponibile la nuova versione %s\n"
+"\n"
+"Registro delle modifiche: %s\n"
+"\n"
+"Premere info_long o yellow_long pulsante per avviare l'aggiornamento forzato."
+
+#: plugin.py:342
+#, python-format
+msgid ""
+"New version %s is available.\n"
+"\n"
+"Changelog: %s \n"
+"\n"
+"Do you want to install it now?"
+msgstr ""
+"È disponibile la nuova versione %s. \n"
+"\n"
+"Registro delle modifiche: %s \n"
+"\n"
+"Vuoi installarla ora?"
+
+#: plugin.py:344
+msgid "Congrats! You already have the latest version..."
+msgstr "Congratulazioni! Hai già l'ultima versione..."
+
+#: plugin.py:354
+#, python-format
+msgid "Do you want to install update ( %s ) now?"
+msgstr "Vuoi installare aggiornamento(%s) ora?"
+
+#: plugin.py:363
+msgid "Update Aborted!"
+msgstr "Aggiornamento annullato!"
+
+#: plugin.py:377
+msgid "Sorting Terrestrial channels with Lcn rules Completed"
+msgstr "Canali terrestri con le regole Lcn ordinati correttamente"
+
+#: plugin.py:396 plugin.py:547 plugin.py:670 plugin.py:784 plugin.py:901
+#: plugin.py:1014 plugin.py:1131
+msgid "Please select ..."
+msgstr "Seleziona Prego ..."
+
+#: plugin.py:419
 msgid "UPDATE SATELLITES.XML"
-msgstr ""
+msgstr "AGGIORNA  SATELLITES.XML"
 
-#: plugin.py:314
+#: plugin.py:421
 msgid "UPDATE TERRESTRIAL.XML"
-msgstr ""
+msgstr "AGGIORNA TERRESTRIAL.XML"
 
-#: plugin.py:338 plugin.py:357 plugin.py:455 plugin.py:588 plugin.py:720
-#: plugin.py:845 plugin.py:979 plugin.py:1103 plugin.py:1222 plugin.py:1342
+#: plugin.py:427
+msgid ""
+"This operation restore your Favorite channel Dtt\n"
+"from =>>THISPLUGIN/temp/TerrestrialChannelListArchive\n"
+"Do you really want to continue?"
+msgstr ""
+"Questa operazione ripristina il tuo canale preferito Dtt\n"
+"da =>>THISPLUGIN/temp/TerrestrialChannelListArchive\n"
+"Vuoi davvero continuare?"
+
+#: plugin.py:434
+msgid ""
+"This operation save your Favorite channel Dtt\n"
+"to =>>/tmp/*_enigma2settingsbackup.tar.gz\n"
+"Do you really want to continue?"
+msgstr ""
+"Questa operazione salva il tuo canale preferito Dtt\n"
+"a =>>/tmp/*_enigma2settingsbackup.tar.gz\n"
+"Vuoi davvero continuare?"
+
+#: plugin.py:441 plugin.py:462 plugin.py:554 plugin.py:677 plugin.py:792
+#: plugin.py:908 plugin.py:1022 plugin.py:1139
 msgid "Do you want to install?"
 msgstr "Vuoi installare?"
 
-#: plugin.py:347
+#: plugin.py:454
 msgid "Satellites.xml Updated!"
-msgstr ""
+msgstr "Satellites.xml Aggiornato!"
 
-#: plugin.py:348 plugin.py:367
-msgid "Installation performed successfully!"
-msgstr "Installazione eseguita con successo!"
+#: plugin.py:455 plugin.py:476
+msgid "Installation done !!!"
+msgstr "Installazione completata!"
 
-#: plugin.py:366
+#: plugin.py:475
 msgid "Terrestrial.xml Updated!"
-msgstr ""
+msgstr "Terrestrial.xml Aggiornato!"
 
-#: plugin.py:390 plugin.py:533 plugin.py:656 plugin.py:787 plugin.py:918
-#: plugin.py:1046 plugin.py:1165 plugin.py:1284
+#: plugin.py:495
 msgid "Getting the list, please wait ..."
 msgstr "Ricevo l'elenco , si prega di attendere ..."
 
-#: plugin.py:391 plugin.py:534 plugin.py:657 plugin.py:788 plugin.py:919
-#: plugin.py:1047 plugin.py:1166 plugin.py:1285
+#: plugin.py:501 plugin.py:621 plugin.py:744 plugin.py:858 plugin.py:976
+#: plugin.py:1089
 msgid "Install"
 msgstr "Installa"
 
-#: plugin.py:392 plugin.py:535 plugin.py:658 plugin.py:789 plugin.py:920
-#: plugin.py:1048 plugin.py:1167 plugin.py:1286
+#: plugin.py:502 plugin.py:622 plugin.py:745 plugin.py:859 plugin.py:977
+#: plugin.py:1090
 msgid "Back"
 msgstr "Indietro"
 
-#: plugin.py:418 plugin.py:563 plugin.py:686 plugin.py:816 plugin.py:947
-#: plugin.py:1076 plugin.py:1194 plugin.py:1314
-msgid "Try again later ..."
-msgstr "Riprovare piu tardi ..."
+#: plugin.py:551 plugin.py:674 plugin.py:789 plugin.py:905 plugin.py:1019
+#: plugin.py:1136
+msgid "Download page get failed ..."
+msgstr "Download Fallito ..."
 
-#: plugin.py:511 plugin.py:636 plugin.py:766 plugin.py:898 plugin.py:1024
-#: plugin.py:1145 plugin.py:1264 plugin.py:1384
+#: plugin.py:595 plugin.py:718 plugin.py:833 plugin.py:949 plugin.py:1064
+#: plugin.py:1194
 msgid "Installation Settings"
 msgstr "Installazione Settings"
 
-#: plugin.py:1410
-msgid "TiVuStream Settings V."
-msgstr ""
+#: plugin.py:597 plugin.py:720 plugin.py:835 plugin.py:951 plugin.py:1066
+#: plugin.py:1196
+msgid "Settings Installed ..."
+msgstr "Setting Installati..."
 
-#: plugin.py:1411 plugin.py:1412
-msgid "TiVuStream Settings"
-msgstr ""
+#: plugin.py:599 plugin.py:722 plugin.py:837 plugin.py:953 plugin.py:1068
+msgid "Settings Not Installed (dest)..."
+msgstr "Setting Installati! (dest)..."
 
-#~ msgid "Setting Installed!"
-#~ msgstr "Setting Installati!"
+#: plugin.py:601 plugin.py:724 plugin.py:839 plugin.py:955 plugin.py:1070
+#: plugin.py:1198
+msgid "Settings Not Installed ..."
+msgstr "Setting Non Installati ..."
+
+#: plugin.py:1202
+msgid "Not Installed ..."
+msgstr "Non installati ..."
+
+#~ msgid "Installation performed successfully!"
+#~ msgstr "Installazione eseguita con successo!"
+
+#~ msgid "Try again later ..."
+#~ msgstr "Riprovare piu tardi ..."
 
 #~ msgid "Other"
 #~ msgstr "Altro"
@@ -191,9 +272,6 @@ msgstr ""
 #~ msgid "Installing "
 #~ msgstr "Installazione "
 
-#~ msgid "... please wait"
-#~ msgstr "... attendere prego"
-
 #~ msgid "Unknow Image!"
 #~ msgstr "Unknow Image!"
 
@@ -217,9 +295,6 @@ msgstr ""
 
 #~ msgid "Download file in /tmp successful!!"
 #~ msgstr "File scaricato con successo in /tmp!!"
-
-#~ msgid "Download failed!"
-#~ msgstr "Download Fallito!"
 
 #~ msgid "... Not supported"
 #~ msgstr "... Non supportato"
@@ -353,9 +428,6 @@ msgstr ""
 #~ msgstr ""
 #~ "Vuoi installare?\n"
 #~ "Potrebbe richiedere qualche minuto, attendere .."
-
-#~ msgid "Installation Picons"
-#~ msgstr "Installazione Picons"
 
 #~ msgid "TiVuStream Addons"
 #~ msgstr "TiVuStream Addons"
