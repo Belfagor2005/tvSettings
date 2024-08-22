@@ -279,7 +279,6 @@ class MainSetting(Screen):
         self['key_blue'].hide()
         self.Update = False
         self['actions'] = ActionMap(['OkCancelActions',
-                                     'ColorActions',
                                      'HotkeyActions',
                                      'InfobarEPGActions',
                                      'EPGSelectActions',
