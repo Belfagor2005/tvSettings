@@ -65,8 +65,10 @@ def ReloadBouquets(x):
             db.reloadBouquets()
             print("eDVBDB: bouquets reloaded...")
     else:
-        os.system("wget -qO - http://127.0.0.1/web/servicelistreload?mode=2 > /dev/null 2>&1 &")
-        os.system("wget -qO - http://127.0.0.1/web/servicelistreload?mode=4 > /dev/null 2>&1 &")
+        os.system(
+            "wget -qO - http://127.0.0.1/web/servicelistreload?mode=2 > /dev/null 2>&1 &")
+        os.system(
+            "wget -qO - http://127.0.0.1/web/servicelistreload?mode=4 > /dev/null 2>&1 &")
         print("wGET: bouquets reloaded...")
     return  # x
 
@@ -92,8 +94,8 @@ class LCN:
         self.e2services = []
         mdom = parse(rules)
         # with open(rules, 'rt') as f:
-            # mdom = ET()
-            # mdom.parse(f)
+        # mdom = ET()
+        # mdom.parse(f)
         self.root = None
         for x in mdom.getroot():
             if x.tag == "ruleset" and x.get("name") == 'Italy':
@@ -110,7 +112,8 @@ class LCN:
         for i in range(0, len(self.lcnlist)):
             if self.lcnlist[i][0] == lcn:
                 if self.lcnlist[i][5] > signal:
-                    self.addLcnToList(namespace, nid, tsid, sid, lcn + 16536, signal)
+                    self.addLcnToList(
+                        namespace, nid, tsid, sid, lcn + 16536, signal)
                 else:
                     znamespace = self.lcnlist[i][1]
                     znid = self.lcnlist[i][2]
@@ -122,10 +125,12 @@ class LCN:
                     self.lcnlist[i][3] = tsid
                     self.lcnlist[i][4] = sid
                     self.lcnlist[i][5] = signal
-                    self.addLcnToList(znamespace, znid, ztsid, zsid, lcn + 16536, zsignal)
+                    self.addLcnToList(
+                        znamespace, znid, ztsid, zsid, lcn + 16536, zsignal)
                 return
             if self.lcnlist[i][0] > lcn:
-                self.lcnlist.insert(i, [lcn, namespace, nid, tsid, sid, signal])
+                self.lcnlist.insert(
+                    i, [lcn, namespace, nid, tsid, sid, signal])
                 return
         self.lcnlist.append([lcn, namespace, nid, tsid, sid, signal])
 
@@ -164,7 +169,8 @@ class LCN:
             tmp = line.split(":")
             if len(tmp) != 6:
                 continue
-            self.addLcnToList(int(tmp[0], 16), int(tmp[1], 16), int(tmp[2], 16), int(tmp[3], 16), int(tmp[4]), int(tmp[5]))
+            self.addLcnToList(int(tmp[0], 16), int(tmp[1], 16), int(
+                tmp[2], 16), int(tmp[3], 16), int(tmp[4]), int(tmp[5]))
         if self.root is not None:
             for x in self.root:
                 if x.tag == "rule":
@@ -236,9 +242,13 @@ class LCN:
             if len(self.markers) > 0:
                 if x[0] > self.markers[0][0]:
                     f.write("#SERVICE 1:64:0:0:0:0:0:0:0:0:\n")
-                    f.write("#DESCRIPTION ------- " + self.markers[0][1] + " -------\n")
+                    f.write(
+                        "#DESCRIPTION ------- " +
+                        self.markers[0][1] +
+                        " -------\n")
                     self.markers.remove(self.markers[0])
-            refstr = "1:0:1:%x:%x:%x:%x:0:0:0:" % (x[4], x[3], x[2], x[1])  # temporary ref
+            refstr = "1:0:1:%x:%x:%x:%x:0:0:0:" % (
+                x[4], x[3], x[2], x[1])  # temporary ref
             refsplit = eServiceReference(refstr).toString().split(":")
             for tref in self.e2services:
                 tmp = tref.split(":")
@@ -257,8 +267,10 @@ def terrestrial():
     import time
     now = time.time()
     ttime = time.localtime(now)
-    tt = str('{0:02d}'.format(ttime[2])) + str('{0:02d}'.format(ttime[1])) + str(ttime[0])[2:] + '_' + str('{0:02d}'.format(ttime[3])) + str('{0:02d}'.format(ttime[4])) + str('{0:02d}'.format(ttime[5]))
-    os.system('tar -czvf /tmp/' + tt + '_enigma2settingsbackup.tar.gz' + ' -C / /etc/enigma2/*.tv /etc/enigma2/*.radio /etc/enigma2/lamedb')
+    tt = str('{0:02d}'.format(ttime[2])) + str('{0:02d}'.format(ttime[1])) + str(ttime[0])[2:] + '_' + str(
+        '{0:02d}'.format(ttime[3])) + str('{0:02d}'.format(ttime[4])) + str('{0:02d}'.format(ttime[5]))
+    os.system('tar -czvf /tmp/' + tt + '_enigma2settingsbackup.tar.gz' +
+              ' -C / /etc/enigma2/*.tv /etc/enigma2/*.radio /etc/enigma2/lamedb')
     if SavingProcessTerrestrialChannels:
         print('SavingProcessTerrestrialChannels')
     return
@@ -296,22 +308,28 @@ def terrestrial_rest():
         # terrr = os.path.join(plugin_path, 'temp/TerrestrialChannelListArchive')
         terrr = plugin_path + '/temp/TerrestrialChannelListArchive'
         if os.path.exists(terrr):
-            os.system("cp -rf " + plugin_path + "/temp/TerrestrialChannelListArchive /etc/enigma2/userbouquet.terrestrial.tv")
+            os.system(
+                "cp -rf " +
+                plugin_path +
+                "/temp/TerrestrialChannelListArchive /etc/enigma2/userbouquet.terrestrial.tv")
         os.system('cp -rf /etc/enigma2/bouquets.tv /etc/enigma2/backup_bouquets.tv')
         with open('/etc/enigma2/bouquets.tv', 'r+') as f:
             bouquetTvString = '#SERVICE 1:7:1:0:0:0:0:0:0:0:FROM BOUQUET "userbouquet.terrestrial.tv" ORDER BY bouquet\n'
             if bouquetTvString not in f:
                 new_bouquet = open('/etc/enigma2/new_bouquets.tv', 'w')
                 new_bouquet.write('#NAME User - bouquets (TV)\n')
-                new_bouquet.write('#SERVICE 1:7:1:0:0:0:0:0:0:0:FROM BOUQUET "userbouquet.terrestrial.tv" ORDER BY bouquet\n')
+                new_bouquet.write(
+                    '#SERVICE 1:7:1:0:0:0:0:0:0:0:FROM BOUQUET "userbouquet.terrestrial.tv" ORDER BY bouquet\n')
                 file_read = open('/etc/enigma2/bouquets.tv').readlines()
                 for line in file_read:
                     if line.startswith("#NAME"):
                         continue
                     new_bouquet.write(line)
                 new_bouquet.close()
-                os.system('cp -rf /etc/enigma2/bouquets.tv /etc/enigma2/backup_bouquets.tv')
-                os.system('mv -f /etc/enigma2/new_bouquets.tv /etc/enigma2/bouquets.tv')
+                os.system(
+                    'cp -rf /etc/enigma2/bouquets.tv /etc/enigma2/backup_bouquets.tv')
+                os.system(
+                    'mv -f /etc/enigma2/new_bouquets.tv /etc/enigma2/bouquets.tv')
         if os.path.exists('/etc/enigma2/lcndb'):
             lcnstart()
 
@@ -330,7 +348,8 @@ def copy_files_to_enigma2():
 
             # Aggiungi il nome del file al file bouquet.tv
             with open(bouquet_file, "r+") as f:
-                line = '#SERVICE 1:7:1:0:0:0:0:0:0:0:FROM BOUQUET "{}" ORDER BY bouquet\n'.format(filename)
+                line = '#SERVICE 1:7:1:0:0:0:0:0:0:0:FROM BOUQUET "{}" ORDER BY bouquet\n'.format(
+                    filename)
                 if line not in f:
                     f.write(line)
     print("Operazione completata!")
@@ -401,7 +420,8 @@ def StartSavingTerrestrialChannels():
                         TrasponderListOldLamedb.write(line)
                     if inService:
                         tmp = line.split(':')
-                        ServiceListOldLamedb.write(tmp[0] + ":" + tmp[1] + ":" + tmp[2] + ":" + tmp[3] + ":" + tmp[4] + ":0\n")
+                        ServiceListOldLamedb.write(
+                            tmp[0] + ":" + tmp[1] + ":" + tmp[2] + ":" + tmp[3] + ":" + tmp[4] + ":0\n")
                         line = LamedbFile.readline()
                         ServiceListOldLamedb.write(line)
                         line = LamedbFile.readline()
@@ -411,7 +431,7 @@ def StartSavingTerrestrialChannels():
             if not Trasponder:
                 os.system('rm -fr ' + TransOldLamedb)
                 os.system('rm -fr ' + ServOldLamedb)
-        except:
+        except BaseException:
             pass
         return Trasponder
 
@@ -422,7 +442,8 @@ def StartSavingTerrestrialChannels():
         for jx in ReadingTempServicelist:
             if jx.find('eeee') != -1:
                 String = jx.split(':')
-                WritingBouquetTemporary.write('#SERVICE 1:0:%s:%s:%s:%s:%s:0:0:0:\n' % (hex(int(String[4]))[2:], String[0], String[2], String[3], String[1]))
+                WritingBouquetTemporary.write('#SERVICE 1:0:%s:%s:%s:%s:%s:0:0:0:\n' % (
+                    hex(int(String[4]))[2:], String[0], String[2], String[3], String[1]))
         WritingBouquetTemporary.close()
 
     def SaveBouquetTerrestrial():
@@ -432,7 +453,7 @@ def StartSavingTerrestrialChannels():
         try:
             shutil.copyfile(NameDirectory, TerChArch)
             return True
-        except:
+        except BaseException:
             pass
         return
     Service = SaveTrasponderService()
@@ -445,8 +466,10 @@ def StartSavingTerrestrialChannels():
 
 def LamedbRestore():
     try:
-        TrasponderListNewLamedb = open(plugin_path + '/temp/TrasponderListNewLamedb', 'w')
-        ServiceListNewLamedb = open(plugin_path + '/temp/ServiceListNewLamedb', 'w')
+        TrasponderListNewLamedb = open(
+            plugin_path + '/temp/TrasponderListNewLamedb', 'w')
+        ServiceListNewLamedb = open(
+            plugin_path + '/temp/ServiceListNewLamedb', 'w')
         inTransponder = False
         inService = False
         infile = open(ee2ldb, 'r')
@@ -470,29 +493,35 @@ def LamedbRestore():
         ServiceListNewLamedb.close()
         WritingLamedbFinal = open(ee2ldb, "w")
         WritingLamedbFinal.write("eDVB services /4/\n")
-        TrasponderListNewLamedb = open(plugin_path + '/temp/TrasponderListNewLamedb', 'r').readlines()
+        TrasponderListNewLamedb = open(
+            plugin_path +
+            '/temp/TrasponderListNewLamedb',
+            'r').readlines()
         for x in TrasponderListNewLamedb:
             WritingLamedbFinal.write(x)
         try:
             TrasponderListOldLamedb = open(TransOldLamedb, 'r').readlines()
             for x in TrasponderListOldLamedb:
                 WritingLamedbFinal.write(x)
-        except:
+        except BaseException:
             pass
         WritingLamedbFinal.write("end\n")
-        ServiceListNewLamedb = open(plugin_path + '/temp/ServiceListNewLamedb', 'r').readlines()
+        ServiceListNewLamedb = open(
+            plugin_path +
+            '/temp/ServiceListNewLamedb',
+            'r').readlines()
         for x in ServiceListNewLamedb:
             WritingLamedbFinal.write(x)
         try:
             ServiceListOldLamedb = open(ServOldLamedb, 'r').readlines()
             for x in ServiceListOldLamedb:
                 WritingLamedbFinal.write(x)
-        except:
+        except BaseException:
             pass
         WritingLamedbFinal.write("end\n")
         WritingLamedbFinal.close()
         return True
-    except:
+    except BaseException:
         return False
 
 
@@ -503,7 +532,13 @@ def TransferBouquetTerrestrialFinal():
             if re.search('^userbouquet.*.tv', file):
                 f = open("/etc/enigma2/" + file, "r")
                 x = f.read()
-                if re.search('#NAME Digitale Terrestre', x, flags=re.IGNORECASE) or re.search('#NAME DTT', x, flags=re.IGNORECASE):  # for disa51
+                if re.search(
+                        '#NAME Digitale Terrestre',
+                        x,
+                        flags=re.IGNORECASE) or re.search(
+                        '#NAME DTT',
+                        x,
+                        flags=re.IGNORECASE):  # for disa51
                     return "/etc/enigma2/" + file
         return
 
@@ -519,7 +554,7 @@ def TransferBouquetTerrestrialFinal():
                     TrasfBouq.write(Line)
             TrasfBouq.close()
             return True
-    except:
+    except BaseException:
         return False
     return
 
