@@ -24,7 +24,9 @@ from Components.ActionMap import ActionMap
 from Components.Button import Button
 from Components.Label import Label
 from Components.MenuList import MenuList
-from Components.MultiContent import (MultiContentEntryText, MultiContentEntryPixmapAlphaTest)
+from Components.MultiContent import (
+    MultiContentEntryText,
+    MultiContentEntryPixmapAlphaTest)
 # from Components.Pixmap import Pixmap
 # from Components.ScrollLabel import ScrollLabel
 # from Screens.Standby import TryQuitMainloop
@@ -81,12 +83,12 @@ if sys.version_info >= (2, 7, 9):
     try:
         # import ssl
         sslContext = ssl._create_unverified_context()
-    except:
+    except BaseException:
         sslContext = None
 
 try:
     wgetsts()
-except:
+except BaseException:
     pass
 
 
@@ -101,7 +103,7 @@ try:
     from twisted.internet import ssl
     from twisted.internet._sslverify import ClientTLSOptions
     sslverify = True
-except:
+except BaseException:
     sslverify = False
 
 if sslverify:
@@ -121,7 +123,13 @@ def make_request(url):
         import requests
         response = requests.get(url, verify=False, timeout=5)
         if response.status_code == 200:
-            link = requests.get(url, headers={'User-Agent': Utils.RequestAgent()}, timeout=10, verify=False, stream=True).text
+            link = requests.get(
+                url,
+                headers={
+                    'User-Agent': Utils.RequestAgent()},
+                timeout=10,
+                verify=False,
+                stream=True).text
         return link
     except ImportError:
         req = Request(url)
@@ -158,7 +166,8 @@ def checkGZIP(url):
         return None
 
 
-os.system('rm -fr /usr/lib/enigma2/python/Plugins/Extensions/tvSettings/temp/*')  # clean /temp
+# clean /temp
+os.system('rm -fr /usr/lib/enigma2/python/Plugins/Extensions/tvSettings/temp/*')
 currversion = '1.9'
 title_plug = '..:: TiVuStream Settings V. %s ::..' % currversion
 name_plug = 'TiVuStream Settings'
@@ -228,17 +237,61 @@ class OneSetList(MenuList):
 
 def DListEntry(name, idx=None):
     res = [name]
-    pngs = resolveFilename(SCOPE_PLUGINS, "Extensions/{}/res/pics/settingon.png".format('tvSettings'))
+    pngs = resolveFilename(
+        SCOPE_PLUGINS,
+        "Extensions/{}/res/pics/settingon.png".format('tvSettings'))
     # pngs = resolveFilename(SCOPE_PLUGINS, "Extensions/{}/res/pics/settingoff.png".format('tvSettings'))
     if screenwidth.width() == 2560:
-        res.append(MultiContentEntryPixmapAlphaTest(pos=(10, 10), size=(40, 40), png=loadPNG(pngs)))
-        res.append(MultiContentEntryText(pos=(80, 0), size=(1200, 50), font=0, text=name, flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER))
+        res.append(
+            MultiContentEntryPixmapAlphaTest(
+                pos=(
+                    10, 10), size=(
+                    40, 40), png=loadPNG(pngs)))
+        res.append(
+            MultiContentEntryText(
+                pos=(
+                    80,
+                    0),
+                size=(
+                    1200,
+                    50),
+                font=0,
+                text=name,
+                flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER))
     elif screenwidth.width() == 1920:
-        res.append(MultiContentEntryPixmapAlphaTest(pos=(5, 5), size=(40, 40), png=loadPNG(pngs)))
-        res.append(MultiContentEntryText(pos=(70, 0), size=(1000, 50), font=0, text=name, flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER))
+        res.append(
+            MultiContentEntryPixmapAlphaTest(
+                pos=(
+                    5, 5), size=(
+                    40, 40), png=loadPNG(pngs)))
+        res.append(
+            MultiContentEntryText(
+                pos=(
+                    70,
+                    0),
+                size=(
+                    1000,
+                    50),
+                font=0,
+                text=name,
+                flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER))
     else:
-        res.append(MultiContentEntryPixmapAlphaTest(pos=(3, 0), size=(40, 40), png=loadPNG(pngs)))
-        res.append(MultiContentEntryText(pos=(50, 0), size=(500, 40), font=0, text=name, flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER))
+        res.append(
+            MultiContentEntryPixmapAlphaTest(
+                pos=(
+                    3, 0), size=(
+                    40, 40), png=loadPNG(pngs)))
+        res.append(
+            MultiContentEntryText(
+                pos=(
+                    50,
+                    0),
+                size=(
+                    500,
+                    40),
+                font=0,
+                text=name,
+                flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER))
     return res
 
 
@@ -313,13 +366,20 @@ class MainSetting(Screen):
         self.onLayoutFinish.append(self.updateMenuList)
 
     def infomsg(self):
-        self.session.open(MessageBox, _("tvSettings by Lululla\nV.%s\nInstall Channel Settings and recovery DDT and IPTV Favorite\nForum Support www.corvoboys.org\n") % currversion,  MessageBox.TYPE_INFO, timeout=4)
+        self.session.open(
+            MessageBox,
+            _("tvSettings by Lululla\nV.%s\nInstall Channel Settings and recovery DDT and IPTV Favorite\nForum Support www.corvoboys.org\n") %
+            currversion,
+            MessageBox.TYPE_INFO,
+            timeout=4)
 
     def check_vers(self):
         try:
             remote_version = '0.0'
             remote_changelog = ''
-            req = Utils.Request(Utils.b64decoder(installer_url), headers={'User-Agent': 'Mozilla/5.0'})
+            req = Utils.Request(
+                Utils.b64decoder(installer_url), headers={
+                    'User-Agent': 'Mozilla/5.0'})
             page = Utils.urlopen(req).read()
             if PY3:
                 data = page.decode("utf-8")
@@ -341,35 +401,69 @@ class MainSetting(Screen):
                 self.Update = True
                 # self['key_yellow'].show()
                 # self['key_green'].show()
-                self.session.open(MessageBox, _('New version %s is available\n\nChangelog: %s\n\nPress info_long or yellow_long button to start force updating.') % (self.new_version, self.new_changelog), MessageBox.TYPE_INFO, timeout=5)
+                self.session.open(
+                    MessageBox,
+                    _('New version %s is available\n\nChangelog: %s\n\nPress info_long or yellow_long button to start force updating.') %
+                    (self.new_version,
+                     self.new_changelog),
+                    MessageBox.TYPE_INFO,
+                    timeout=5)
             # self.update_me()
         except Exception as e:
             print('error check_vers:', e)
 
     def update_me(self):
         if self.Update is True:
-            self.session.openWithCallback(self.install_update, MessageBox, _("New version %s is available.\n\nChangelog: %s \n\nDo you want to install it now?") % (self.new_version, self.new_changelog), MessageBox.TYPE_YESNO)
+            self.session.openWithCallback(
+                self.install_update,
+                MessageBox,
+                _("New version %s is available.\n\nChangelog: %s \n\nDo you want to install it now?") %
+                (self.new_version,
+                 self.new_changelog),
+                MessageBox.TYPE_YESNO)
         else:
-            self.session.open(MessageBox, _("Congrats! You already have the latest version..."),  MessageBox.TYPE_INFO, timeout=4)
+            self.session.open(
+                MessageBox,
+                _("Congrats! You already have the latest version..."),
+                MessageBox.TYPE_INFO,
+                timeout=4)
 
     def update_dev(self):
         try:
-            req = Utils.Request(Utils.b64decoder(developer_url), headers={'User-Agent': 'Mozilla/5.0'})
+            req = Utils.Request(
+                Utils.b64decoder(developer_url), headers={
+                    'User-Agent': 'Mozilla/5.0'})
             page = Utils.urlopen(req).read()
             data = json.loads(page)
             remote_date = data['pushed_at']
-            strp_remote_date = datetime.strptime(remote_date, '%Y-%m-%dT%H:%M:%SZ')
+            strp_remote_date = datetime.strptime(
+                remote_date, '%Y-%m-%dT%H:%M:%SZ')
             remote_date = strp_remote_date.strftime('%Y-%m-%d')
-            self.session.openWithCallback(self.install_update, MessageBox, _("Do you want to install update ( %s ) now?") % (remote_date), MessageBox.TYPE_YESNO)
+            self.session.openWithCallback(
+                self.install_update,
+                MessageBox,
+                _("Do you want to install update ( %s ) now?") %
+                (remote_date),
+                MessageBox.TYPE_YESNO)
         except Exception as e:
             print('error xcons:', e)
 
     def install_update(self, answer=False):
         if answer:
-            cmd1 = 'wget -q "--no-check-certificate" ' + Utils.b64decoder(installer_url) + ' -O - | /bin/sh'
-            self.session.open(xConsole, 'Upgrading...', cmdlist=[cmd1], finishedCallback=self.myCallback, closeOnSuccess=False)
+            cmd1 = 'wget -q "--no-check-certificate" ' + \
+                Utils.b64decoder(installer_url) + ' -O - | /bin/sh'
+            self.session.open(
+                xConsole,
+                'Upgrading...',
+                cmdlist=[cmd1],
+                finishedCallback=self.myCallback,
+                closeOnSuccess=False)
         else:
-            self.session.open(MessageBox, _("Update Aborted!"),  MessageBox.TYPE_INFO, timeout=3)
+            self.session.open(
+                MessageBox,
+                _("Update Aborted!"),
+                MessageBox.TYPE_INFO,
+                timeout=3)
 
     def myCallback(self, result=None):
         print('result:', result)
@@ -383,9 +477,11 @@ class MainSetting(Screen):
             if len(lcn.lcnlist) >= 1:
                 lcn.writeBouquet()
                 lcn.ReloadBouquets(setx)
-                self.session.open(MessageBox, _('Sorting Terrestrial channels with Lcn rules Completed'),
-                                  MessageBox.TYPE_INFO,
-                                  timeout=5)
+                self.session.open(
+                    MessageBox,
+                    _('Sorting Terrestrial channels with Lcn rules Completed'),
+                    MessageBox.TYPE_INFO,
+                    timeout=5)
 
     def cancel(self):
         self.close()
@@ -433,21 +529,33 @@ class MainSetting(Screen):
             return
 
     def terrestrial_restore(self):
-        self.session.openWithCallback(self.terrestrial_restore2, MessageBox, _("This operation restore your Favorite channel Dtt\nfrom =>>THISPLUGIN/temp/TerrestrialChannelListArchive\nDo you really want to continue?"), MessageBox.TYPE_YESNO)
+        self.session.openWithCallback(
+            self.terrestrial_restore2,
+            MessageBox,
+            _("This operation restore your Favorite channel Dtt\nfrom =>>THISPLUGIN/temp/TerrestrialChannelListArchive\nDo you really want to continue?"),
+            MessageBox.TYPE_YESNO)
 
     def terrestrial_restore2(self, answer=False):
         if answer:
             terrestrial_rest()
 
     def terrestrialsave(self):
-        self.session.openWithCallback(self.terrestrialsave2, MessageBox, _("This operation save your Favorite channel Dtt\nto =>>/tmp/*_enigma2settingsbackup.tar.gz\nDo you really want to continue?"), MessageBox.TYPE_YESNO)
+        self.session.openWithCallback(
+            self.terrestrialsave2,
+            MessageBox,
+            _("This operation save your Favorite channel Dtt\nto =>>/tmp/*_enigma2settingsbackup.tar.gz\nDo you really want to continue?"),
+            MessageBox.TYPE_YESNO)
 
     def terrestrialsave2(self, answer=False):
         if answer:
             terrestrial()
 
     def okSATELLITE(self):
-        self.session.openWithCallback(self.okSATELLITE2, MessageBox, _("Do you want to install?"), MessageBox.TYPE_YESNO)
+        self.session.openWithCallback(
+            self.okSATELLITE2,
+            MessageBox,
+            _("Do you want to install?"),
+            MessageBox.TYPE_YESNO)
 
     def okSATELLITE2(self, answer=False):
         if answer:
@@ -460,15 +568,26 @@ class MainSetting(Screen):
                     r = requests.get(link_sat)
                     with open(dirCopy, 'wb') as f:
                         f.write(r.content)
-                    self.session.open(MessageBox, _('Satellites.xml Updated!'), MessageBox.TYPE_INFO, timeout=5)
+                    self.session.open(
+                        MessageBox,
+                        _('Satellites.xml Updated!'),
+                        MessageBox.TYPE_INFO,
+                        timeout=5)
                     self['info'].setText(_('Installation done !!!'))
                 except Exception as e:
                     print('error: ', str(e))
             else:
-                self.session.open(MessageBox, "No Internet", MessageBox.TYPE_INFO)
+                self.session.open(
+                    MessageBox,
+                    "No Internet",
+                    MessageBox.TYPE_INFO)
 
     def okTERRESTRIAL(self):
-        self.session.openWithCallback(self.okTERRESTRIAL2, MessageBox, _("Do you want to install?"), MessageBox.TYPE_YESNO)
+        self.session.openWithCallback(
+            self.okTERRESTRIAL2,
+            MessageBox,
+            _("Do you want to install?"),
+            MessageBox.TYPE_YESNO)
 
     def okTERRESTRIAL2(self, answer=False):
         if answer:
@@ -481,12 +600,19 @@ class MainSetting(Screen):
                     r = requests.get(link_ter)
                     with open(dirCopy, 'wb') as f:
                         f.write(r.content)
-                    self.session.open(MessageBox, _('Terrestrial.xml Updated!'), MessageBox.TYPE_INFO, timeout=5)
+                    self.session.open(
+                        MessageBox,
+                        _('Terrestrial.xml Updated!'),
+                        MessageBox.TYPE_INFO,
+                        timeout=5)
                     self['info'].setText(_('Installation done !!!'))
                 except Exception as e:
                     print('error: ', str(e))
             else:
-                self.session.open(MessageBox, "No Internet", MessageBox.TYPE_INFO)
+                self.session.open(
+                    MessageBox,
+                    "No Internet",
+                    MessageBox.TYPE_INFO)
 
 
 class SettingCiefp(Screen):
@@ -560,7 +686,11 @@ class SettingCiefp(Screen):
             self['info'].setText(_('Download page get failed ...'))
 
     def okRun(self):
-        self.session.openWithCallback(self.okRun1, MessageBox, _("Do you want to install?"), MessageBox.TYPE_YESNO)
+        self.session.openWithCallback(
+            self.okRun1,
+            MessageBox,
+            _("Do you want to install?"),
+            MessageBox.TYPE_YESNO)
 
     def okRun1(self, answer=False):
         if answer:
@@ -585,7 +715,7 @@ class SettingCiefp(Screen):
                 from six.moves.urllib.request import urlretrieve
                 urlretrieve(url, dest)
 
-                if os.path.exists(dest)  and '.zip' in dest:
+                if os.path.exists(dest) and '.zip' in dest:
                     fdest1 = "/tmp/unzipped"
                     fdest2 = "/etc/enigma2"
                     if os.path.exists("/tmp/unzipped"):
@@ -600,9 +730,15 @@ class SettingCiefp(Screen):
                     os.system('rm -rf /etc/enigma2/*.radio')
                     os.system('rm -rf /etc/enigma2/*.tv')
                     os.system('rm -rf /etc/enigma2/*.del')
-                    os.system("cp -rf  '/tmp/unzipped/" + str(self.namel) + "/'* " + fdest2)
+                    os.system("cp -rf  '/tmp/unzipped/" +
+                              str(self.namel) + "/'* " + fdest2)
                     title = _("Installation Settings")
-                    self.session.openWithCallback(self.yes, xConsole, title=_(title), cmdlist=["wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"], closeOnSuccess=False)
+                    self.session.openWithCallback(
+                        self.yes,
+                        xConsole,
+                        title=_(title),
+                        cmdlist=["wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"],
+                        closeOnSuccess=False)
                     self['info'].setText(_('Settings Installed ...'))
                 else:
                     self['info'].setText(_('Settings Not Installed (dest)...'))
@@ -683,7 +819,11 @@ class SettingCyrus(Screen):
             self['info'].setText(_('Download page get failed ...'))
 
     def okRun(self):
-        self.session.openWithCallback(self.okRun1, MessageBox, _("Do you want to install?"), MessageBox.TYPE_YESNO)
+        self.session.openWithCallback(
+            self.okRun1,
+            MessageBox,
+            _("Do you want to install?"),
+            MessageBox.TYPE_YESNO)
 
     def okRun1(self, answer=False):
         if answer:
@@ -708,7 +848,7 @@ class SettingCyrus(Screen):
                 from six.moves.urllib.request import urlretrieve
                 urlretrieve(url, dest)
 
-                if os.path.exists(dest)  and '.zip' in dest:
+                if os.path.exists(dest) and '.zip' in dest:
                     fdest1 = "/tmp/unzipped"
                     fdest2 = "/etc/enigma2"
                     if os.path.exists("/tmp/unzipped"):
@@ -723,9 +863,15 @@ class SettingCyrus(Screen):
                     os.system('rm -rf /etc/enigma2/*.radio')
                     os.system('rm -rf /etc/enigma2/*.tv')
                     os.system('rm -rf /etc/enigma2/*.del')
-                    os.system("cp -rf  '/tmp/unzipped/" + str(self.namel) + "/'* " + fdest2)
+                    os.system("cp -rf  '/tmp/unzipped/" +
+                              str(self.namel) + "/'* " + fdest2)
                     title = _("Installation Settings")
-                    self.session.openWithCallback(self.yes, xConsole, title=_(title), cmdlist=["wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"], closeOnSuccess=False)
+                    self.session.openWithCallback(
+                        self.yes,
+                        xConsole,
+                        title=_(title),
+                        cmdlist=["wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"],
+                        closeOnSuccess=False)
                     self['info'].setText(_('Settings Installed ...'))
                 else:
                     self['info'].setText(_('Settings Not Installed (dest)...'))
@@ -783,7 +929,13 @@ class SettingManutek(Screen):
             regex = 'href="/isetting/.*?file=(.+?).zip">'
             match = re.compile(regex).findall(r)
             for url in match:
-                name = url.replace("NemoxyzRLS_Manutek_", "").replace("_", " ").replace("%20", " ")  
+                name = url.replace(
+                    "NemoxyzRLS_Manutek_",
+                    "").replace(
+                    "_",
+                    " ").replace(
+                    "%20",
+                    " ")
                 if name in self.names:
                     continue
                 url = 'http://www.manutek.it/isetting/enigma2/' + url + '.zip'
@@ -798,7 +950,11 @@ class SettingManutek(Screen):
             self['info'].setText(_('Download page get failed ...'))
 
     def okRun(self):
-        self.session.openWithCallback(self.okRun1, MessageBox, _("Do you want to install?"), MessageBox.TYPE_YESNO)
+        self.session.openWithCallback(
+            self.okRun1,
+            MessageBox,
+            _("Do you want to install?"),
+            MessageBox.TYPE_YESNO)
 
     def okRun1(self, answer=False):
         if answer:
@@ -823,7 +979,7 @@ class SettingManutek(Screen):
                 from six.moves.urllib.request import urlretrieve
                 urlretrieve(url, dest)
 
-                if os.path.exists(dest)  and '.zip' in dest:
+                if os.path.exists(dest) and '.zip' in dest:
                     fdest1 = "/tmp/unzipped"
                     fdest2 = "/etc/enigma2"
                     if os.path.exists("/tmp/unzipped"):
@@ -838,9 +994,15 @@ class SettingManutek(Screen):
                     os.system('rm -rf /etc/enigma2/*.radio')
                     os.system('rm -rf /etc/enigma2/*.tv')
                     os.system('rm -rf /etc/enigma2/*.del')
-                    os.system("cp -rf  '/tmp/unzipped/" + str(self.namel) + "/'* " + fdest2)
+                    os.system("cp -rf  '/tmp/unzipped/" +
+                              str(self.namel) + "/'* " + fdest2)
                     title = _("Installation Settings")
-                    self.session.openWithCallback(self.yes, xConsole, title=_(title), cmdlist=["wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &; sleep 3"], closeOnSuccess=False)
+                    self.session.openWithCallback(
+                        self.yes,
+                        xConsole,
+                        title=_(title),
+                        cmdlist=["wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &; sleep 3"],
+                        closeOnSuccess=False)
                     self['info'].setText(_('Settings Installed ...'))
                 else:
                     self['info'].setText(_('Settings Not Installed (dest)...'))
@@ -914,7 +1076,11 @@ class SettingMorpheus(Screen):
             self['info'].setText(_('Download page get failed ...'))
 
     def okRun(self):
-        self.session.openWithCallback(self.okRun1, MessageBox, _("Do you want to install?"), MessageBox.TYPE_YESNO)
+        self.session.openWithCallback(
+            self.okRun1,
+            MessageBox,
+            _("Do you want to install?"),
+            MessageBox.TYPE_YESNO)
 
     def okRun1(self, answer=False):
         if answer:
@@ -954,9 +1120,15 @@ class SettingMorpheus(Screen):
                     os.system('rm -rf /etc/enigma2/*.radio')
                     os.system('rm -rf /etc/enigma2/*.tv')
                     os.system('rm -rf /etc/enigma2/*.del')
-                    os.system("cp -rf  '/tmp/unzipped/" + str(self.namel) + "/'* " + fdest2)
+                    os.system("cp -rf  '/tmp/unzipped/" +
+                              str(self.namel) + "/'* " + fdest2)
                     title = _("Installation Settings")
-                    self.session.openWithCallback(self.yes, xConsole, title=_(title), cmdlist=["wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"], closeOnSuccess=False)
+                    self.session.openWithCallback(
+                        self.yes,
+                        xConsole,
+                        title=_(title),
+                        cmdlist=["wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &"],
+                        closeOnSuccess=False)
                     self['info'].setText(_('Settings Installed ...'))
                 else:
                     self['info'].setText(_('Settings Not Installed (dest)...'))
@@ -1011,7 +1183,9 @@ class SettingVhan(Screen):
             data = make_request(urlsat)
             if PY3:
                 data = six.ensure_str(data)
-            match = re.compile('<td><a href="(.+?)">(.+?)</a></td>.*?<td>(.+?)</td>', re.DOTALL).findall(data)
+            match = re.compile(
+                '<td><a href="(.+?)">(.+?)</a></td>.*?<td>(.+?)</td>',
+                re.DOTALL).findall(data)
             for url, name, date in match:
                 name = str(name) + ' ' + date
                 url = "https://www.vhannibal.net/" + url
@@ -1028,7 +1202,11 @@ class SettingVhan(Screen):
             self['info'].setText(_('Download page get failed ...'))
 
     def okRun(self):
-        self.session.openWithCallback(self.okRun1, MessageBox, _("Do you want to install?"), MessageBox.TYPE_YESNO)
+        self.session.openWithCallback(
+            self.okRun1,
+            MessageBox,
+            _("Do you want to install?"),
+            MessageBox.TYPE_YESNO)
 
     def okRun1(self, answer=False):
         if answer:
@@ -1044,7 +1222,7 @@ class SettingVhan(Screen):
                 # import requests
                 # r = requests.get(url)
                 # with open(dest, 'wb') as f:
-                    # f.write(r.content)
+                # f.write(r.content)
 
                 if 'dtt' not in self.name.lower():
                     setx = 1
@@ -1054,7 +1232,7 @@ class SettingVhan(Screen):
                 from six.moves.urllib.request import urlretrieve
                 urlretrieve(url, dest)
 
-                if os.path.exists(dest)  and '.zip' in dest:
+                if os.path.exists(dest) and '.zip' in dest:
                     fdest1 = "/tmp/unzipped"
                     fdest2 = "/etc/enigma2"
                     if os.path.exists("/tmp/unzipped"):
@@ -1069,9 +1247,15 @@ class SettingVhan(Screen):
                     os.system('rm -rf /etc/enigma2/*.radio')
                     os.system('rm -rf /etc/enigma2/*.tv')
                     os.system('rm -rf /etc/enigma2/*.del')
-                    os.system("cp -rf  '/tmp/unzipped/" + str(self.namel) + "/'* " + fdest2)
+                    os.system("cp -rf  '/tmp/unzipped/" +
+                              str(self.namel) + "/'* " + fdest2)
                     title = _("Installation Settings")
-                    self.session.openWithCallback(self.yes, xConsole, title=_(title), cmdlist=["wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &; sleep 3"], closeOnSuccess=False)
+                    self.session.openWithCallback(
+                        self.yes,
+                        xConsole,
+                        title=_(title),
+                        cmdlist=["wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &; sleep 3"],
+                        closeOnSuccess=False)
                     self['info'].setText(_('Settings Installed ...'))
                 else:
                     self['info'].setText(_('Settings Not Installed (dest)...'))
@@ -1145,7 +1329,11 @@ class SettingVhan2(Screen):
             self['info'].setText(_('Download page get failed ...'))
 
     def okRun(self):
-        self.session.openWithCallback(self.okRun1, MessageBox, _("Do you want to install?"), MessageBox.TYPE_YESNO)
+        self.session.openWithCallback(
+            self.okRun1,
+            MessageBox,
+            _("Do you want to install?"),
+            MessageBox.TYPE_YESNO)
 
     def okRun1(self, answer=False):
         if answer:
@@ -1168,9 +1356,21 @@ class SettingVhan2(Screen):
                         parsed_uri = urlparse(url)
                         domain = parsed_uri.hostname
                         sniFactory = SNIFactory(domain)
-                        downloadPage(url, dest, sniFactory, timeout=5).addCallback(self.download, dest).addErrback(self.downloadError)
+                        downloadPage(
+                            url,
+                            dest,
+                            sniFactory,
+                            timeout=5).addCallback(
+                            self.download,
+                            dest).addErrback(
+                            self.downloadError)
                     else:
-                        downloadPage(url, dest).addCallback(self.download, dest).addErrback(self.downloadError)
+                        downloadPage(
+                            url,
+                            dest).addCallback(
+                            self.download,
+                            dest).addErrback(
+                            self.downloadError)
                 except Exception as e:
                     print('error: ', str(e))
 
@@ -1183,7 +1383,7 @@ class SettingVhan2(Screen):
 
     def download(self, data, dest):
         try:
-            if os.path.exists(dest)  and '.zip' in dest:
+            if os.path.exists(dest) and '.zip' in dest:
                 self.namel = ''
                 fdest1 = "/tmp/unzipped"
                 fdest2 = "/etc/enigma2"
@@ -1199,9 +1399,15 @@ class SettingVhan2(Screen):
                 os.system('rm -rf /etc/enigma2/*.radio')
                 os.system('rm -rf /etc/enigma2/*.tv')
                 os.system('rm -rf /etc/enigma2/*.del')
-                os.system("cp -rf  '/tmp/unzipped/" + str(self.namel) + "/'* " + fdest2)
+                os.system("cp -rf  '/tmp/unzipped/" +
+                          str(self.namel) + "/'* " + fdest2)
                 title = _("Installation Settings")
-                self.session.openWithCallback(self.yes, xConsole, title=_(title), cmdlist=["wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &; sleep 3"], closeOnSuccess=False)
+                self.session.openWithCallback(
+                    self.yes,
+                    xConsole,
+                    title=_(title),
+                    cmdlist=["wget -qO - http://127.0.0.1/web/servicelistreload?mode=0 > /tmp/inst.txt 2>&1 &; sleep 3"],
+                    closeOnSuccess=False)
                 self['info'].setText(_('Settings Installed ...'))
             else:
                 self['info'].setText(_('Settings Not Installed ...'))
@@ -1218,7 +1424,7 @@ class SettingVhan2(Screen):
 def main(session, **kwargs):
     try:
         session.open(MainSetting)
-    except:
+    except BaseException:
         import traceback
         traceback.print_exc()
         pass
@@ -1240,8 +1446,12 @@ def Plugins(**kwargs):
         ico_path = os.path.join(plugin_path, 'res/pics/logo.png')
     return [PluginDescriptor(name=name_plug, description=title_plug, where=[PluginDescriptor.WHERE_PLUGINMENU], icon=ico_path, fnc=main),
             # PluginDescriptor(name=name_plug, description=title_plug, where=[PluginDescriptor.WHERE_SESSIONSTART], fnc=autostart),
-            PluginDescriptor(name=name_plug, description=title_plug, where=PluginDescriptor.WHERE_MENU, fnc=StartSetup),
-            PluginDescriptor(name=name_plug, description=title_plug, where=PluginDescriptor.WHERE_EXTENSIONSMENU, fnc=main)]
+            PluginDescriptor(
+        name=name_plug,
+        description=title_plug,
+        where=PluginDescriptor.WHERE_MENU,
+        fnc=StartSetup),
+        PluginDescriptor(name=name_plug, description=title_plug, where=PluginDescriptor.WHERE_EXTENSIONSMENU, fnc=main)]
 
 
 def copy_files_to_enigma2():
@@ -1259,7 +1469,8 @@ def copy_files_to_enigma2():
 
             # Aggiungi il nome del file al file bouquet.tv
             with open(bouquet_file, "r+") as f:
-                line = '#SERVICE 1:7:1:0:0:0:0:0:0:0:FROM BOUQUET "{}" ORDER BY bouquet\n'.format(filename)
+                line = '#SERVICE 1:7:1:0:0:0:0:0:0:0:FROM BOUQUET "{}" ORDER BY bouquet\n'.format(
+                    filename)
                 if line not in f:
                     f.write(line)
     print("Operazione completata!")
